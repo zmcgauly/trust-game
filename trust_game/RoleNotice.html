@@ -1,0 +1,29 @@
+{{ block title }}
+Role Assignment
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+<div class="trust-meta">
+  <span>Period {{ player.period_number }} of {{ C.PERIODS }}</span>
+  <span>{{ visible_treatment_label }}</span>
+</div>
+
+<div class="trust-panel">
+  <p>
+    You are {{ player_profile.title }}. Your role is {{ role_label }}.
+    This role stays the same for the full session.
+  </p>
+  {{ if show_profile }}
+    <p>Your picture is visible during this period.</p>
+    <img class="profile-image" src="{{ player_profile.picture_url }}" alt="">
+  {{ else }}
+    <p>Your picture is not visible during this period.</p>
+  {{ endif }}
+</div>
+
+{{ next_button }}
+{{ endblock }}

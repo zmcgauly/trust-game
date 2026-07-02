@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trust Game Experiment</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>Trust Game</h1>
+        <p id="session-subtitle">Configure a session</p>
+      </div>
+      <div class="topbar-actions">
+        <button id="export-csv" class="secondary" type="button" disabled>Export CSV</button>
+        <button id="export-json" class="secondary" type="button" disabled>Export JSON</button>
+        <button id="reset-session" class="danger" type="button">Reset</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="setup-view" class="view">
+        <div class="setup-layout">
+          <section class="panel">
+            <div class="panel-heading">
+              <h2>Session Setup</h2>
+              <span class="tag">2x2 design</span>
+            </div>
+
+            <label class="field">
+              <span>Total players</span>
+              <input id="player-count" type="number" min="2" max="40" step="2" value="10">
+            </label>
+
+            <div class="treatment-grid" role="radiogroup" aria-label="Treatment condition">
+              <button class="treatment selected" type="button" data-picture="false" data-error="false">
+                <span>No picture</span>
+                <strong>Standard Trust</strong>
+                <small>No chance for error</small>
+              </button>
+              <button class="treatment" type="button" data-picture="false" data-error="true">
+                <span>No picture</span>
+                <strong>Deception Condition</strong>
+                <small>50% chance returned money is halved</small>
+              </button>
+              <button class="treatment" type="button" data-picture="true" data-error="false">
+                <span>Picture</span>
+                <strong>Demographic Beliefs</strong>
+                <small>No chance for error</small>
+              </button>
+              <button class="treatment" type="button" data-picture="true" data-error="true">
+                <span>Picture</span>
+                <strong>Picture + Error</strong>
+                <small>50% hidden delivery error</small>
+              </button>
+            </div>
+
+            <div class="button-row">
+              <button id="generate-players" class="secondary" type="button">Generate Players</button>
+              <button id="start-session" type="button">Start Session</button>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <h2>Players</h2>
+              <span id="role-counts" class="tag">5 proposers, 5 responders</span>
+            </div>
+            <div id="players-editor" class="players-editor"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="run-view" class="view hidden">
+        <section class="status-strip">
+          <div>
+            <span>Period</span>
+            <strong id="period-status">1 / 5</strong>
+          </div>
+          <div>
+            <span>Round</span>
+            <strong id="round-status">1 / 2</strong>
+          </div>
+          <div>
+            <span>Pair</span>
+            <strong id="pair-status">1 / 5</strong>
+          </div>
+          <div>
+            <span>Identity</span>
+            <strong id="treatment-status">Standard Trust</strong>
+          </div>
+        </section>
+
+        <div class="run-layout">
+          <section id="stage" class="stage" aria-live="polite"></section>
+
+          <aside class="side-panel">
+            <h2>Pairing Schedule</h2>
+            <div id="schedule-list" class="schedule-list"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="complete-view" class="view hidden">
+        <section class="panel complete-panel">
+          <h2>Session Complete</h2>
+          <p>All unique proposer-responder pairings are finished. Export the data before resetting the session.</p>
+          <div id="summary" class="summary-grid"></div>
+          <div class="button-row">
+            <button id="complete-export-csv" type="button">Export CSV</button>
+            <button id="complete-export-json" class="secondary" type="button">Export JSON</button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

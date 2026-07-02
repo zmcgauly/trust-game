@@ -1,0 +1,33 @@
+<div class="card my-3">
+  <div class="card-body">
+    <h5 class="card-title">Treatment Schedule</h5>
+    <p class="card-text">
+      This table is for the experiment lead. Participants only see whether pictures are shown.
+    </p>
+    <p class="card-text">
+      In error-active periods, each pair-round independently applies the delivery error
+      with probability {{ error_probability }}. If it applies, the responder's intended
+      return is multiplied by {{ error_return_multiplier }} before reaching the proposer.
+    </p>
+    <table class="table table-sm table-striped">
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th>Box</th>
+          <th>Pictures</th>
+          <th>Error condition</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ for row in period_treatments }}
+          <tr>
+            <td>{{ row.period }}</td>
+            <td>{{ row.label }}</td>
+            <td>{{ row.picture_text }}</td>
+            <td>{{ row.error_text }}</td>
+          </tr>
+        {{ endfor }}
+      </tbody>
+    </table>
+  </div>
+</div>

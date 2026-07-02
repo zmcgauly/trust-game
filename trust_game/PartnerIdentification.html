@@ -1,0 +1,31 @@
+{{ block title }}
+Partner Identification
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+<div class="trust-meta">
+  <span>Period {{ current_period }} of {{ C.PERIODS }}</span>
+  <span>Pictures shown</span>
+</div>
+
+<div class="trust-card">
+  <img class="profile-image" src="{{ partner_profile.picture_url }}" alt="{{ partner_profile.title }}">
+  <p><b>{{ partner_profile.title }}</b></p>
+</div>
+
+<div class="trust-panel">
+  <p>Please answer the following questions about this player.</p>
+</div>
+
+{{ formfield 'partner_age_guess' }}
+{{ formfield 'partner_ethnicity_guess' }}
+{{ formfield 'partner_race_guess' }}
+{{ formfield 'partner_gender_guess' }}
+{{ formfield 'partner_sexuality_guess' }}
+
+{{ next_button }}
+{{ endblock }}

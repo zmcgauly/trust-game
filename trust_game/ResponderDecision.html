@@ -1,0 +1,45 @@
+{{ block title }}
+Responder Decision
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+<div class="trust-meta">
+  <span>Period {{ player.period_number }} of {{ C.PERIODS }}</span>
+  <span>Round {{ player.round_in_period }} of {{ C.ROUNDS_PER_PERIOD }}</span>
+  <span>{{ visible_treatment_label }}</span>
+</div>
+
+<div class="trust-grid">
+  <div class="trust-card">
+    <h3>Your Role</h3>
+    <p>Responder {{ player.role_number }}</p>
+  </div>
+  <div class="trust-card">
+    <h3>Your Partner</h3>
+    {{ if show_profile }}
+      <img class="profile-image" src="{{ partner_profile.picture_url }}" alt="">
+      <p>{{ partner_profile.title }}</p>
+    {{ else }}
+      <p>Anonymous proposer</p>
+    {{ endif }}
+  </div>
+</div>
+
+<div class="trust-grid">
+  <div class="trust-card">
+    <h3>Points Sent</h3>
+    <p>{{ offer }}</p>
+  </div>
+  <div class="trust-card">
+    <h3>Tripled Points</h3>
+    <p>{{ tripled_amount }}</p>
+  </div>
+</div>
+
+{{ formfields }}
+{{ next_button }}
+{{ endblock }}

@@ -1,0 +1,19 @@
+{{ block title }}
+Round Question
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+<div class="trust-meta">
+  <span>Period {{ player.period_number }} of {{ C.PERIODS }}</span>
+  <span>Round {{ player.round_in_period }} of {{ C.ROUNDS_PER_PERIOD }}</span>
+  <span>{{ visible_treatment_label }}</span>
+</div>
+
+{{ formfield 'proposer_belief_return' label=belief_question }}
+
+{{ next_button }}
+{{ endblock }}

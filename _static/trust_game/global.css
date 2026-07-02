@@ -1,0 +1,76 @@
+.otree-body {
+  max-width: 920px;
+}
+
+.trust-panel,
+.trust-card {
+  border: 1px solid #d8dee7;
+  border-radius: 8px;
+  background: #fff;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.trust-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.trust-meta span {
+  border-radius: 999px;
+  background: #eef2f7;
+  color: #607080;
+  font-weight: 700;
+  padding: 6px 12px;
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.trust-card h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.trust-card p,
+.trust-panel p {
+  margin: 0 0 10px;
+}
+
+.trust-card p:last-child,
+.trust-panel p:last-child {
+  margin-bottom: 0;
+}
+
+.muted {
+  color: #607080;
+}
+
+.profile-image {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.elicitation-image {
+  width: min(260px, 100%);
+  max-height: 320px;
+  object-fit: cover;
+  display: block;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 720px) {
+  .trust-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,25 @@
+{{ block title }}
+Trust Game Instructions
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+<div class="trust-panel">
+  <p>
+    There are proposers and responders. Roles stay fixed for the full session.
+  </p>
+  <p>
+    In each round, the proposer receives 20 points and chooses how many whole
+    points to send to the responder. The sent points are tripled.
+  </p>
+  <p>
+    The responder then chooses how many of the tripled points to send back.
+    There are two rounds with each partner. After each period, partners rotate.
+  </p>
+</div>
+
+{{ next_button }}
+{{ endblock }}
