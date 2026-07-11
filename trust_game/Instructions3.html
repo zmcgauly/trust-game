@@ -1,0 +1,37 @@
+{{ block title }}
+Rounds
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
+<div class="trust-panel">
+  <p>
+    In each round, the proposer receives 20 points. The proposer chooses how
+    many whole points, from 0 to 20, to send to the responder.
+  </p>
+  <p>
+    Points sent by the proposer are multiplied before the responder makes a
+    decision. In some rounds, the multiplier is fixed at 3. In other rounds, the
+    multiplier is randomly either 3 or 6, with an equal chance of each outcome.
+    You will not know which you are in during the experiment.
+  </p>
+  <p>
+    In a random multiplier round, the proposer will not know whether the
+    multiplier is 3 or 6 before making the sending decision. The responder sees
+    the actual multiplier and the resulting number of available points before
+    choosing how much to send back.
+  </p>
+  <p>
+    The responder, however, will see how many points the proposer sent and the
+    total points available after multiplication. The responder then chooses how
+    many whole points to send back to the proposer. The responder can send back
+    any whole number from 0 up to the total points available.
+  </p>
+</div>
+
+{{ next_button }}
+{{ endblock }}

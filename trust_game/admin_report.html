@@ -5,9 +5,9 @@
       This table is for the experiment lead. Participants only see whether pictures are shown.
     </p>
     <p class="card-text">
-      In error-active periods, each pair-round independently applies the delivery error
-      with probability {{ error_probability }}. If it applies, the responder's intended
-      return is multiplied by {{ error_return_multiplier }} before reaching the proposer.
+      In random-multiplier periods, each pair-round independently uses the
+      {{ high_multiplier }}x multiplier with probability {{ high_multiplier_probability }}.
+      Otherwise, it uses the {{ low_multiplier }}x multiplier.
     </p>
     <table class="table table-sm table-striped">
       <thead>
@@ -15,7 +15,7 @@
           <th>Period</th>
           <th>Box</th>
           <th>Pictures</th>
-          <th>Error condition</th>
+          <th>Multiplier</th>
         </tr>
       </thead>
       <tbody>
@@ -24,7 +24,7 @@
             <td>{{ row.period }}</td>
             <td>{{ row.label }}</td>
             <td>{{ row.picture_text }}</td>
-            <td>{{ row.error_text }}</td>
+            <td>{{ row.multiplier_risk_text }}</td>
           </tr>
         {{ endfor }}
       </tbody>

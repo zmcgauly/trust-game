@@ -7,23 +7,37 @@ Responder Receipt
 {{ endblock }}
 
 {{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-meta">
-  <span>Period {{ player.period_number }} of {{ C.PERIODS }}</span>
-  <span>Round {{ player.round_in_period }} of {{ C.ROUNDS_PER_PERIOD }}</span>
-  <span>{{ visible_treatment_label }}</span>
+  {{ if is_practice }}
+    <span>Practice round {{ player.round_in_period }} of {{ C.PRACTICE_ROUNDS }}</span>
+  {{ else }}
+    <span>Period {{ player.period_number }} of {{ C.PERIODS }}</span>
+    <span>Round {{ player.round_in_period }} of {{ C.ROUNDS_PER_PERIOD }}</span>
+  {{ endif }}
 </div>
+
+{{ if is_practice }}
+  <div class="trust-panel practice-note">
+    <p>This practice result is for learning only and cannot be selected for payoff.</p>
+  </div>
+{{ endif }}
 
 <div class="trust-grid">
   <div class="trust-card">
-    <h3>Tripled Points</h3>
-    <p>{{ tripled_amount }}</p>
+    <h3>Points Sent</h3>
+    <p>{{ offer }}</p>
+  </div>
+  <div class="trust-card">
+    <h3>Points Available</h3>
+    <p>{{ multiplied_amount }}</p>
   </div>
   <div class="trust-card">
     <h3>Points You Sent Back</h3>
     <p>{{ intended_return }}</p>
   </div>
   <div class="trust-card">
-    <h3>Your Round Points</h3>
+    <h3>{{ if is_practice }}Practice Round Points{{ else }}Your Round Points{{ endif }}</h3>
     <p>{{ responder_payoff }}</p>
   </div>
 </div>

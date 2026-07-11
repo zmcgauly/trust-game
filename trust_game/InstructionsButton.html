@@ -1,0 +1,82 @@
+<button class="instructions-button" type="button" data-instructions-open>
+  Instructions
+</button>
+
+<div class="instructions-overlay" data-instructions-overlay hidden>
+  <div class="instructions-modal" role="dialog" aria-modal="true" aria-labelledby="instructions-summary-title">
+    <div class="instructions-modal-header">
+      <h3 id="instructions-summary-title">Instructions Summary</h3>
+      <button class="instructions-close" type="button" aria-label="Close instructions" data-instructions-close>
+        x
+      </button>
+    </div>
+    <div class="instructions-modal-body">
+      <p>
+        Your role is either proposer or responder and stays the same for the
+        entire session. The session begins with two practice rounds that cannot
+        be selected for payoff.
+      </p>
+      <p>
+        After the practice rounds, there are 5 periods. In each period, you are
+        matched with one partner for 2 rounds. After each period, partners
+        rotate.
+      </p>
+      <p>
+        In each round, the proposer receives 20 points and chooses how many
+        whole points, from 0 to 20, to send to the responder.
+      </p>
+      <p>
+        Points sent by the proposer are multiplied before the responder decides
+        how much to send back. The responder sees how many points were sent and
+        the total points available after multiplication.
+      </p>
+      <p>
+        If the proposer sends S points, the multiplier is M, and the responder
+        sends back R points, round points are:
+      </p>
+      <ul>
+        <li>Proposer: 20 - S + R</li>
+        <li>Responder: S x M - R</li>
+      </ul>
+      <p>
+        At the end of the game, you will answer demographic questions about
+        yourself and questions about the people you were matched with.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var openButton = document.querySelector('[data-instructions-open]');
+    var overlay = document.querySelector('[data-instructions-overlay]');
+    var closeButton = document.querySelector('[data-instructions-close]');
+
+    if (!openButton || !overlay || !closeButton) {
+      return;
+    }
+
+    function openInstructions() {
+      overlay.hidden = false;
+      closeButton.focus();
+    }
+
+    function closeInstructions() {
+      overlay.hidden = true;
+      openButton.focus();
+    }
+
+    openButton.addEventListener('click', openInstructions);
+    closeButton.addEventListener('click', closeInstructions);
+    overlay.addEventListener('click', function (event) {
+      if (event.target === overlay) {
+        closeInstructions();
+      }
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !overlay.hidden) {
+        closeInstructions();
+      }
+    });
+  })();
+</script>

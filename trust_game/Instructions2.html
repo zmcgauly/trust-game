@@ -1,0 +1,31 @@
+{{ block title }}
+Roles
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
+<div class="trust-panel">
+  <p>
+    This study has two roles: proposers and responders. Your role will stay the
+    same for the entire session.
+  </p>
+  <p>
+    The session begins with two practice rounds. Practice rounds are only for
+    learning the rules and cannot be selected for payoff. After the practice
+    rounds, there are 5 periods. In each period, you are matched with one
+    partner for 2 rounds. After each period, partners rotate. Your partner will
+    be someone with the opposite role to you.
+  </p>
+  <p>
+    In some periods, you may see your partner's picture. In other periods, your
+    partner may be shown as anonymous. Your own picture is shown on decision
+    screens so you can confirm which participant you are.
+  </p>
+</div>
+
+{{ next_button }}
+{{ endblock }}

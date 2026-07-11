@@ -1,0 +1,22 @@
+{{ block title }}
+End-of-Game Questions
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
+<div class="trust-panel">
+  <p>
+    At the end of the game, you will answer demographic questions about yourself.
+    You may choose "Prefer not to say" when you do not want to answer a
+    question. You will also answer questions about the people you were matched
+    with, including your confidence in each guess and whether you have an
+    existing relationship with the person shown.
+  </p>
+</div>
+
+{{ next_button }}
+{{ endblock }}

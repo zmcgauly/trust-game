@@ -7,16 +7,17 @@ Self Identification
 {{ endblock }}
 
 {{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-meta">
-  <span>Period {{ player.period_number }} of {{ C.PERIODS }}</span>
-  <span>Pictures shown</span>
+  <span>End of game</span>
 </div>
 
 <div class="trust-panel">
-  <p>Please answer the following questions about yourself.</p>
+  <p>Please answer the following questions about yourself. You may choose "Prefer not to say" for any question.</p>
 </div>
 
 {{ formfield 'age' }}
+{{ formfield 'age_prefer_not_to_say' }}
 {{ formfield 'ethnicity' }}
 {{ formfield 'race' }}
 {{ formfield 'gender' }}

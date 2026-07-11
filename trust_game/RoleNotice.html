@@ -7,9 +7,13 @@ Role Assignment
 {{ endblock }}
 
 {{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-meta">
-  <span>Period {{ player.period_number }} of {{ C.PERIODS }}</span>
-  <span>{{ visible_treatment_label }}</span>
+  {{ if player.is_practice_round }}
+    <span>Practice round {{ player.round_in_period }} of {{ C.PRACTICE_ROUNDS }}</span>
+  {{ else }}
+    <span>Period {{ player.period_number }} of {{ C.PERIODS }}</span>
+  {{ endif }}
 </div>
 
 <div class="trust-panel">
@@ -18,10 +22,7 @@ Role Assignment
     This role stays the same for the full session.
   </p>
   {{ if show_profile }}
-    <p>Your picture is visible during this period.</p>
     <img class="profile-image" src="{{ player_profile.picture_url }}" alt="">
-  {{ else }}
-    <p>Your picture is not visible during this period.</p>
   {{ endif }}
 </div>
 

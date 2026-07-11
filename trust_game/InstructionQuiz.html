@@ -1,0 +1,24 @@
+{{ block title }}
+Instructions Quiz
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
+
+<div class="trust-panel">
+  <p>
+    Please answer the following five questions about the instructions. You must
+    answer all five questions correctly before continuing.
+  </p>
+  <p>
+    Attempts remaining: {{ attempts_remaining }}
+  </p>
+</div>
+
+{{ formfields }}
+{{ next_button }}
+{{ endblock }}

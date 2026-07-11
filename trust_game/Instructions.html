@@ -1,5 +1,5 @@
 {{ block title }}
-Trust Game Instructions
+Instructions
 {{ endblock }}
 
 {{ block styles }}
@@ -7,17 +7,28 @@ Trust Game Instructions
 {{ endblock }}
 
 {{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-panel">
   <p>
-    There are proposers and responders. Roles stay fixed for the full session.
+    Please put all electronic devices away for the duration of the experiment.
+    Please remain quiet while the experiment is in session. If you have a
+    question, raise your hand and an experimenter will meet with you directly. At
+    any time if you wish to see the instructions again select the instructions
+    button in the upper right-hand corner of your screen.
   </p>
   <p>
-    In each round, the proposer receives 20 points and chooses how many whole
-    points to send to the responder. The sent points are tripled.
+    This is an experiment on economic decision making. The decisions you and
+    others make determine the final amount of money you and other participants
+    will earn. By participating, you have earned a show-up fee of $ (Varible).
+    This amount is separate from your potential earnings throughout the
+    experiment. Regardless of your decisions throughout the experiment, you will
+    earn the show-up fee.
   </p>
   <p>
-    The responder then chooses how many of the tripled points to send back.
-    There are two rounds with each partner. After each period, partners rotate.
+    You are free to leave at any time regardless of the completion status of the
+    experiment. Should you choose to leave before the experiment is complete, you
+    will still be given your show-up fee but will forfeit any payoff from your
+    decisions.
   </p>
 </div>
 

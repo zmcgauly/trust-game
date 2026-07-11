@@ -3,6 +3,11 @@ from otree.api import Bot
 from . import (
     C,
     Instructions,
+    Instructions2,
+    Instructions3,
+    Instructions4,
+    Instructions5,
+    InstructionQuiz,
     ProposerBelief,
     ProposerDecision,
     ProposerReceipt,
@@ -10,41 +15,77 @@ from . import (
     ResponderReceipt,
     RoleNotice,
     SelfIdentification,
-    PartnerIdentification,
+    PartnerIdentification1,
+    PartnerIdentification2,
+    PartnerIdentification3,
+    PartnerIdentification4,
+    PartnerIdentification5,
 )
 
 
 class PlayerBot(Bot):
     def play_round(self):
-        if self.player.round_in_period == 1:
-            yield RoleNotice
-
         if self.round_number == 1:
             yield Instructions
+            yield Instructions2
+            yield Instructions3
+            yield Instructions4
+            yield Instructions5
+            yield InstructionQuiz, dict(
+                instruction_quiz_1="same",
+                instruction_quiz_2="learning",
+                instruction_quiz_3="zero_to_twenty",
+                instruction_quiz_4="sent_available",
+                instruction_quiz_5="correct",
+            )
+
+        if self.player.round_in_period == 1:
+            yield RoleNotice
 
         if self.player.role_name == "proposer":
             yield ProposerDecision, dict(offer=10)
             yield ProposerReceipt
-            yield ProposerBelief, dict(proposer_belief_return=15)
+            yield ProposerBelief, dict(proposer_belief_multiplier=C.LOW_MULTIPLIER)
         else:
-            tripled_amount = 10 * C.MULTIPLIER
-            yield ResponderDecision, dict(intended_return=tripled_amount / 2)
+            yield ResponderDecision, dict(
+                intended_return=self.player.group.multiplied_amount() / 2
+            )
             yield ResponderReceipt
 
-        if self.player.round_in_period == C.ROUNDS_PER_PERIOD and self.player.group.treatment_picture:
+        if self.round_number == C.NUM_ROUNDS:
             identification = dict(
-                age=30,
-                ethnicity="No",
-                race="Other",
+                age=None,
+                age_prefer_not_to_say=True,
+                ethnicity="Prefer not to say",
+                race="Prefer not to say",
                 gender="Prefer not to say",
                 sexuality="Prefer not to say",
             )
-            partner_identification = dict(
-                partner_age_guess=30,
-                partner_ethnicity_guess="No",
-                partner_race_guess="Other",
-                partner_gender_guess="Prefer not to say",
-                partner_sexuality_guess="Prefer not to say",
-            )
             yield SelfIdentification, identification
-            yield PartnerIdentification, partner_identification
+
+            for slot, page in enumerate(
+                [
+                    PartnerIdentification1,
+                    PartnerIdentification2,
+                    PartnerIdentification3,
+                    PartnerIdentification4,
+                    PartnerIdentification5,
+                ],
+                start=1,
+            ):
+                prefix = f"partner_{slot}"
+                partner_identification = {
+                    f"{prefix}_age_guess": 30,
+                    f"{prefix}_age_confidence": "Sure",
+                    f"{prefix}_ethnicity_guess": "No",
+                    f"{prefix}_ethnicity_confidence": "Unsure",
+                    f"{prefix}_race_guess": "Other",
+                    f"{prefix}_race_confidence": "Neither Sure or Unsure",
+                    f"{prefix}_gender_guess": "Other",
+                    f"{prefix}_gender_confidence": "Unsure",
+                    f"{prefix}_sexuality_guess": "Other",
+                    f"{prefix}_sexuality_confidence": "Unsure",
+                    f"{prefix}_existing_relationship": "No",
+                    f"{prefix}_relationship_nature": "",
+                }
+                yield page, partner_identification

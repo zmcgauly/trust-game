@@ -7,13 +7,23 @@ Round Question
 {{ endblock }}
 
 {{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-meta">
-  <span>Period {{ player.period_number }} of {{ C.PERIODS }}</span>
-  <span>Round {{ player.round_in_period }} of {{ C.ROUNDS_PER_PERIOD }}</span>
-  <span>{{ visible_treatment_label }}</span>
+  {{ if is_practice }}
+    <span>Practice round {{ player.round_in_period }} of {{ C.PRACTICE_ROUNDS }}</span>
+  {{ else }}
+    <span>Period {{ player.period_number }} of {{ C.PERIODS }}</span>
+    <span>Round {{ player.round_in_period }} of {{ C.ROUNDS_PER_PERIOD }}</span>
+  {{ endif }}
 </div>
 
-{{ formfield 'proposer_belief_return' label=belief_question }}
+{{ if is_practice }}
+  <div class="trust-panel practice-note">
+    <p>This practice question is for learning only and cannot be selected for payoff.</p>
+  </div>
+{{ endif }}
+
+{{ formfield 'proposer_belief_multiplier' }}
 
 {{ next_button }}
 {{ endblock }}
