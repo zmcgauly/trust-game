@@ -1,4 +1,9 @@
 __pycache__/
 *.py[cod]
-db.sqlite3
 .venv/
+.env
+db.sqlite3
+*.sqlite3
+*.log
+__temp_bots_*/
+bot_comparison/*/exports/

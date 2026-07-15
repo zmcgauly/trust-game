@@ -1,0 +1,61 @@
+otree_round,period,round_in_period,is_practice_round,proposer_name,responder_name,current_treatment,group_treatment,current_multiplier,group_multiplier,offer,current_points_available,group_points_available,current_points_returned,group_points_returned,current_proposer_payoff,group_proposer_payoff,proposer_payoff_diff,current_responder_payoff,group_responder_payoff,responder_payoff_diff
+1,0,1,1,Player 1,Player 6,Practice,Practice,3.0,3.0,10.0,30.0,30.0,15.0,15.0,0.0,0.0,0.0,0.0,0.0,0.0
+1,0,1,1,Player 2,Player 7,Practice,Practice,3.0,3.0,10.0,30.0,30.0,15.0,15.0,0.0,0.0,0.0,0.0,0.0,0.0
+1,0,1,1,Player 3,Player 8,Practice,Practice,3.0,3.0,10.0,30.0,30.0,15.0,15.0,0.0,0.0,0.0,0.0,0.0,0.0
+1,0,1,1,Player 4,Player 9,Practice,Practice,3.0,3.0,10.0,30.0,30.0,15.0,15.0,0.0,0.0,0.0,0.0,0.0,0.0
+1,0,1,1,Player 5,Player 10,Practice,Practice,3.0,3.0,10.0,30.0,30.0,15.0,15.0,0.0,0.0,0.0,0.0,0.0,0.0
+2,0,2,1,Player 1,Player 6,Practice,Practice,3.0,3.0,10.0,30.0,30.0,15.0,15.0,0.0,0.0,0.0,0.0,0.0,0.0
+2,0,2,1,Player 2,Player 7,Practice,Practice,3.0,3.0,10.0,30.0,30.0,15.0,15.0,0.0,0.0,0.0,0.0,0.0,0.0
+2,0,2,1,Player 3,Player 8,Practice,Practice,3.0,3.0,10.0,30.0,30.0,15.0,15.0,0.0,0.0,0.0,0.0,0.0,0.0
+2,0,2,1,Player 4,Player 9,Practice,Practice,3.0,3.0,10.0,30.0,30.0,15.0,15.0,0.0,0.0,0.0,0.0,0.0,0.0
+2,0,2,1,Player 5,Player 10,Practice,Practice,3.0,3.0,10.0,30.0,30.0,15.0,15.0,0.0,0.0,0.0,0.0,0.0,0.0
+3,1,1,0,Player 1,Player 6,Fixed multiplier / No picture,Random multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+3,1,1,0,Player 2,Player 7,Fixed multiplier / No picture,Fixed multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+3,1,1,0,Player 3,Player 8,Fixed multiplier / No picture,Fixed multiplier / Picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+3,1,1,0,Player 4,Player 9,Fixed multiplier / No picture,Fixed multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+3,1,1,0,Player 5,Player 10,Fixed multiplier / No picture,Fixed multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+4,1,2,0,Player 1,Player 6,Fixed multiplier / No picture,Random multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+4,1,2,0,Player 2,Player 7,Fixed multiplier / No picture,Fixed multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+4,1,2,0,Player 3,Player 8,Fixed multiplier / No picture,Fixed multiplier / Picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+4,1,2,0,Player 4,Player 9,Fixed multiplier / No picture,Fixed multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+4,1,2,0,Player 5,Player 10,Fixed multiplier / No picture,Fixed multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+5,2,1,0,Player 1,Player 7,Fixed multiplier / Picture,Random multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+5,2,1,0,Player 2,Player 8,Fixed multiplier / Picture,Fixed multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+5,2,1,0,Player 3,Player 9,Fixed multiplier / Picture,Fixed multiplier / Picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+5,2,1,0,Player 4,Player 10,Fixed multiplier / Picture,Fixed multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+5,2,1,0,Player 5,Player 6,Fixed multiplier / Picture,Random multiplier / Picture,3.0,6.0,10.0,30.0,60.0,15.0,30.0,25.0,40.0,15.0,15.0,30.0,15.0
+6,2,2,0,Player 1,Player 7,Fixed multiplier / Picture,Random multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+6,2,2,0,Player 2,Player 8,Fixed multiplier / Picture,Fixed multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+6,2,2,0,Player 3,Player 9,Fixed multiplier / Picture,Fixed multiplier / Picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+6,2,2,0,Player 4,Player 10,Fixed multiplier / Picture,Fixed multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+6,2,2,0,Player 5,Player 6,Fixed multiplier / Picture,Random multiplier / Picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+7,3,1,0,Player 1,Player 8,Random multiplier / No picture,Fixed multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+7,3,1,0,Player 2,Player 9,Random multiplier / No picture,Random multiplier / No picture,6.0,6.0,10.0,60.0,60.0,30.0,30.0,40.0,40.0,0.0,30.0,30.0,0.0
+7,3,1,0,Player 3,Player 10,Random multiplier / No picture,Random multiplier / No picture,3.0,6.0,10.0,30.0,60.0,15.0,30.0,25.0,40.0,15.0,15.0,30.0,15.0
+7,3,1,0,Player 4,Player 6,Random multiplier / No picture,Fixed multiplier / Picture,6.0,3.0,10.0,60.0,30.0,30.0,15.0,40.0,25.0,-15.0,30.0,15.0,-15.0
+7,3,1,0,Player 5,Player 7,Random multiplier / No picture,Random multiplier / No picture,6.0,3.0,10.0,60.0,30.0,30.0,15.0,40.0,25.0,-15.0,30.0,15.0,-15.0
+8,3,2,0,Player 1,Player 8,Random multiplier / No picture,Fixed multiplier / No picture,6.0,3.0,10.0,60.0,30.0,30.0,15.0,40.0,25.0,-15.0,30.0,15.0,-15.0
+8,3,2,0,Player 2,Player 9,Random multiplier / No picture,Random multiplier / No picture,3.0,6.0,10.0,30.0,60.0,15.0,30.0,25.0,40.0,15.0,15.0,30.0,15.0
+8,3,2,0,Player 3,Player 10,Random multiplier / No picture,Random multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+8,3,2,0,Player 4,Player 6,Random multiplier / No picture,Fixed multiplier / Picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+8,3,2,0,Player 5,Player 7,Random multiplier / No picture,Random multiplier / No picture,3.0,6.0,10.0,30.0,60.0,15.0,30.0,25.0,40.0,15.0,15.0,30.0,15.0
+9,4,1,0,Player 1,Player 9,Fixed multiplier / Picture,Random multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+9,4,1,0,Player 2,Player 10,Fixed multiplier / Picture,Fixed multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+9,4,1,0,Player 3,Player 6,Fixed multiplier / Picture,Fixed multiplier / Picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+9,4,1,0,Player 4,Player 7,Fixed multiplier / Picture,Random multiplier / No picture,3.0,6.0,10.0,30.0,60.0,15.0,30.0,25.0,40.0,15.0,15.0,30.0,15.0
+9,4,1,0,Player 5,Player 8,Fixed multiplier / Picture,Fixed multiplier / Picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+10,4,2,0,Player 1,Player 9,Fixed multiplier / Picture,Random multiplier / No picture,3.0,6.0,10.0,30.0,60.0,15.0,30.0,25.0,40.0,15.0,15.0,30.0,15.0
+10,4,2,0,Player 2,Player 10,Fixed multiplier / Picture,Fixed multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+10,4,2,0,Player 3,Player 6,Fixed multiplier / Picture,Fixed multiplier / Picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+10,4,2,0,Player 4,Player 7,Fixed multiplier / Picture,Random multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+10,4,2,0,Player 5,Player 8,Fixed multiplier / Picture,Fixed multiplier / Picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+11,5,1,0,Player 1,Player 10,Random multiplier / No picture,Random multiplier / No picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+11,5,1,0,Player 2,Player 6,Random multiplier / No picture,Fixed multiplier / Picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+11,5,1,0,Player 3,Player 7,Random multiplier / No picture,Fixed multiplier / Picture,6.0,3.0,10.0,60.0,30.0,30.0,15.0,40.0,25.0,-15.0,30.0,15.0,-15.0
+11,5,1,0,Player 4,Player 8,Random multiplier / No picture,Random multiplier / Picture,6.0,6.0,10.0,60.0,60.0,30.0,30.0,40.0,40.0,0.0,30.0,30.0,0.0
+11,5,1,0,Player 5,Player 9,Random multiplier / No picture,Random multiplier / Picture,6.0,3.0,10.0,60.0,30.0,30.0,15.0,40.0,25.0,-15.0,30.0,15.0,-15.0
+12,5,2,0,Player 1,Player 10,Random multiplier / No picture,Random multiplier / No picture,3.0,6.0,10.0,30.0,60.0,15.0,30.0,25.0,40.0,15.0,15.0,30.0,15.0
+12,5,2,0,Player 2,Player 6,Random multiplier / No picture,Fixed multiplier / Picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+12,5,2,0,Player 3,Player 7,Random multiplier / No picture,Fixed multiplier / Picture,3.0,3.0,10.0,30.0,30.0,15.0,15.0,25.0,25.0,0.0,15.0,15.0,0.0
+12,5,2,0,Player 4,Player 8,Random multiplier / No picture,Random multiplier / Picture,6.0,6.0,10.0,60.0,60.0,30.0,30.0,40.0,40.0,0.0,30.0,30.0,0.0
+12,5,2,0,Player 5,Player 9,Random multiplier / No picture,Random multiplier / Picture,6.0,3.0,10.0,60.0,30.0,30.0,15.0,40.0,25.0,-15.0,30.0,15.0,-15.0

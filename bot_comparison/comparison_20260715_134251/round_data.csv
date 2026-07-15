@@ -1,0 +1,61 @@
+otree_round,period,round_in_period,is_practice_round,proposer_name,responder_name,treatment,realized_multiplier,offer,points_available,points_returned,proposer_payoff,responder_payoff
+1,0,1,1,Player 1,Player 6,Practice,3.0,10.0,30.0,15.0,0.0,0.0
+1,0,1,1,Player 2,Player 7,Practice,6.0,10.0,60.0,30.0,0.0,0.0
+1,0,1,1,Player 3,Player 8,Practice,3.0,10.0,30.0,15.0,0.0,0.0
+1,0,1,1,Player 4,Player 9,Practice,6.0,10.0,60.0,30.0,0.0,0.0
+1,0,1,1,Player 5,Player 10,Practice,6.0,10.0,60.0,30.0,0.0,0.0
+2,0,2,1,Player 1,Player 6,Practice,6.0,10.0,60.0,30.0,0.0,0.0
+2,0,2,1,Player 2,Player 7,Practice,3.0,10.0,30.0,15.0,0.0,0.0
+2,0,2,1,Player 3,Player 8,Practice,3.0,10.0,30.0,15.0,0.0,0.0
+2,0,2,1,Player 4,Player 9,Practice,3.0,10.0,30.0,15.0,0.0,0.0
+2,0,2,1,Player 5,Player 10,Practice,3.0,10.0,30.0,15.0,0.0,0.0
+3,1,1,0,Player 1,Player 6,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+3,1,1,0,Player 2,Player 7,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+3,1,1,0,Player 3,Player 8,No picture,6.0,10.0,60.0,30.0,40.0,30.0
+3,1,1,0,Player 4,Player 9,No picture,6.0,10.0,60.0,30.0,40.0,30.0
+3,1,1,0,Player 5,Player 10,No picture,6.0,10.0,60.0,30.0,40.0,30.0
+4,1,2,0,Player 1,Player 6,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+4,1,2,0,Player 2,Player 7,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+4,1,2,0,Player 3,Player 8,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+4,1,2,0,Player 4,Player 9,No picture,6.0,10.0,60.0,30.0,40.0,30.0
+4,1,2,0,Player 5,Player 10,No picture,6.0,10.0,60.0,30.0,40.0,30.0
+5,2,1,0,Player 1,Player 7,Picture,6.0,10.0,60.0,30.0,40.0,30.0
+5,2,1,0,Player 2,Player 8,Picture,3.0,10.0,30.0,15.0,25.0,15.0
+5,2,1,0,Player 3,Player 9,Picture,3.0,10.0,30.0,15.0,25.0,15.0
+5,2,1,0,Player 4,Player 10,Picture,6.0,10.0,60.0,30.0,40.0,30.0
+5,2,1,0,Player 5,Player 6,Picture,6.0,10.0,60.0,30.0,40.0,30.0
+6,2,2,0,Player 1,Player 7,Picture,3.0,10.0,30.0,15.0,25.0,15.0
+6,2,2,0,Player 2,Player 8,Picture,6.0,10.0,60.0,30.0,40.0,30.0
+6,2,2,0,Player 3,Player 9,Picture,6.0,10.0,60.0,30.0,40.0,30.0
+6,2,2,0,Player 4,Player 10,Picture,6.0,10.0,60.0,30.0,40.0,30.0
+6,2,2,0,Player 5,Player 6,Picture,6.0,10.0,60.0,30.0,40.0,30.0
+7,3,1,0,Player 1,Player 8,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+7,3,1,0,Player 2,Player 9,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+7,3,1,0,Player 3,Player 10,No picture,6.0,10.0,60.0,30.0,40.0,30.0
+7,3,1,0,Player 4,Player 6,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+7,3,1,0,Player 5,Player 7,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+8,3,2,0,Player 1,Player 8,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+8,3,2,0,Player 2,Player 9,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+8,3,2,0,Player 3,Player 10,No picture,6.0,10.0,60.0,30.0,40.0,30.0
+8,3,2,0,Player 4,Player 6,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+8,3,2,0,Player 5,Player 7,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+9,4,1,0,Player 1,Player 9,Picture,3.0,10.0,30.0,15.0,25.0,15.0
+9,4,1,0,Player 2,Player 10,Picture,3.0,10.0,30.0,15.0,25.0,15.0
+9,4,1,0,Player 3,Player 6,Picture,3.0,10.0,30.0,15.0,25.0,15.0
+9,4,1,0,Player 4,Player 7,Picture,3.0,10.0,30.0,15.0,25.0,15.0
+9,4,1,0,Player 5,Player 8,Picture,6.0,10.0,60.0,30.0,40.0,30.0
+10,4,2,0,Player 1,Player 9,Picture,3.0,10.0,30.0,15.0,25.0,15.0
+10,4,2,0,Player 2,Player 10,Picture,3.0,10.0,30.0,15.0,25.0,15.0
+10,4,2,0,Player 3,Player 6,Picture,3.0,10.0,30.0,15.0,25.0,15.0
+10,4,2,0,Player 4,Player 7,Picture,3.0,10.0,30.0,15.0,25.0,15.0
+10,4,2,0,Player 5,Player 8,Picture,6.0,10.0,60.0,30.0,40.0,30.0
+11,5,1,0,Player 1,Player 10,No picture,6.0,10.0,60.0,30.0,40.0,30.0
+11,5,1,0,Player 2,Player 6,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+11,5,1,0,Player 3,Player 7,No picture,6.0,10.0,60.0,30.0,40.0,30.0
+11,5,1,0,Player 4,Player 8,No picture,6.0,10.0,60.0,30.0,40.0,30.0
+11,5,1,0,Player 5,Player 9,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+12,5,2,0,Player 1,Player 10,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+12,5,2,0,Player 2,Player 6,No picture,3.0,10.0,30.0,15.0,25.0,15.0
+12,5,2,0,Player 3,Player 7,No picture,6.0,10.0,60.0,30.0,40.0,30.0
+12,5,2,0,Player 4,Player 8,No picture,6.0,10.0,60.0,30.0,40.0,30.0
+12,5,2,0,Player 5,Player 9,No picture,3.0,10.0,30.0,15.0,25.0,15.0

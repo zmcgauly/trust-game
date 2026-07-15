@@ -5,7 +5,7 @@
       This table is for the experiment lead. Participants only see whether pictures are shown.
     </p>
     <p class="card-text">
-      In random-multiplier periods, each pair-round independently uses the
+      In every period, each pair-round independently uses the
       {{ high_multiplier }}x multiplier with probability {{ high_multiplier_probability }}.
       Otherwise, it uses the {{ low_multiplier }}x multiplier.
     </p>
@@ -15,7 +15,6 @@
           <th>Period</th>
           <th>Box</th>
           <th>Pictures</th>
-          <th>Multiplier</th>
         </tr>
       </thead>
       <tbody>
@@ -24,7 +23,6 @@
             <td>{{ row.period }}</td>
             <td>{{ row.label }}</td>
             <td>{{ row.picture_text }}</td>
-            <td>{{ row.multiplier_risk_text }}</td>
           </tr>
         {{ endfor }}
       </tbody>

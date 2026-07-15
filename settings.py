@@ -10,6 +10,8 @@ SESSION_CONFIGS = [
         num_demo_participants=10,
         app_sequence=["trust_game"],
         randomize_treatment_by_period=True,
+        treatment_randomization_level="period",
+        is_real_experiment=True,
         high_multiplier_probability=0.50,
     ),
 ]

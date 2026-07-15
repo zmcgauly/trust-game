@@ -1,5 +1,5 @@
 {{ block title }}
-Round Points
+Calculation of Round Earnings
 {{ endblock }}
 
 {{ block styles }}
@@ -10,20 +10,81 @@ Round Points
 {{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-panel">
   <p>
-    If the proposer sends S points and the multiplier is M, the responder has S
-    x M points available. If the responder sends back R points, the round points
-    are:
+    Suppose the proposer sends some number of points and the multiplier in that
+    round is either 3 or 6.
   </p>
-  <p>Proposer: 20 - S + R</p>
-  <p>Responder: S x M - R</p>
   <p>
-    For example, if the proposer sends 10 points and the multiplier is 3, the
-    responder has 30 points available. If the responder sends back 12 points,
-    the proposer earns 20 - 10 + 12 = 22 points and the responder earns
-    30 - 12 = 18 points for that round. If that round is chosen for payout then
-    they would respectively earn $22 and $18.
+    After multiplication, the responder has:
+  </p>
+  <p class="formula-line">
+    \[
+      \text{points available to responder}
+      =
+      \text{points sent by proposer}
+      \times
+      \text{multiplier}
+    \]
+  </p>
+  <p>
+    If the responder returns points to the proposer, the earnings for that round
+    are calculated as follows:
+  </p>
+  <p>Proposer's Earnings</p>
+  <p class="formula-line">
+    \[
+      \text{proposer earnings}
+      =
+      20
+      -
+      \text{points sent by proposer}
+      +
+      \text{points returned by responder}
+    \]
+  </p>
+  <p>Responder's Earnings</p>
+  <p class="formula-line">
+    \[
+      \text{responder earnings}
+      =
+      \text{points available to responder}
+      -
+      \text{points returned by responder}
+    \]
+  </p>
+  <p>Example</p>
+  <p>
+    Suppose the proposer sends 10 points and the multiplier is 3.
+  </p>
+  <p>
+    The responder receives:
+  </p>
+  <p class="formula-line">
+    \[
+      10 \times 3 = 30 \text{ points}
+    \]
+  </p>
+  <p>
+    If the responder returns 12 points, then:
+  </p>
+  <p>Proposer's earnings</p>
+  <p class="formula-line">
+    \[
+      20 - 10 + 12 = 22 \text{ points}
+    \]
+  </p>
+  <p>Responder's earnings</p>
+  <p class="formula-line">
+    \[
+      30 - 12 = 18 \text{ points}
+    \]
+  </p>
+  <p>
+    If this round is selected for payment, these point totals will be converted
+    into cash according to the payment procedure described at the end of the
+    session.
   </p>
 </div>
 
+{{ include_sibling 'TestingSkipButton.html' }}
 {{ next_button }}
 {{ endblock }}

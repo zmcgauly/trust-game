@@ -65,6 +65,39 @@ error_return_multiplier=0.50
 For example, changing `error_return_multiplier` to `0.25` means the proposer receives
 25% of the responder's intended point return when the error occurs.
 
+## Heroku Deployment from GitHub
+
+This project includes Heroku deployment files:
+
+- `Procfile` runs `otree prodserver`.
+- `.python-version` pins the Heroku Python runtime.
+- `requirements.txt` pins oTree and includes the PostgreSQL driver.
+- `.slugignore` keeps local development artifacts out of the Heroku slug.
+
+To deploy from GitHub:
+
+1. Push this project to a GitHub repository.
+2. In Heroku, create a new app and connect it to that GitHub repository.
+3. Add a Heroku Postgres database to the app. This creates the `DATABASE_URL` config var that oTree uses in production.
+4. Set these Heroku config vars:
+
+```text
+OTREE_PRODUCTION=1
+OTREE_AUTH_LEVEL=STUDY
+OTREE_ADMIN_PASSWORD=<strong admin password>
+OTREE_SECRET_KEY=<long random secret>
+```
+
+5. Deploy the GitHub branch from Heroku.
+6. On first deployment, or after changing model fields, run:
+
+```powershell
+heroku run otree resetdb --app <your-heroku-app-name>
+```
+
+Do not run `otree resetdb` after collecting real data unless you intentionally want to
+erase that app's database.
+
 ## Player Pictures
 
 Preloaded player images live in `_static/trust_game/players/`. Use the player title as

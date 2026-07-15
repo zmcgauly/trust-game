@@ -1,0 +1,18 @@
+<div class="trust-grid player-pair-grid">
+  <div class="trust-card">
+    <h3>You</h3>
+    <img class="profile-image" src="{{ player_profile.picture_url }}" alt="{{ player_profile.title }}">
+    <p>{{ player_profile.title }}</p>
+    <p class="muted">{{ player_role_label }}</p>
+  </div>
+  <div class="trust-card">
+    <h3>Your Partner</h3>
+    {{ if show_profile }}
+      <img class="profile-image" src="{{ partner_profile.picture_url }}" alt="{{ partner_profile.title }}">
+      <p>{{ partner_profile.title }}</p>
+    {{ else }}
+      <p>{{ anonymous_partner_label }}</p>
+    {{ endif }}
+    <p class="muted">{{ partner_role_label }}</p>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<input type="hidden" id="skip-instructions-input" name="skip_instructions" value="">
+
+{{ if show_testing_skip }}
+  <button
+    type="submit"
+    class="testing-skip-button"
+    onclick="document.getElementById('skip-instructions-input').value = '1';"
+  >
+    Skip
+  </button>
+{{ endif }}

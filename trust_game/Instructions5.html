@@ -1,5 +1,5 @@
 {{ block title }}
-End-of-Game Questions
+End-of-Experiment Questionnaire
 {{ endblock }}
 
 {{ block styles }}
@@ -10,13 +10,25 @@ End-of-Game Questions
 {{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-panel">
   <p>
-    At the end of the game, you will answer demographic questions about yourself.
-    You may choose "Prefer not to say" when you do not want to answer a
-    question. You will also answer questions about the people you were matched
-    with, including your confidence in each guess and whether you have an
-    existing relationship with the person shown.
+    After all decision rounds have been completed, you will be asked to complete
+    a brief questionnaire.
+  </p>
+  <p>
+    The questionnaire includes demographic questions about yourself. For any
+    demographic question, you may select "Prefer not to answer" if you do not
+    wish to provide a response.
+  </p>
+  <p>
+    You will also be asked questions about the participants with whom you were
+    matched during the experiment. Your answers will not affect your payoff from
+    the game in any way.
+  </p>
+  <p>
+    Your responses to these questions are confidential and will be used solely
+    for research purposes.
   </p>
 </div>
 
+{{ include_sibling 'TestingSkipButton.html' }}
 {{ next_button }}
 {{ endblock }}

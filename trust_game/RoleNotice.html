@@ -18,13 +18,13 @@ Role Assignment
 
 <div class="trust-panel">
   <p>
-    You are {{ player_profile.title }}. Your role is {{ role_label }}.
-    This role stays the same for the full session.
+    You are {{ player_profile.title }}. You have matched with
+    {{ partner_profile.title }}. Your role is {{ role_label }}. This role stays
+    the same for the full session.
   </p>
-  {{ if show_profile }}
-    <img class="profile-image" src="{{ player_profile.picture_url }}" alt="">
-  {{ endif }}
 </div>
+
+{{ include_sibling 'PlayerPairCards.html' }}
 
 {{ next_button }}
 {{ endblock }}

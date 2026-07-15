@@ -19,6 +19,32 @@ Instructions Quiz
   </p>
 </div>
 
-{{ formfields }}
+{{ for field in quiz_fields }}
+  <div class="quiz-field">
+    {{ formfield field }}
+  </div>
+{{ endfor }}
+
+{{ if randomize_quiz_answers }}
+  <script>
+    document.querySelectorAll('.quiz-field').forEach(function (field) {
+      var options = Array.from(field.querySelectorAll('.form-check'));
+      if (options.length < 2) {
+        return;
+      }
+      var parent = options[0].parentNode;
+      for (var i = options.length - 1; i > 0; i -= 1) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = options[i];
+        options[i] = options[j];
+        options[j] = temp;
+      }
+      options.forEach(function (option) {
+        parent.appendChild(option);
+      });
+    });
+  </script>
+{{ endif }}
+
 {{ next_button }}
 {{ endblock }}

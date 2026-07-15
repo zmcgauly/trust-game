@@ -1,0 +1,17 @@
+metric,current_period_level
+all_export_rows,60
+real_game_rows,50
+practice_rows,10
+total_proposer_payoff_real_rounds,1565.0
+total_responder_payoff_real_rounds,1065.0
+average_proposer_payoff_real_rounds,31.3
+average_responder_payoff_real_rounds,21.3
+total_points_sent_real_rounds,500.0
+total_points_available_real_rounds,2130.0
+total_points_returned_real_rounds,1065.0
+average_realized_multiplier_real_rounds,4.26
+high_multiplier_rows_real_rounds,21
+low_multiplier_rows_real_rounds,29
+random_multiplier_condition_rows_real_rounds,50
+fixed_multiplier_condition_rows_real_rounds,0
+picture_condition_rows_real_rounds,20

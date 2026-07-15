@@ -68,13 +68,41 @@
   color: #607080;
 }
 
+.formula-line {
+  overflow-x: auto;
+  padding: 4px 0;
+}
+
+.formula-line mjx-container[jax="CHTML"][display="true"] {
+  margin: 0.45em 0;
+  text-align: left;
+}
+
+.compact-formula {
+  font-size: 0.92rem;
+}
+
 .profile-image {
-  width: min(220px, 100%);
-  aspect-ratio: 4 / 5;
+  width: min(280px, 100%);
+  aspect-ratio: 3 / 4;
   border-radius: 8px;
   object-fit: cover;
+  object-position: center 32%;
   display: block;
   margin-bottom: 12px;
+}
+
+.player-pair-grid .trust-card {
+  text-align: center;
+}
+
+.player-pair-grid .profile-image {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.player-own-grid {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .elicitation-image {
@@ -83,6 +111,67 @@
   object-fit: cover;
   display: block;
   margin-bottom: 10px;
+}
+
+.round-summary-hover {
+  position: relative;
+  display: inline-block;
+  margin: 0 0 16px;
+}
+
+.round-summary-trigger {
+  color: #1f4f7a;
+  cursor: help;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.round-summary-popover {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  z-index: 900;
+  display: none;
+  width: min(380px, calc(100vw - 40px));
+  border: 1px solid #c7d0dc;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.18);
+  padding: 14px;
+}
+
+.round-summary-popover p {
+  margin: 0 0 8px;
+}
+
+.round-summary-popover p:last-child {
+  margin-bottom: 0;
+}
+
+.round-summary-hover:hover .round-summary-popover,
+.round-summary-hover:focus-within .round-summary-popover {
+  display: block;
+}
+
+.testing-skip-button {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 1000;
+  border: 1px solid #1f2937;
+  border-radius: 6px;
+  background: #fff;
+  color: #1f2937;
+  font-weight: 700;
+  padding: 8px 12px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18);
+}
+
+.testing-skip-button:hover,
+.testing-skip-button:focus {
+  background: #eef2f7;
+  color: #111827;
 }
 
 .instructions-button {

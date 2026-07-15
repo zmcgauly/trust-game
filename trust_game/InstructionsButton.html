@@ -2,6 +2,8 @@
   Instructions
 </button>
 
+{{ include_sibling 'MathJax.html' }}
+
 <div class="instructions-overlay" data-instructions-overlay hidden>
   <div class="instructions-modal" role="dialog" aria-modal="true" aria-labelledby="instructions-summary-title">
     <div class="instructions-modal-header">
@@ -12,35 +14,55 @@
     </div>
     <div class="instructions-modal-body">
       <p>
-        Your role is either proposer or responder and stays the same for the
-        entire session. The session begins with two practice rounds that cannot
-        be selected for payoff.
+        Your assigned role is either proposer or responder and remains the same
+        for the entire session.
       </p>
       <p>
-        After the practice rounds, there are 5 periods. In each period, you are
-        matched with one partner for 2 rounds. After each period, partners
-        rotate.
+        The experiment begins with two practice rounds that are not eligible for
+        payment. After the practice rounds, there are five periods with two
+        decision rounds in each period.
+      </p>
+      <p>
+        At the beginning of every period, you are matched with a participant who
+        has the opposite role. You remain paired with that participant for both
+        rounds in the period.
       </p>
       <p>
         In each round, the proposer receives 20 points and chooses how many
-        whole points, from 0 to 20, to send to the responder.
+        whole points, from 0 to 20, to send to the responder. The points sent
+        are multiplied by either 3 or 6.
       </p>
       <p>
-        Points sent by the proposer are multiplied before the responder decides
-        how much to send back. The responder sees how many points were sent and
-        the total points available after multiplication.
+        The proposer does not know whether the multiplier will be 3 or 6 when
+        making the sending decision. After multiplication, the responder observes
+        the points sent, the multiplier used, and the total points available.
       </p>
       <p>
-        If the proposer sends S points, the multiplier is M, and the responder
-        sends back R points, round points are:
+        Round earnings are:
       </p>
-      <ul>
-        <li>Proposer: 20 - S + R</li>
-        <li>Responder: S x M - R</li>
-      </ul>
+      <p class="formula-line">
+        \[
+          \text{proposer earnings}
+          =
+          20
+          -
+          \text{points sent by proposer}
+          +
+          \text{points returned by responder}
+        \]
+      </p>
+      <p class="formula-line">
+        \[
+          \text{responder earnings}
+          =
+          \text{points available to responder}
+          -
+          \text{points returned by responder}
+        \]
+      </p>
       <p>
-        At the end of the game, you will answer demographic questions about
-        yourself and questions about the people you were matched with.
+        At the end of the experiment, you will answer a brief questionnaire
+        about yourself and the participants with whom you were matched.
       </p>
     </div>
   </div>

@@ -1,5 +1,5 @@
 {{ block title }}
-Roles
+Roles and Experimental Structure
 {{ endblock }}
 
 {{ block styles }}
@@ -10,22 +10,42 @@ Roles
 {{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-panel">
   <p>
-    This study has two roles: proposers and responders. Your role will stay the
-    same for the entire session.
+    Participants are assigned one of two roles:
+  </p>
+  <ul>
+    <li>Proposer</li>
+    <li>Responder</li>
+  </ul>
+  <p>
+    Your assigned role will remain the same for the entire session.
   </p>
   <p>
-    The session begins with two practice rounds. Practice rounds are only for
-    learning the rules and cannot be selected for payoff. After the practice
-    rounds, there are 5 periods. In each period, you are matched with one
-    partner for 2 rounds. After each period, partners rotate. Your partner will
-    be someone with the opposite role to you.
+    The experiment begins with two practice rounds. These practice rounds are
+    provided solely to familiarize you with the decision-making process and
+    interface. They will not be eligible for payment.
   </p>
   <p>
-    In some periods, you may see your partner's picture. In other periods, your
-    partner may be shown as anonymous. Your own picture is shown on decision
-    screens so you can confirm which participant you are.
+    Following the practice rounds, the experiment consists of five periods.
+  </p>
+  <p>
+    Each period contains two decision rounds. At the beginning of every period,
+    you will be randomly matched with a new participant who has the opposite
+    role from your own. You will remain paired with that participant for both
+    rounds within the period before being assigned a new partner in the next
+    period.
+  </p>
+  <p>
+    Depending on the experimental condition, your partner may either be
+    represented anonymously or by a photograph. Likewise, your own photograph
+    may appear on your decision screen so that you can verify your identity
+    throughout the session.
+  </p>
+  <p>
+    The information presented during each period is determined by the
+    experimental condition to which you have been assigned.
   </p>
 </div>
 
+{{ include_sibling 'TestingSkipButton.html' }}
 {{ next_button }}
 {{ endblock }}

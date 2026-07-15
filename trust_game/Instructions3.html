@@ -1,5 +1,5 @@
 {{ block title }}
-Rounds
+Decisions During Each Round
 {{ endblock }}
 
 {{ block styles }}
@@ -10,28 +10,39 @@ Rounds
 {{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-panel">
   <p>
-    In each round, the proposer receives 20 points. The proposer chooses how
-    many whole points, from 0 to 20, to send to the responder.
+    At the beginning of every round, the proposer receives an endowment of 20
+    points.
   </p>
   <p>
-    Points sent by the proposer are multiplied before the responder makes a
-    decision. In some rounds, the multiplier is fixed at 3. In other rounds, the
-    multiplier is randomly either 3 or 6, with an equal chance of each outcome.
-    You will not know which you are in during the experiment.
+    The proposer decides how many whole points, from 0 to 20, to send to the
+    responder.
   </p>
   <p>
-    In a random multiplier round, the proposer will not know whether the
-    multiplier is 3 or 6 before making the sending decision. The responder sees
-    the actual multiplier and the resulting number of available points before
-    choosing how much to send back.
+    The number of points sent is multiplied before the responder makes a
+    decision.
   </p>
   <p>
-    The responder, however, will see how many points the proposer sent and the
-    total points available after multiplication. The responder then chooses how
-    many whole points to send back to the proposer. The responder can send back
-    any whole number from 0 up to the total points available.
+    There are two possible multiplier conditions: 3 or 6.
+  </p>
+  <p>
+    In rounds using the random multiplier, the proposer does not know whether
+    the multiplier will be 3 or 6 when making the sending decision.
+  </p>
+  <p>
+    After the multiplier has been applied, the responder observes:
+  </p>
+  <ul>
+    <li>the number of points sent by the proposer,</li>
+    <li>the multiplier used in that round, and</li>
+    <li>the total number of points available.</li>
+  </ul>
+  <p>
+    The responder then decides how many whole points to return to the proposer.
+    The responder may return any whole number from 0 up to the total number of
+    points available after multiplication.
   </p>
 </div>
 
+{{ include_sibling 'TestingSkipButton.html' }}
 {{ next_button }}
 {{ endblock }}

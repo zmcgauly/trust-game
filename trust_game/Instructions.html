@@ -1,5 +1,5 @@
 {{ block title }}
-Instructions
+General Information
 {{ endblock }}
 
 {{ block styles }}
@@ -10,27 +10,44 @@ Instructions
 {{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-panel">
   <p>
-    Please put all electronic devices away for the duration of the experiment.
-    Please remain quiet while the experiment is in session. If you have a
-    question, raise your hand and an experimenter will meet with you directly. At
-    any time if you wish to see the instructions again select the instructions
-    button in the upper right-hand corner of your screen.
+    Welcome, and thank you for participating in this research study.
   </p>
   <p>
-    This is an experiment on economic decision making. The decisions you and
-    others make determine the final amount of money you and other participants
-    will earn. By participating, you have earned a show-up fee of $ (Varible).
-    This amount is separate from your potential earnings throughout the
-    experiment. Regardless of your decisions throughout the experiment, you will
-    earn the show-up fee.
+    Please place all electronic devices out of reach for the duration of the
+    experiment. To ensure that all participants have the same experimental
+    environment, conversation and other forms of communication are not permitted
+    while the session is in progress.
   </p>
   <p>
-    You are free to leave at any time regardless of the completion status of the
-    experiment. Should you choose to leave before the experiment is complete, you
-    will still be given your show-up fee but will forfeit any payoff from your
-    decisions.
+    If you have a question at any time, please raise your hand. An experimenter
+    will come to your workstation and answer your question privately.
+  </p>
+  <p>
+    You may review these instructions at any time during the experiment by
+    selecting the Instructions button located in the upper-right corner of your
+    screen.
+  </p>
+  <p>
+    This study investigates economic decision-making. Throughout the experiment,
+    you will make decisions that determine both your own earnings and the
+    earnings of another participant. Likewise, the decisions of other
+    participants will affect their own earnings and, in some cases, yours.
+  </p>
+  <p>
+    For participating in today's session, you will receive a show-up payment of
+    $[Show-Up Fee]. This payment is guaranteed and is separate from any earnings
+    you accumulate during the experiment. You will receive the show-up payment
+    regardless of the decisions made during the session.
+  </p>
+  <p>
+    Your participation is entirely voluntary. You may withdraw from the
+    experiment at any time without penalty. If you choose to leave before the
+    experiment has concluded, you will still receive your show-up payment but
+    will forfeit any additional earnings that could have been earned during the
+    experiment.
   </p>
 </div>
 
+{{ include_sibling 'TestingSkipButton.html' }}
 {{ next_button }}
 {{ endblock }}

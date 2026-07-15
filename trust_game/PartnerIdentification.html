@@ -13,10 +13,9 @@ Partner Identification
   <span>Person {{ partner_number }} of {{ C.PERIODS }}</span>
 </div>
 
-<div class="trust-card">
-  <img class="profile-image" src="{{ partner_profile.picture_url }}" alt="{{ partner_profile.title }}">
-  <p><b>{{ partner_profile.title }}</b></p>
-</div>
+{{ include_sibling 'PlayerPairCards.html' }}
+
+{{ include_sibling 'RoundSummaryHover.html' }}
 
 <div class="trust-panel">
   <p>Please answer the following questions about this player. Each demographic guess is required.</p>
