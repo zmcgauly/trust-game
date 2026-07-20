@@ -438,8 +438,8 @@ def get_treatment_randomization_level(session):
 def practice_treatment():
     return dict(
         code="practice",
-        picture_label="Practice",
-        picture=False,
+        picture_label="Picture",
+        picture=True,
         random_multiplier=True,
     )
 
@@ -1114,6 +1114,7 @@ class ResponderDecision(Page):
             pair_card_vars(player),
             is_practice=player.is_practice_round,
             offer=player.group.offer,
+            multiplier_applied=get_group_realized_multiplier(player.group),
             multiplied_amount=player.group.multiplied_amount(),
             low_multiplier=C.LOW_MULTIPLIER,
             large_multiplier=get_large_multiplier(player.session),
