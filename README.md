@@ -13,27 +13,27 @@ entry point is `settings.py` and the app is `trust_game`.
 - Every proposer meets every responder exactly once.
 - Each period has 2 rounds with the same partner.
 - Proposers start each round with 20 points and can send whole points.
-- Sent points are tripled for the responder.
+- Sent points are multiplied for the responder.
 - Responders choose how many whole points to send back.
 - After each round result, proposers answer how many points they think the responder sent back.
 - At the start of each period, the app independently randomizes one of the four treatment cells with equal 1-in-4 probability.
 - The two rounds in the same period use the same treatment cell.
-- Players are told their fixed role and whether pictures are visible at the start of each period.
+- Players are told their fixed role at the start of each period, without being told the treatment cell.
 - Players are never asked to upload pictures.
-- If pictures are visible in a period, self-identification and partner-identification pages appear after the second round of that period.
-- In error periods, each pair-round has a hidden error draw.
-- By default, the error occurs with probability `0.50`.
-- By default, when the error occurs, the points delivered back to the proposer are multiplied by `0.50`.
-- Participants are not told whether the hidden error occurred; exports include the private audit fields.
+- If pictures are visible in a period, both players' pictures are shown. If pictures are not visible, neither player's picture is shown.
+- In random-multiplier periods, the session draws either the 3x or large multiplier once per period.
+- By default, the 3x multiplier occurs with probability `0.50` and the large multiplier is `6`.
+- In fixed-multiplier periods, the multiplier is always 3x.
+- Participants are not told which treatment cell applies; exports include the private audit fields.
 
 ## Treatment Cells
 
-| Picture condition | Error condition | Box label |
+| Picture condition | Multiplier condition | Box label |
 | --- | --- | --- |
-| No picture | No error | No error / No picture |
-| No picture | Error active | Error / No picture |
-| Picture | No error | No error / Picture |
-| Picture | Error active | Error / Picture |
+| No picture | Fixed 3x | No picture / Multiplier 3 |
+| No picture | Hidden 3x/large draw | No picture / Multiplier 3 or large |
+| Picture | Fixed 3x | Picture / Multiplier 3 |
+| Picture | Hidden 3x/large draw | Picture / Multiplier 3 or large |
 
 The oTree demo page shows one session config, `trust_game_randomized`. The treatment
 box is drawn separately for each period, not each round. The two rounds in a period
@@ -55,15 +55,15 @@ Available oTree session config:
 
 - `trust_game_randomized`
 
-Error parameters are set in `settings.py`:
+The random multiplier parameter is set in `settings.py`:
 
 ```python
-error_probability=0.50
-error_return_multiplier=0.50
+chance_of_3=0.50
+large_multiplier=6
 ```
 
-For example, changing `error_return_multiplier` to `0.25` means the proposer receives
-25% of the responder's intended point return when the error occurs.
+The create-session form exposes `Chance of 3` as 25%, 50%, or 75%, and `Large
+multiplier` as a whole-number input.
 
 ## Heroku Deployment from GitHub
 
@@ -114,8 +114,9 @@ the filename:
 - `Player 9.jpg`
 - `Player 10.jpg`
 
-When a period is assigned to a picture condition, oTree displays the matching image
-automatically. When pictures are not visible, participants only see anonymous partner labels.
+When a period is assigned to a picture condition, oTree displays the matching images
+automatically. When pictures are not visible, neither the participant's own image nor the
+partner's image is displayed.
 
 ## Standalone Prototype
 
@@ -128,13 +129,13 @@ Use oTree's admin data export. The app defines a custom export with one row per
 proposer-responder round. The export includes:
 
 - treatment box
-- error probability and return multiplier
+- random-multiplier probability
 - period, round, and pair number
 - proposer and responder IDs/names
 - offer
-- tripled points
+- multiplied points
 - responder's intended return
-- whether the hidden error applied
+- whether the 6x multiplier applied
 - points delivered back to the proposer
 - proposer's belief about how many points the responder sent back
 - final proposer and responder points

@@ -27,7 +27,78 @@ Round Question
 
 {{ include_sibling 'RoundSummaryHover.html' }}
 
-{{ formfield 'proposer_belief_multiplier' }}
+<div class="trust-panel">
+  <p>
+    Place all 10 balls according to what you think the multiplier was. For
+    every ball placed on the correct multiplier, you earn $1.
+  </p>
+  <input id="low-balls-input" name="proposer_belief_low_balls" type="hidden" value="5">
+  <input id="large-balls-input" name="proposer_belief_large_balls" type="hidden" value="5">
+
+  <div class="belief-ball-grid" data-belief-balls>
+    <div class="belief-bin">
+      <h3>{{ low_multiplier }}</h3>
+      <div class="belief-count"><span data-low-count>5</span> balls</div>
+      <div class="belief-balls" data-low-balls></div>
+      <button class="belief-adjust" type="button" data-move-to="low">Add ball</button>
+    </div>
+    <div class="belief-bin">
+      <h3>{{ large_multiplier }}</h3>
+      <div class="belief-count"><span data-large-count>5</span> balls</div>
+      <div class="belief-balls" data-large-balls></div>
+      <button class="belief-adjust" type="button" data-move-to="large">Add ball</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var lowInput = document.getElementById('low-balls-input');
+    var largeInput = document.getElementById('large-balls-input');
+    var lowCount = document.querySelector('[data-low-count]');
+    var largeCount = document.querySelector('[data-large-count]');
+    var lowBalls = document.querySelector('[data-low-balls]');
+    var largeBalls = document.querySelector('[data-large-balls]');
+
+    function renderBalls(container, count) {
+      container.innerHTML = '';
+      for (var i = 0; i < count; i += 1) {
+        var ball = document.createElement('span');
+        ball.className = 'belief-ball';
+        container.appendChild(ball);
+      }
+    }
+
+    function render() {
+      var low = Number(lowInput.value);
+      var large = Number(largeInput.value);
+      lowCount.textContent = low;
+      largeCount.textContent = large;
+      renderBalls(lowBalls, low);
+      renderBalls(largeBalls, large);
+    }
+
+    document.querySelectorAll('[data-move-to]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var low = Number(lowInput.value);
+        var large = Number(largeInput.value);
+        if (button.dataset.moveTo === 'low' && large > 0) {
+          low += 1;
+          large -= 1;
+        }
+        if (button.dataset.moveTo === 'large' && low > 0) {
+          low -= 1;
+          large += 1;
+        }
+        lowInput.value = low;
+        largeInput.value = large;
+        render();
+      });
+    });
+
+    render();
+  })();
+</script>
 
 {{ next_button }}
 {{ endblock }}

@@ -7,8 +7,8 @@ from otree.api import *
 
 doc = """
 Two-by-two trust game with fixed proposer/responder roles, rotating partners,
-two rounds per period, optional picture/profile information, and an independently
-random investment multiplier.
+two rounds per period, optional picture/profile information, and either a fixed
+3x multiplier or a hidden 3x/6x multiplier draw.
 """
 
 
@@ -23,7 +23,8 @@ class C(BaseConstants):
     LOW_MULTIPLIER = 3
     HIGH_MULTIPLIER = 6
     MULTIPLIER = LOW_MULTIPLIER
-    DEFAULT_HIGH_MULTIPLIER_PROBABILITY = 0.50
+    DEFAULT_CHANCE_OF_3 = 0.50
+    DEFAULT_LARGE_MULTIPLIER = HIGH_MULTIPLIER
     INSTRUCTION_QUIZ_MAX_ATTEMPTS = 3
     MIN_AGE = 18
     MAX_AGE = 100
@@ -96,14 +97,28 @@ class C(BaseConstants):
     ]
     TREATMENTS = [
         dict(
-            code="no_picture",
-            label="No picture",
+            code="no_picture_fixed_multiplier",
+            picture_label="No picture",
             picture=False,
+            random_multiplier=False,
         ),
         dict(
-            code="picture",
-            label="Picture",
+            code="no_picture_random_multiplier",
+            picture_label="No picture",
+            picture=False,
+            random_multiplier=True,
+        ),
+        dict(
+            code="picture_fixed_multiplier",
+            picture_label="Picture",
             picture=True,
+            random_multiplier=False,
+        ),
+        dict(
+            code="picture_random_multiplier",
+            picture_label="Picture",
+            picture=True,
+            random_multiplier=True,
         ),
     ]
 
@@ -115,17 +130,32 @@ class Subsession(BaseSubsession):
             rows.append(
                 dict(
                     period=index,
-                    label=treatment["label"],
+                    label=treatment_label(self.session, treatment),
                     code=treatment["code"],
                     picture=treatment["picture"],
                     picture_text="Shown" if treatment["picture"] else "Not shown",
+                    random_multiplier=treatment["random_multiplier"],
+                    multiplier_text=(
+                        f"{C.LOW_MULTIPLIER} or {get_large_multiplier(self.session)}"
+                        if treatment["random_multiplier"]
+                        else str(C.LOW_MULTIPLIER)
+                    ),
+                    realized_multiplier=get_period_realized_multiplier(
+                        self.session,
+                        index - 1,
+                    ),
                 )
             )
         return dict(
             period_treatments=rows,
-            high_multiplier_probability=get_high_multiplier_probability(self.session),
+            chance_of_3=get_chance_of_3(self.session),
+            chance_of_3_percent=round(get_chance_of_3(self.session) * 100),
+            large_multiplier_probability=get_large_multiplier_probability(self.session),
+            large_multiplier_probability_percent=round(
+                get_large_multiplier_probability(self.session) * 100
+            ),
             low_multiplier=C.LOW_MULTIPLIER,
-            high_multiplier=C.HIGH_MULTIPLIER,
+            large_multiplier=get_large_multiplier(self.session),
         )
 
 
@@ -322,7 +352,7 @@ class Player(BasePlayer):
     partner_1_gender_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
     partner_1_sexuality_guess = models.StringField(choices=C.SEXUALITY_GUESS_CHOICES, label="Guess what sexuality this person identifies as.")
     partner_1_sexuality_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
-    partner_1_existing_relationship = models.StringField(choices=C.RELATIONSHIP_CHOICES, label="Do you have an existing relationship with the person whose picture you see?")
+    partner_1_existing_relationship = models.StringField(choices=C.RELATIONSHIP_CHOICES, label="Do you have an existing relationship with this person?")
     partner_1_relationship_nature = models.LongStringField(label="If so, what is the nature of the relationship?", blank=True)
     partner_2_age_guess = models.IntegerField(label="Guess this person's age.", min=0, max=C.MAX_AGE)
     partner_2_age_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
@@ -334,7 +364,7 @@ class Player(BasePlayer):
     partner_2_gender_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
     partner_2_sexuality_guess = models.StringField(choices=C.SEXUALITY_GUESS_CHOICES, label="Guess what sexuality this person identifies as.")
     partner_2_sexuality_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
-    partner_2_existing_relationship = models.StringField(choices=C.RELATIONSHIP_CHOICES, label="Do you have an existing relationship with the person whose picture you see?")
+    partner_2_existing_relationship = models.StringField(choices=C.RELATIONSHIP_CHOICES, label="Do you have an existing relationship with this person?")
     partner_2_relationship_nature = models.LongStringField(label="If so, what is the nature of the relationship?", blank=True)
     partner_3_age_guess = models.IntegerField(label="Guess this person's age.", min=0, max=C.MAX_AGE)
     partner_3_age_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
@@ -346,7 +376,7 @@ class Player(BasePlayer):
     partner_3_gender_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
     partner_3_sexuality_guess = models.StringField(choices=C.SEXUALITY_GUESS_CHOICES, label="Guess what sexuality this person identifies as.")
     partner_3_sexuality_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
-    partner_3_existing_relationship = models.StringField(choices=C.RELATIONSHIP_CHOICES, label="Do you have an existing relationship with the person whose picture you see?")
+    partner_3_existing_relationship = models.StringField(choices=C.RELATIONSHIP_CHOICES, label="Do you have an existing relationship with this person?")
     partner_3_relationship_nature = models.LongStringField(label="If so, what is the nature of the relationship?", blank=True)
     partner_4_age_guess = models.IntegerField(label="Guess this person's age.", min=0, max=C.MAX_AGE)
     partner_4_age_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
@@ -358,7 +388,7 @@ class Player(BasePlayer):
     partner_4_gender_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
     partner_4_sexuality_guess = models.StringField(choices=C.SEXUALITY_GUESS_CHOICES, label="Guess what sexuality this person identifies as.")
     partner_4_sexuality_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
-    partner_4_existing_relationship = models.StringField(choices=C.RELATIONSHIP_CHOICES, label="Do you have an existing relationship with the person whose picture you see?")
+    partner_4_existing_relationship = models.StringField(choices=C.RELATIONSHIP_CHOICES, label="Do you have an existing relationship with this person?")
     partner_4_relationship_nature = models.LongStringField(label="If so, what is the nature of the relationship?", blank=True)
     partner_5_age_guess = models.IntegerField(label="Guess this person's age.", min=0, max=C.MAX_AGE)
     partner_5_age_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
@@ -370,16 +400,15 @@ class Player(BasePlayer):
     partner_5_gender_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
     partner_5_sexuality_guess = models.StringField(choices=C.SEXUALITY_GUESS_CHOICES, label="Guess what sexuality this person identifies as.")
     partner_5_sexuality_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
-    partner_5_existing_relationship = models.StringField(choices=C.RELATIONSHIP_CHOICES, label="Do you have an existing relationship with the person whose picture you see?")
+    partner_5_existing_relationship = models.StringField(choices=C.RELATIONSHIP_CHOICES, label="Do you have an existing relationship with this person?")
     partner_5_relationship_nature = models.LongStringField(label="If so, what is the nature of the relationship?", blank=True)
     proposer_belief_multiplier = models.IntegerField(
-        choices=[
-            [C.LOW_MULTIPLIER, str(C.LOW_MULTIPLIER)],
-            [C.HIGH_MULTIPLIER, str(C.HIGH_MULTIPLIER)],
-        ],
         label="What do you think the multiplier was?",
-        widget=widgets.RadioSelect,
+        min=0,
     )
+    proposer_belief_low_balls = models.IntegerField(min=0, max=10, initial=5)
+    proposer_belief_large_balls = models.IntegerField(min=0, max=10, initial=5)
+    multiplier_belief_bonus = models.CurrencyField(initial=0)
 
 
 def make_period_treatments():
@@ -394,6 +423,14 @@ def get_period_treatment(session, period_index):
     return get_period_treatments(session)[period_index]
 
 
+def treatment_label(session, treatment):
+    if treatment["random_multiplier"]:
+        multiplier_label = f"Multiplier {C.LOW_MULTIPLIER} or {get_large_multiplier(session)}"
+    else:
+        multiplier_label = f"Multiplier {C.LOW_MULTIPLIER}"
+    return f'{treatment["picture_label"]} / {multiplier_label}'
+
+
 def get_treatment_randomization_level(session):
     return session.config.get("treatment_randomization_level", "period")
 
@@ -401,8 +438,9 @@ def get_treatment_randomization_level(session):
 def practice_treatment():
     return dict(
         code="practice",
-        label="Practice",
+        picture_label="Practice",
         picture=False,
+        random_multiplier=True,
     )
 
 
@@ -414,28 +452,64 @@ def real_round_number(record):
     return record.round_number - C.PRACTICE_ROUNDS
 
 
-def get_high_multiplier_probability(session):
-    return float(
-        session.config.get(
-            "high_multiplier_probability",
-            session.config.get(
-                "error_probability",
-                C.DEFAULT_HIGH_MULTIPLIER_PROBABILITY,
-            ),
+def get_chance_of_3(session):
+    if "chance_of_3" in session.config:
+        chance = float(session.config["chance_of_3"])
+    else:
+        large_probability = float(session.config.get("high_multiplier_probability", 0.50))
+        chance = 1 - large_probability
+
+    if chance not in {0.25, 0.50, 0.75}:
+        raise ValueError("Chance of 3 must be 25%, 50%, or 75%.")
+    return chance
+
+
+def get_large_multiplier(session):
+    value = session.config.get("large_multiplier", C.DEFAULT_LARGE_MULTIPLIER)
+    large_multiplier = int(value)
+    if str(value) not in {str(large_multiplier), f"{large_multiplier}.0"}:
+        raise ValueError("Large multiplier must be a whole number.")
+    if large_multiplier <= C.LOW_MULTIPLIER:
+        raise ValueError(
+            f"Large multiplier must be greater than {C.LOW_MULTIPLIER}."
         )
-    )
+    return large_multiplier
 
 
-def choose_realized_multiplier(session):
-    if random.random() < get_high_multiplier_probability(session):
-        return C.HIGH_MULTIPLIER
-    return C.LOW_MULTIPLIER
+def get_large_multiplier_probability(session):
+    return 1 - get_chance_of_3(session)
+
+
+def get_treatment_high_multiplier_probability(session, treatment):
+    if not treatment["random_multiplier"]:
+        return 0.0
+    return get_large_multiplier_probability(session)
+
+
+def choose_realized_multiplier(session, treatment):
+    if not treatment["random_multiplier"]:
+        return C.LOW_MULTIPLIER
+    if random.random() < get_chance_of_3(session):
+        return C.LOW_MULTIPLIER
+    return get_large_multiplier(session)
+
+
+def make_period_realized_multipliers(session, treatments):
+    return [choose_realized_multiplier(session, treatment) for treatment in treatments]
+
+
+def get_period_realized_multipliers(session):
+    return session.vars.get("period_realized_multipliers", [])
+
+
+def get_period_realized_multiplier(session, period_index):
+    return get_period_realized_multipliers(session)[period_index]
 
 
 def get_group_high_multiplier_probability(group: Group):
     value = group.field_maybe_none("error_probability")
     if value is None:
-        value = get_high_multiplier_probability(group.session)
+        value = get_large_multiplier_probability(group.session)
         group.error_probability = value
     return float(value)
 
@@ -476,7 +550,11 @@ def creating_session(subsession: Subsession):
 
     if subsession.round_number == 1:
         seed_random_for_bot_comparison()
-        subsession.session.vars["period_treatments"] = make_period_treatments()
+        period_treatments = make_period_treatments()
+        subsession.session.vars["period_treatments"] = period_treatments
+        subsession.session.vars["period_realized_multipliers"] = (
+            make_period_realized_multipliers(subsession.session, period_treatments)
+        )
 
     practice_round = is_practice_round(subsession)
     if practice_round:
@@ -501,15 +579,27 @@ def creating_session(subsession: Subsession):
 
     for group in subsession.get_groups():
         treatment = period_treatment
-        realized_multiplier = choose_realized_multiplier(subsession.session)
+        high_multiplier_probability = get_treatment_high_multiplier_probability(
+            subsession.session,
+            treatment,
+        )
+        if practice_round:
+            realized_multiplier = choose_realized_multiplier(subsession.session, treatment)
+        else:
+            realized_multiplier = get_period_realized_multiplier(
+                subsession.session,
+                period_index,
+            )
         group.treatment_code = treatment["code"]
-        group.treatment_label = treatment["label"]
+        group.treatment_label = treatment_label(subsession.session, treatment)
         group.treatment_picture = treatment["picture"]
-        group.treatment_error = True
-        group.error_probability = get_high_multiplier_probability(subsession.session)
-        group.error_return_multiplier = C.HIGH_MULTIPLIER
+        group.treatment_error = treatment["random_multiplier"]
+        group.error_probability = high_multiplier_probability
+        group.error_return_multiplier = get_large_multiplier(subsession.session)
         group.realized_multiplier = realized_multiplier
-        group.high_multiplier_applied = realized_multiplier == C.HIGH_MULTIPLIER
+        group.high_multiplier_applied = realized_multiplier == get_large_multiplier(
+            subsession.session
+        )
 
     for player in subsession.get_players():
         is_proposer = player.id_in_subsession <= proposer_count
@@ -552,8 +642,6 @@ def profile_for(player: Player):
 
 
 def treatment_picture(player: Player):
-    if player.is_practice_round:
-        return True
     return bool(player.group.treatment_picture)
 
 
@@ -566,8 +654,8 @@ def pair_card_vars(player: Player):
         player_profile=profile_for(player),
         partner_profile=profile_for(partner),
         show_profile=treatment_picture(player),
-        player_role_label=f"{player_role} {player.role_number}",
-        partner_role_label=f"{partner_role} {partner.role_number}",
+        player_role_label=player_role,
+        partner_role_label=partner_role,
         anonymous_partner_label=f"Anonymous {partner.role_name}",
     )
 
@@ -578,16 +666,21 @@ def round_summary_vars(player: Player):
     delivered_return = group.field_maybe_none("delivered_return") or cu(0)
     multiplied_amount = group.multiplied_amount()
     low_available = offer * C.LOW_MULTIPLIER
-    high_available = offer * C.HIGH_MULTIPLIER
+    large_multiplier = get_large_multiplier(player.session)
+    high_available = offer * large_multiplier
 
     if player.role_name == "proposer":
         received_label = "Points you received back"
         received_amount = delivered_return
-        final_payoff = proposer_round_points(group)
+        final_payoff = player.field_maybe_none("payoff")
+        if final_payoff is None:
+            final_payoff = proposer_round_points(group)
     else:
         received_label = "Points available to you after multiplication"
         received_amount = multiplied_amount
-        final_payoff = responder_round_points(group)
+        final_payoff = player.field_maybe_none("payoff")
+        if final_payoff is None:
+            final_payoff = responder_round_points(group)
 
     return dict(
         summary_offer=offer,
@@ -596,7 +689,7 @@ def round_summary_vars(player: Player):
         summary_received_amount=received_amount,
         summary_payoff=final_payoff,
         summary_low_multiplier=C.LOW_MULTIPLIER,
-        summary_high_multiplier=C.HIGH_MULTIPLIER,
+        summary_high_multiplier=large_multiplier,
         summary_low_available=low_available,
         summary_high_available=high_available,
     )
@@ -642,8 +735,8 @@ def partner_survey_vars(player: Player, slot):
         player_profile=profile_for(player),
         partner_profile=profile_for(partner),
         show_profile=treatment_picture(player_in_period),
-        player_role_label=f"{player_in_period.role_name.title()} {player_in_period.role_number}",
-        partner_role_label=f"{partner.role_name.title()} {partner.role_number}",
+        player_role_label=player_in_period.role_name.title(),
+        partner_role_label=partner.role_name.title(),
         anonymous_partner_label=f"Anonymous {partner.role_name}",
         **round_summary_vars(player_in_period),
         age_guess_field=f"{prefix}_age_guess",
@@ -681,6 +774,25 @@ def proposer_round_points(group: Group):
 
 def responder_round_points(group: Group):
     return group.multiplied_amount() - group.intended_return
+
+
+def proposer_multiplier_belief_bonus(player: Player):
+    realized_multiplier = int(get_group_realized_multiplier(player.group))
+    if realized_multiplier == C.LOW_MULTIPLIER:
+        return cu(player.proposer_belief_low_balls)
+    if realized_multiplier == get_large_multiplier(player.session):
+        return cu(player.proposer_belief_large_balls)
+    return cu(0)
+
+
+def implied_multiplier_belief(player: Player):
+    low_balls = player.proposer_belief_low_balls
+    large_balls = player.proposer_belief_large_balls
+    if low_balls > large_balls:
+        return C.LOW_MULTIPLIER
+    if large_balls > low_balls:
+        return get_large_multiplier(player.session)
+    return 0
 
 
 def set_payoffs(group: Group):
@@ -767,7 +879,11 @@ def instruction_page_is_displayed(player: Player):
 
 
 def instruction_page_vars(player: Player):
-    return dict(show_testing_skip=not is_real_experiment_session(player.session))
+    return dict(
+        show_testing_skip=not is_real_experiment_session(player.session),
+        low_multiplier=C.LOW_MULTIPLIER,
+        large_multiplier=get_large_multiplier(player.session),
+    )
 
 
 def instruction_page_before_next(player: Player, timeout_happened):
@@ -795,6 +911,23 @@ class RoleNotice(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.round_in_period == 1
+
+
+class InstructionsIntro(Page):
+    form_model = "player"
+    form_fields = ["skip_instructions"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return instruction_page_is_displayed(player)
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return instruction_page_vars(player)
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        instruction_page_before_next(player, timeout_happened)
 
 
 class Instructions(Page):
@@ -952,7 +1085,7 @@ class ProposerDecision(Page):
             is_practice=player.is_practice_round,
             endowment=C.ENDOWMENT,
             low_multiplier=C.LOW_MULTIPLIER,
-            high_multiplier=C.HIGH_MULTIPLIER,
+            high_multiplier=get_large_multiplier(player.session),
             high_multiplier_probability=get_group_high_multiplier_probability(
                 player.group
             ),
@@ -982,6 +1115,8 @@ class ResponderDecision(Page):
             is_practice=player.is_practice_round,
             offer=player.group.offer,
             multiplied_amount=player.group.multiplied_amount(),
+            low_multiplier=C.LOW_MULTIPLIER,
+            large_multiplier=get_large_multiplier(player.session),
         )
 
     @staticmethod
@@ -1014,7 +1149,7 @@ class ProposerReceipt(Page):
 
 class ProposerBelief(Page):
     form_model = "player"
-    form_fields = ["proposer_belief_multiplier"]
+    form_fields = ["proposer_belief_low_balls", "proposer_belief_large_balls"]
 
     @staticmethod
     def is_displayed(player: Player):
@@ -1026,7 +1161,29 @@ class ProposerBelief(Page):
             **pair_card_vars(player),
             **round_summary_vars(player),
             "is_practice": player.is_practice_round,
+            "low_multiplier": C.LOW_MULTIPLIER,
+            "large_multiplier": get_large_multiplier(player.session),
         }
+
+    @staticmethod
+    def error_message(player: Player, values):
+        low_balls = values["proposer_belief_low_balls"]
+        large_balls = values["proposer_belief_large_balls"]
+        if low_balls is None or large_balls is None:
+            return "Please place all 10 balls."
+        if low_balls + large_balls != 10:
+            return "Please place exactly 10 balls across the two multipliers."
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        player.proposer_belief_multiplier = implied_multiplier_belief(player)
+        if player.is_practice_round:
+            player.multiplier_belief_bonus = cu(0)
+            player.payoff = cu(0)
+            return
+
+        player.multiplier_belief_bonus = proposer_multiplier_belief_bonus(player)
+        player.payoff = proposer_round_points(player.group) + player.multiplier_belief_bonus
 
 
 class ResponderReceipt(Page):
@@ -1065,7 +1222,8 @@ class SelfIdentification(Page):
     def vars_for_template(player: Player):
         return dict(
             player_profile=profile_for(player),
-            player_role_label=f"{player.role_name.title()} {player.role_number}",
+            player_role_label=player.role_name.title(),
+            show_profile=False,
         )
 
     @staticmethod
@@ -1175,6 +1333,7 @@ class PartnerIdentification5(Page):
 
 
 page_sequence = [
+    InstructionsIntro,
     Instructions,
     Instructions2,
     Instructions3,
@@ -1278,11 +1437,12 @@ def custom_export(players):
         "treatment_code",
         "picture_condition",
         "random_multiplier_condition",
-        "high_multiplier_probability",
+        "chance_of_3",
+        "large_multiplier_probability",
         "low_multiplier",
-        "high_multiplier",
+        "large_multiplier",
         "realized_multiplier",
-        "high_multiplier_applied",
+        "large_multiplier_applied",
         "period",
         "round_in_period",
         "otree_round",
@@ -1296,6 +1456,9 @@ def custom_export(players):
         "intended_return",
         "delivered_return",
         "proposer_belief_multiplier",
+        "proposer_belief_low_balls",
+        "proposer_belief_large_balls",
+        "multiplier_belief_bonus",
         "proposer_payoff",
         "responder_payoff",
     ]
@@ -1335,9 +1498,10 @@ def custom_export(players):
             nullable_field(group, "treatment_code"),
             nullable_field(group, "treatment_picture"),
             nullable_field(group, "treatment_error"),
+            get_chance_of_3(player.session),
             get_group_high_multiplier_probability(group),
             C.LOW_MULTIPLIER,
-            C.HIGH_MULTIPLIER,
+            get_large_multiplier(player.session),
             get_group_realized_multiplier(group),
             nullable_field(group, "high_multiplier_applied"),
             nullable_field(player, "period_number"),
@@ -1353,6 +1517,9 @@ def custom_export(players):
             nullable_field(group, "intended_return"),
             nullable_field(group, "delivered_return"),
             nullable_field(proposer, "proposer_belief_multiplier"),
+            nullable_field(proposer, "proposer_belief_low_balls"),
+            nullable_field(proposer, "proposer_belief_large_balls"),
+            nullable_field(proposer, "multiplier_belief_bonus"),
             nullable_field(proposer, "payoff"),
             nullable_field(responder, "payoff"),
         ]

@@ -12,7 +12,8 @@ SESSION_CONFIGS = [
         randomize_treatment_by_period=True,
         treatment_randomization_level="period",
         is_real_experiment=True,
-        high_multiplier_probability=0.50,
+        chance_of_3=0.50,
+        large_multiplier=6,
     ),
 ]
 

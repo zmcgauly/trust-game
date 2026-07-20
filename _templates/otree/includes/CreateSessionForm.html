@@ -23,6 +23,37 @@
     </div>
   </div>
 
+  <div class="mb-3" id="trust-game-chance-of-3-field">
+    <label class="col-form-label" for="trust-game-chance-of-3">
+      Chance of 3
+    </label>
+    <div class="controls">
+      <select class="form-select w-auto"
+              id="trust-game-chance-of-3"
+              name="trust_game_randomized.chance_of_3">
+        <option value="0.25">25%</option>
+        <option value="0.50" selected>50%</option>
+        <option value="0.75">75%</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mb-3" id="trust-game-large-multiplier-field">
+    <label class="col-form-label" for="trust-game-large-multiplier">
+      Large multiplier
+    </label>
+    <div class="controls">
+      <input class="form-control w-auto"
+             id="trust-game-large-multiplier"
+             name="trust_game_randomized.large_multiplier"
+             type="number"
+             step="1"
+             min="4"
+             value="6"
+             required>
+    </div>
+  </div>
+
   <div class="mb-3" id="real-experiment-session-field">
     <label class="col-form-label" for="trust-game-real-experiment">
       Real experiment session
@@ -116,6 +147,8 @@
         $('.lcm').hide();
         $('#lcm-' + sessionconfigname).show();
         $('#real-experiment-session-field').toggle(sessionconfigname === 'trust_game_randomized');
+        $('#trust-game-chance-of-3-field').toggle(sessionconfigname === 'trust_game_randomized');
+        $('#trust-game-large-multiplier-field').toggle(sessionconfigname === 'trust_game_randomized');
     }
 
     $(document).ready(function () {
@@ -134,6 +167,16 @@
 
         $("input[name='trust_game_randomized.is_real_experiment']")
             .not("#trust-game-real-experiment")
+            .prop("disabled", true)
+            .closest("tr")
+            .hide();
+        $("[name='trust_game_randomized.chance_of_3']")
+            .not("#trust-game-chance-of-3")
+            .prop("disabled", true)
+            .closest("tr")
+            .hide();
+        $("[name='trust_game_randomized.large_multiplier']")
+            .not("#trust-game-large-multiplier")
             .prop("disabled", true)
             .closest("tr")
             .hide();

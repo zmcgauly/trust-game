@@ -1,8 +1,12 @@
 <div class="trust-grid player-pair-grid">
   <div class="trust-card">
     <h3>You</h3>
-    <img class="profile-image" src="{{ player_profile.picture_url }}" alt="{{ player_profile.title }}">
-    <p>{{ player_profile.title }}</p>
+    {{ if show_profile }}
+      <img class="profile-image" src="{{ player_profile.picture_url }}" alt="{{ player_profile.title }}">
+      <p>{{ player_profile.title }}</p>
+    {{ else }}
+      <p>You</p>
+    {{ endif }}
     <p class="muted">{{ player_role_label }}</p>
   </div>
   <div class="trust-card">

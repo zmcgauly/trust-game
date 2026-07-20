@@ -2,12 +2,13 @@
   <div class="card-body">
     <h5 class="card-title">Treatment Schedule</h5>
     <p class="card-text">
-      This table is for the experiment lead. Participants only see whether pictures are shown.
+      This table is for the experiment lead and is not shown to participants.
     </p>
     <p class="card-text">
-      In every period, each pair-round independently uses the
-      {{ high_multiplier }}x multiplier with probability {{ high_multiplier_probability }}.
-      Otherwise, it uses the {{ low_multiplier }}x multiplier.
+      Random-multiplier periods use the {{ low_multiplier }}x multiplier with
+      probability {{ chance_of_3_percent }}% and the {{ large_multiplier }}x
+      multiplier with probability {{ large_multiplier_probability_percent }}%.
+      Fixed-multiplier periods always use the {{ low_multiplier }}x multiplier.
     </p>
     <table class="table table-sm table-striped">
       <thead>
@@ -15,6 +16,8 @@
           <th>Period</th>
           <th>Box</th>
           <th>Pictures</th>
+          <th>Multiplier</th>
+          <th>Realized Multiplier</th>
         </tr>
       </thead>
       <tbody>
@@ -23,6 +26,8 @@
             <td>{{ row.period }}</td>
             <td>{{ row.label }}</td>
             <td>{{ row.picture_text }}</td>
+            <td>{{ row.multiplier_text }}</td>
+            <td>{{ row.realized_multiplier }}</td>
           </tr>
         {{ endfor }}
       </tbody>

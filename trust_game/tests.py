@@ -2,6 +2,7 @@ from otree.api import Bot
 
 from . import (
     C,
+    InstructionsIntro,
     Instructions,
     Instructions2,
     Instructions3,
@@ -26,6 +27,7 @@ from . import (
 class PlayerBot(Bot):
     def play_round(self):
         if self.round_number == 1:
+            yield InstructionsIntro, dict(skip_instructions="")
             yield Instructions, dict(skip_instructions="")
             yield Instructions2, dict(skip_instructions="")
             yield Instructions3, dict(skip_instructions="")
@@ -46,7 +48,10 @@ class PlayerBot(Bot):
         if self.player.role_name == "proposer":
             yield ProposerDecision, dict(offer=10)
             yield ProposerReceipt
-            yield ProposerBelief, dict(proposer_belief_multiplier=C.LOW_MULTIPLIER)
+            yield ProposerBelief, dict(
+                proposer_belief_low_balls=10,
+                proposer_belief_large_balls=0,
+            )
         else:
             yield ResponderDecision, dict(
                 intended_return=self.player.group.multiplied_amount() / 2

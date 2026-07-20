@@ -30,12 +30,14 @@
       <p>
         In each round, the proposer receives 20 points and chooses how many
         whole points, from 0 to 20, to send to the responder. The points sent
-        are multiplied by either 3 or 6.
+        are multiplied before the responder makes a decision.
       </p>
       <p>
-        The proposer does not know whether the multiplier will be 3 or 6 when
-        making the sending decision. After multiplication, the responder observes
-        the points sent, the multiplier used, and the total points available.
+        What the proposer sends will be multiplied by a multiplier. The
+        multiplier can be either {{ C.LOW_MULTIPLIER }} or
+        {{ session.config.large_multiplier }} and will be established each
+        period by fair odds. After multiplication, the responder observes the
+        points sent and the total points available.
       </p>
       <p>
         Round earnings are:

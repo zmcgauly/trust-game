@@ -22,18 +22,15 @@ Decisions During Each Round
     decision.
   </p>
   <p>
-    There are two possible multiplier conditions: 3 or 6.
-  </p>
-  <p>
-    In rounds using the random multiplier, the proposer does not know whether
-    the multiplier will be 3 or 6 when making the sending decision.
+    What the proposer sends will be multiplied by a multiplier. The multiplier
+    can be either {{ low_multiplier }} or {{ large_multiplier }} and will be
+    established each period by fair odds.
   </p>
   <p>
     After the multiplier has been applied, the responder observes:
   </p>
   <ul>
     <li>the number of points sent by the proposer,</li>
-    <li>the multiplier used in that round, and</li>
     <li>the total number of points available.</li>
   </ul>
   <p>
