@@ -1,0 +1,34 @@
+{{ block title }}
+End-of-Experiment Questionnaire
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
+<div class="trust-panel">
+  <p>
+    After all decision rounds have been completed, you will be asked to complete
+    a brief questionnaire.
+  </p>
+  <p>
+    The questionnaire includes demographic questions about yourself. For any
+    demographic question, you may select "Prefer not to answer" if you do not
+    wish to provide a response.
+  </p>
+  <p>
+    You will also be asked questions about the participants with whom you were
+    matched during the experiment. Your answers will not affect your payoff from
+    the game in any way.
+  </p>
+  <p>
+    Your responses to these questions are confidential and will be used solely
+    for research purposes.
+  </p>
+</div>
+
+{{ include_sibling 'TestingSkipButton.html' }}
+{{ next_button }}
+{{ endblock }}

@@ -8,6 +8,7 @@ from . import (
     Instructions3,
     Instructions4,
     Instructions5,
+    Instructions6,
     InstructionQuiz,
     ProposerBelief,
     ProposerDecision,
@@ -33,6 +34,7 @@ class PlayerBot(Bot):
             yield Instructions3, dict(skip_instructions="")
             yield Instructions4, dict(skip_instructions="")
             yield Instructions5, dict(skip_instructions="")
+            yield Instructions6, dict(skip_instructions="")
             if self.player.session.config.get("is_real_experiment", True):
                 yield InstructionQuiz, dict(
                     instruction_quiz_1="same",

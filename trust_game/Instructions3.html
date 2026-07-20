@@ -27,10 +27,16 @@ Decisions During Each Round
     established each period by fair odds.
   </p>
   <p>
+    In rounds using the random multiplier, the proposer does not know whether
+    the multiplier will be {{ low_multiplier }} or {{ large_multiplier }} when
+    making the sending decision.
+  </p>
+  <p>
     After the multiplier has been applied, the responder observes:
   </p>
   <ul>
     <li>the number of points sent by the proposer,</li>
+    <li>the multiplier used in that round, and</li>
     <li>the total number of points available.</li>
   </ul>
   <p>

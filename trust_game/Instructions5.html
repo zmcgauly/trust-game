@@ -1,5 +1,5 @@
 {{ block title }}
-End-of-Experiment Questionnaire
+Review and Belief Elicitation
 {{ endblock }}
 
 {{ block styles }}
@@ -10,23 +10,38 @@ End-of-Experiment Questionnaire
 {{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-panel">
   <p>
-    After all decision rounds have been completed, you will be asked to complete
-    a brief questionnaire.
+    After you and your partner have concluded your decisions, you will be
+    provided with a screen to review the rounds' results including how much was
+    sent, received, and your final payoffs.
   </p>
   <p>
-    The questionnaire includes demographic questions about yourself. For any
-    demographic question, you may select "Prefer not to answer" if you do not
-    wish to provide a response.
+    If you were assigned the role of the proposer, you will then be asked
+    questions regarding what you believe the multiplier for that round was. To
+    answer you will stack the balls on the two multiplier options. You will have
+    ten balls to place across the two options. If you are confident in one, you
+    may place all ten on one. You may also split them up according to what you
+    believe and how confident you are in that belief.
   </p>
   <p>
-    You will also be asked questions about the participants with whom you were
-    matched during the experiment. Your answers will not affect your payoff from
-    the game in any way.
+    For every ball placed correctly you will receive an additional $1 if that
+    round is selected. See the visual below for a demonstration of what it could
+    look like.
   </p>
+  <img
+    class="instruction-screenshot instruction-screenshot-narrow"
+    src="{{ static 'trust_game/instruction_images/belief-balls-demo.png' }}"
+    alt="Example belief elicitation screen with balls stacked on multiplier options"
+  >
   <p>
-    Your responses to these questions are confidential and will be used solely
-    for research purposes.
+    If at anytime you would like to access your round review while answering
+    this question, simply hover your mouse over the bolded and underlined title
+    round review and a box will pop up with the results.
   </p>
+  <img
+    class="instruction-screenshot"
+    src="{{ static 'trust_game/instruction_images/round-review-hover-demo.png' }}"
+    alt="Example round review hover box"
+  >
 </div>
 
 {{ include_sibling 'TestingSkipButton.html' }}

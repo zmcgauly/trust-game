@@ -660,6 +660,13 @@ def pair_card_vars(player: Player):
     )
 
 
+def point_number(value):
+    numeric_value = float(value)
+    if numeric_value.is_integer():
+        return int(numeric_value)
+    return numeric_value
+
+
 def round_summary_vars(player: Player):
     group = player.group
     offer = group.field_maybe_none("offer") or cu(0)
@@ -692,6 +699,9 @@ def round_summary_vars(player: Player):
         summary_high_multiplier=large_multiplier,
         summary_low_available=low_available,
         summary_high_available=high_available,
+        summary_offer_number=point_number(offer),
+        summary_low_available_number=point_number(low_available),
+        summary_high_available_number=point_number(high_available),
     )
 
 
@@ -1015,6 +1025,23 @@ class Instructions5(Page):
         instruction_page_before_next(player, timeout_happened)
 
 
+class Instructions6(Page):
+    form_model = "player"
+    form_fields = ["skip_instructions"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return instruction_page_is_displayed(player)
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return instruction_page_vars(player)
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        instruction_page_before_next(player, timeout_happened)
+
+
 class InstructionQuiz(Page):
     form_model = "player"
     form_fields = INSTRUCTION_QUIZ_FIELDS
@@ -1110,12 +1137,15 @@ class ResponderDecision(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
+        multiplied_amount = player.group.multiplied_amount()
         return dict(
             pair_card_vars(player),
             is_practice=player.is_practice_round,
             offer=player.group.offer,
+            offer_number=point_number(player.group.offer),
             multiplier_applied=get_group_realized_multiplier(player.group),
-            multiplied_amount=player.group.multiplied_amount(),
+            multiplied_amount=multiplied_amount,
+            multiplied_amount_number=point_number(multiplied_amount),
             low_multiplier=C.LOW_MULTIPLIER,
             large_multiplier=get_large_multiplier(player.session),
         )
@@ -1340,6 +1370,7 @@ page_sequence = [
     Instructions3,
     Instructions4,
     Instructions5,
+    Instructions6,
     InstructionQuiz,
     InstructionQuizFailed,
     RoleNotice,
