@@ -84,6 +84,8 @@ class PlayerBot(Bot):
                 ],
                 start=1,
             ):
+                if not page.is_displayed(self.player):
+                    continue
                 prefix = f"partner_{slot}"
                 partner_identification = {
                     f"{prefix}_age_guess": 30,

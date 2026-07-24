@@ -718,6 +718,38 @@ def matched_partner_for_period(player: Player, period_number):
     return get_partner(player_in_period)
 
 
+def unique_matched_partner_periods(player: Player):
+    seen_partner_codes = set()
+    unique_matches = []
+    for period_number in range(1, C.PERIODS + 1):
+        player_in_period = player.in_round(real_round_for_period(period_number))
+        partner = get_partner(player_in_period)
+        partner_code = partner.participant.code
+        if partner_code in seen_partner_codes:
+            continue
+        seen_partner_codes.add(partner_code)
+        unique_matches.append((period_number, player_in_period, partner))
+    return unique_matches
+
+
+def unique_partner_match_for_slot(player: Player, slot):
+    unique_matches = unique_matched_partner_periods(player)
+    if slot <= 0 or slot > len(unique_matches):
+        return None
+    return unique_matches[slot - 1]
+
+
+def unique_partner_count(player: Player):
+    return len(unique_matched_partner_periods(player))
+
+
+def show_partner_survey(player: Player, slot):
+    return (
+        show_end_demographic_survey(player)
+        and unique_partner_match_for_slot(player, slot) is not None
+    )
+
+
 def partner_survey_form_fields(slot):
     prefix = f"partner_{slot}"
     return [
@@ -737,11 +769,14 @@ def partner_survey_form_fields(slot):
 
 
 def partner_survey_vars(player: Player, slot):
-    player_in_period = player.in_round(real_round_for_period(slot))
-    partner = get_partner(player_in_period)
+    period_number, player_in_period, partner = unique_partner_match_for_slot(
+        player, slot
+    )
     prefix = f"partner_{slot}"
     return dict(
         partner_number=slot,
+        partner_count=unique_partner_count(player),
+        matched_period_number=period_number,
         player_profile=profile_for(player),
         partner_profile=profile_for(partner),
         show_profile=treatment_picture(player_in_period),
@@ -1286,7 +1321,7 @@ class PartnerIdentification1(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player)
+        return show_partner_survey(player, 1)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1304,7 +1339,7 @@ class PartnerIdentification2(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player)
+        return show_partner_survey(player, 2)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1322,7 +1357,7 @@ class PartnerIdentification3(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player)
+        return show_partner_survey(player, 3)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1340,7 +1375,7 @@ class PartnerIdentification4(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player)
+        return show_partner_survey(player, 4)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1358,7 +1393,7 @@ class PartnerIdentification5(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player)
+        return show_partner_survey(player, 5)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1455,11 +1490,12 @@ def self_demographic_values(player):
 def partner_survey_values(player):
     final_player = final_round_player(player)
     values = []
+    unique_matches = unique_matched_partner_periods(final_player)
     for slot in range(1, C.PERIODS + 1):
-        partner = matched_partner_for_period(final_player, slot)
-        values.append(profile_for(partner)["title"])
+        match = unique_matches[slot - 1] if slot <= len(unique_matches) else None
+        values.append(profile_for(match[2])["title"] if match else "")
         values.extend(
-            nullable_field(final_player, f"partner_{slot}_{suffix}")
+            nullable_field(final_player, f"partner_{slot}_{suffix}") if match else ""
             for suffix in PARTNER_SURVEY_EXPORT_SUFFIXES
         )
     return values
