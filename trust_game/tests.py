@@ -13,6 +13,7 @@ from . import (
     ProposerBelief,
     ProposerDecision,
     ProposerReceipt,
+    QuestionnaireInstructions,
     ResponderDecision,
     ResponderReceipt,
     RoleNotice,
@@ -61,6 +62,8 @@ class PlayerBot(Bot):
             yield ResponderReceipt
 
         if self.round_number == C.NUM_ROUNDS:
+            yield QuestionnaireInstructions
+
             identification = dict(
                 age=None,
                 age_prefer_not_to_say=True,

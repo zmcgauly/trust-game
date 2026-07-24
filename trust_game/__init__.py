@@ -1234,6 +1234,12 @@ class ResponderReceipt(Page):
         )
 
 
+class QuestionnaireInstructions(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return show_end_demographic_survey(player)
+
+
 class SelfIdentification(Page):
     form_model = "player"
     form_fields = [
@@ -1381,6 +1387,7 @@ page_sequence = [
     ProposerReceipt,
     ProposerBelief,
     ResponderReceipt,
+    QuestionnaireInstructions,
     SelfIdentification,
     PartnerIdentification1,
     PartnerIdentification2,

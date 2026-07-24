@@ -1,20 +1,30 @@
 <div class="round-summary-hover">
-  <span class="round-summary-trigger" tabindex="0">Round summary</span>
+  <span class="round-summary-trigger" tabindex="0">Round review</span>
   <div class="round-summary-popover">
-    <p><b>Round summary</b></p>
+    <p><b>Round review</b></p>
     <p>Points the proposer sent: {{ summary_offer }}</p>
     <p>Points the responder sent back: {{ summary_delivered_return }}</p>
     <p>{{ summary_received_label }}: {{ summary_received_amount }}</p>
     <p>Your final payoff for this round: {{ summary_payoff }}</p>
-    <p class="compact-formula summary-equation">
-      Points available if multiplier was {{ summary_low_multiplier }}:
-      {{ summary_offer_number }} points x {{ summary_low_multiplier }} =
-      {{ summary_low_available_number }} points
+    <p class="formula-line compact-formula summary-equation">
+      \[
+        \text{Points available if multiplier was } {{ summary_low_multiplier }}\text{: }
+        {{ summary_offer_number }}\ \text{points}
+        \times
+        {{ summary_low_multiplier }}
+        =
+        {{ summary_low_available_number }}\ \text{points}
+      \]
     </p>
-    <p class="compact-formula summary-equation">
-      Points available if multiplier was {{ summary_high_multiplier }}:
-      {{ summary_offer_number }} points x {{ summary_high_multiplier }} =
-      {{ summary_high_available_number }} points
+    <p class="formula-line compact-formula summary-equation">
+      \[
+        \text{Points available if multiplier was } {{ summary_high_multiplier }}\text{: }
+        {{ summary_offer_number }}\ \text{points}
+        \times
+        {{ summary_high_multiplier }}
+        =
+        {{ summary_high_available_number }}\ \text{points}
+      \]
     </p>
   </div>
 </div>
