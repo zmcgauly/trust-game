@@ -1,0 +1,27 @@
+<div class="card my-3">
+  <div class="card-body">
+    <h5 class="card-title">Session Design and Payment Draws</h5>
+    <p class="card-text">
+      {{ active_periods }} real periods; low multiplier {{ low_multiplier }}, high multiplier {{ high_multiplier }},
+      high-multiplier probability {{ high_multiplier_probability_percent }}% for every independent group-round draw.
+    </p>
+    <p class="card-text">
+      Period {{ paid_period }} is selected for payment. Trust points from both rounds are worth ${{ trust_point_value }} per point.
+      Each proposer belief report from those two rounds is evaluated for a ${{ belief_prize }} prize.
+    </p>
+    <table class="table table-sm table-striped">
+      <thead>
+        <tr><th>Period</th><th>Pictures</th><th>Selected for payment</th></tr>
+      </thead>
+      <tbody>
+        {{ for row in period_rows }}
+          <tr>
+            <td>{{ row.period }}</td>
+            <td>{{ row.picture_text }}</td>
+            <td>{{ row.paid_text }}</td>
+          </tr>
+        {{ endfor }}
+      </tbody>
+    </table>
+  </div>
+</div>

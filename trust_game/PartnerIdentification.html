@@ -1,0 +1,56 @@
+{{ block title }}
+Partner Identification
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
+<div class="trust-meta">
+  <span>End of game</span>
+  <span>Person {{ partner_number }} of {{ total_periods }}</span>
+</div>
+
+<div class="trust-card">
+  <img class="profile-image" src="{{ partner_profile.picture_url }}" alt="{{ partner_profile.title }}">
+  <p><b>{{ partner_profile.title }}</b></p>
+</div>
+
+<div class="trust-panel">
+  <p>Please answer the following questions about this player. Each demographic guess is required.</p>
+</div>
+
+<div class="confidence-grid">
+  <div>{{ formfield age_guess_field }}</div>
+  <div>{{ formfield age_confidence_field }}</div>
+</div>
+
+<div class="confidence-grid">
+  <div>{{ formfield ethnicity_guess_field }}</div>
+  <div>{{ formfield ethnicity_confidence_field }}</div>
+</div>
+
+<div class="confidence-grid">
+  <div>{{ formfield race_guess_field }}</div>
+  <div>{{ formfield race_confidence_field }}</div>
+</div>
+
+<div class="confidence-grid">
+  <div>{{ formfield gender_guess_field }}</div>
+  <div>{{ formfield gender_confidence_field }}</div>
+</div>
+
+<div class="confidence-grid">
+  <div>{{ formfield sexuality_guess_field }}</div>
+  <div>{{ formfield sexuality_confidence_field }}</div>
+</div>
+
+<div class="trust-panel">
+  {{ formfield relationship_field }}
+  {{ formfield relationship_nature_field }}
+</div>
+
+{{ next_button }}
+{{ endblock }}

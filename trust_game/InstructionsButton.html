@@ -1,0 +1,49 @@
+<button class="instructions-button" type="button" data-instructions-open>Instructions</button>
+<div class="instructions-overlay" data-instructions-overlay hidden>
+  <div class="instructions-modal" role="dialog" aria-modal="true" aria-labelledby="instructions-summary-title">
+    <div class="instructions-modal-header">
+      <h3 id="instructions-summary-title">Instructions Summary</h3>
+      <button class="instructions-close" type="button" aria-label="Close instructions" data-instructions-close>x</button>
+    </div>
+    <div class="instructions-modal-body">
+      <p>Your proposer or responder role remains fixed.</p>
+      <p>There are two unpaid practice rounds.</p>
+      <p>The practice rounds are followed by {{ total_periods }} periods with rotating partners.</p>
+      <p>Each period consists of two rounds.</p>
+      <p>The proposer sends 0–20 points.</p>
+      <p>The amount is multiplied by {{ low_multiplier }} or {{ high_multiplier }}.</p>
+      <p>The high multiplier occurs with probability {{ high_multiplier_probability_percent }}% in each round.</p>
+      <p>Let \(S\) be the amount sent, \(M\) the realized multiplier, and \(R\) the amount returned.</p>
+      <p>The proposer earns \(\mathit{payoff}_P = 20 - S + R\) round points.</p>
+      <p>The responder earns \(\mathit{payoff}_R = S M - R\) round points.</p>
+      <p>One period is selected at random for payment.</p>
+      <p>Trust-game points from both rounds in that period are paid at ${{ trust_point_value }} per point.</p>
+      <p>The ${{ participation_fee }} show-up payment is added to these earnings.</p>
+      <p>After seeing each return, proposers report \(X\), the probability that the low multiplier was used.</p>
+      <p>Both reports from the selected period are evaluated.</p>
+      <p>For each report, \(X\) and the actual multiplier determine a winning chance \(W\).</p>
+      <p>The computer draws \(Y\), which is equally likely to be any integer from 0 through 100.</p>
+      <p>That round's ${{ belief_prize }} belief prize is paid when \(Y \leq W\).</p>
+    </div>
+  </div>
+</div>
+<script>
+window.MathJax = window.MathJax || {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+(function () {
+  var openButton = document.querySelector('[data-instructions-open]');
+  var overlay = document.querySelector('[data-instructions-overlay]');
+  var closeButton = document.querySelector('[data-instructions-close]');
+  if (!openButton || !overlay || !closeButton) return;
+  function openInstructions() { overlay.hidden = false; closeButton.focus(); }
+  function closeInstructions() { overlay.hidden = true; openButton.focus(); }
+  openButton.addEventListener('click', openInstructions);
+  closeButton.addEventListener('click', closeInstructions);
+  overlay.addEventListener('click', function (event) { if (event.target === overlay) closeInstructions(); });
+  document.addEventListener('keydown', function (event) { if (event.key === 'Escape' && !overlay.hidden) closeInstructions(); });
+})();
+</script>

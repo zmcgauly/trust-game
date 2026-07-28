@@ -1,0 +1,28 @@
+{{ block title }}Points and Payment{{ endblock }}
+{{ block styles }}<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">{{ endblock }}
+{{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
+<div class="trust-panel">
+  <p>Let:</p>
+  <ul>
+    <li>\(S\) be the number of points the proposer sends,</li>
+    <li>\(M\) be the realized multiplier, and</li>
+    <li>\(R\) be the number of points the responder returns.</li>
+  </ul>
+  <p>The proposer's round payoff is:</p>
+  \[
+    \mathit{payoff}_P = 20 - S + R
+  \]
+  <p>The responder's round payoff is:</p>
+  \[
+    \mathit{payoff}_R = S M - R
+  \]
+  <p>After the experiment, one period is selected at random for payment.</p>
+  <p>A period consists of two rounds.</p>
+  <p><strong>Both rounds from the selected period</strong> determine trust-game earnings.</p>
+  <p>Each point earned in those rounds is worth <strong>${{ trust_point_value }}</strong>.</p>
+  <p>For example, 22 points in one round of the selected period would be worth ${{ example_22_point_payment }}.</p>
+  <p>Practice rounds and unselected periods do not affect payment.</p>
+</div>
+{{ next_button }}
+{{ endblock }}
