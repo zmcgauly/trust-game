@@ -124,6 +124,7 @@ class Player(BasePlayer):
     is_active_round = models.BooleanField(initial=True)
     period_number = models.IntegerField()
     round_in_period = models.IntegerField()
+    skip_instructions = models.StringField(blank=True, initial="")
 
     round_points = models.FloatField(initial=0)
     trust_game_payment = models.CurrencyField(initial=0)
@@ -164,9 +165,36 @@ class Player(BasePlayer):
         label="What does the responder see before choosing a return?", widget=widgets.RadioSelect,
     )
     instruction_quiz_5 = models.StringField(
-        choices=[["correct", r"Proposer: \(\mathit{payoff}_P = 20 - S + R\); Responder: \(\mathit{payoff}_R = S M - R\)."],
-                 ["swapped", r"Proposer: \(\mathit{payoff}_P = S M - R\); Responder: \(\mathit{payoff}_R = 20 - S + R\)."],
-                 ["same", r"Both receive \(\mathit{payoff} = S M - R\)."]],
+        choices=[
+            [
+                "correct",
+                (
+                    r"Proposer: \(\text{proposer round points} = 20 - "
+                    r"\text{points sent} + \text{points returned}\); "
+                    r"Responder: \(\text{responder round points} = "
+                    r"\text{points sent} \times \text{realized multiplier} - "
+                    r"\text{points returned}\)."
+                ),
+            ],
+            [
+                "swapped",
+                (
+                    r"Proposer: \(\text{proposer round points} = "
+                    r"\text{points sent} \times \text{realized multiplier} - "
+                    r"\text{points returned}\); Responder: "
+                    r"\(\text{responder round points} = 20 - "
+                    r"\text{points sent} + \text{points returned}\)."
+                ),
+            ],
+            [
+                "same",
+                (
+                    r"Both receive \(\text{round points} = "
+                    r"\text{points sent} \times \text{realized multiplier} - "
+                    r"\text{points returned}\)."
+                ),
+            ],
+        ],
         label="How are round points calculated?", widget=widgets.RadioSelect,
     )
     instruction_quiz_6 = models.StringField(
@@ -176,10 +204,10 @@ class Player(BasePlayer):
         label="Which decisions determine payment?", widget=widgets.RadioSelect,
     )
     instruction_quiz_7 = models.StringField(
-        choices=[["quadratic", r"The report and realized multiplier determine a winning chance. The prize is paid when the random integer \(Y\) is no greater than that winning chance."],
+        choices=[["quadratic", "The report and realized multiplier determine a winning chance. The prize is paid when the random draw is no greater than that winning chance."],
                  ["accuracy", "The prize is paid only when the report exactly matches the true probability."],
                  ["random", "The report does not affect the chance of receiving the belief prize."]],
-        label="How can a selected probability report determine the belief prize?", widget=widgets.RadioSelect,
+        label="How can a selected belief report determine the belief prize?", widget=widgets.RadioSelect,
     )
 
     gender = models.StringField(choices=C.GENDER_CHOICES, label="What is your gender?", blank=True)
@@ -315,6 +343,13 @@ def config_float(session, key, default):
     return float(session.config.get(key, default))
 
 
+def config_bool(session, key, default):
+    value = session.config.get(key, default)
+    if isinstance(value, str):
+        return value.strip().lower() in {"1", "true", "yes", "on"}
+    return bool(value)
+
+
 def get_low_multiplier(session):
     return config_float(session, "low_multiplier", C.DEFAULT_LOW_MULTIPLIER)
 
@@ -323,8 +358,22 @@ def get_high_multiplier(session):
     return config_float(session, "high_multiplier", C.DEFAULT_HIGH_MULTIPLIER)
 
 
+def get_low_multiplier_probability(session):
+    if "low_multiplier_probability" in session.config:
+        return config_float(
+            session,
+            "low_multiplier_probability",
+            1 - C.DEFAULT_HIGH_MULTIPLIER_PROBABILITY,
+        )
+    return 1 - config_float(
+        session,
+        "high_multiplier_probability",
+        C.DEFAULT_HIGH_MULTIPLIER_PROBABILITY,
+    )
+
+
 def get_high_multiplier_probability(session):
-    return config_float(session, "high_multiplier_probability", C.DEFAULT_HIGH_MULTIPLIER_PROBABILITY)
+    return 1 - get_low_multiplier_probability(session)
 
 
 def get_trust_point_value(session):
@@ -339,6 +388,7 @@ def validate_session_parameters(session):
     low = get_low_multiplier(session)
     high = get_high_multiplier(session)
     probability = get_high_multiplier_probability(session)
+    low_probability = get_low_multiplier_probability(session)
     point_value = get_trust_point_value(session)
     belief_prize = get_belief_prize(session)
     if low <= 0:
@@ -347,6 +397,8 @@ def validate_session_parameters(session):
         raise ValueError("high_multiplier must be greater than low_multiplier.")
     if not 0 <= probability <= 1:
         raise ValueError("high_multiplier_probability must be between 0 and 1.")
+    if not 0 <= low_probability <= 1:
+        raise ValueError("low_multiplier_probability must be between 0 and 1.")
     if point_value < 0 or belief_prize < 0:
         raise ValueError("Payment parameters cannot be negative.")
 
@@ -419,8 +471,10 @@ def creating_session(subsession: Subsession):
         subsession.session.vars["unique_cross_role_pairs"] = proposer_count * responder_count
         # Picture exposure is a between-session treatment: every participant in
         # the session either sees pictures throughout or never sees pictures.
-        subsession.session.vars["picture_condition"] = bool(
-            subsession.session.config.get("picture_condition", False)
+        subsession.session.vars["picture_condition"] = config_bool(
+            subsession.session,
+            "picture_condition",
+            False,
         )
         subsession.session.vars["paid_period"] = random.randint(1, active_periods)
         subsession.session.vars["high_multiplier_probability_percent"] = round(
@@ -510,6 +564,33 @@ def show_end_demographic_survey(player: Player):
     return player.round_number == last_active_round(player.session)
 
 
+def is_real_experiment_session(session):
+    return config_bool(session, "is_real_experiment", True)
+
+
+def instructions_skipped(player: Player):
+    return bool(player.participant.vars.get("skip_instructions_and_quiz", False))
+
+
+def instruction_page_is_displayed(player: Player):
+    return player.round_number == 1 and not instructions_skipped(player)
+
+
+def instruction_page_vars(player: Player):
+    return dict(
+        **page_common_vars(player),
+        show_testing_skip=not is_real_experiment_session(player.session),
+    )
+
+
+def instruction_page_before_next(player: Player, timeout_happened):
+    if (
+        not is_real_experiment_session(player.session)
+        and player.field_maybe_none("skip_instructions") == "1"
+    ):
+        player.participant.vars["skip_instructions_and_quiz"] = True
+
+
 def real_round_for_period(period_number):
     return C.PRACTICE_ROUNDS + ((period_number - 1) * C.ROUNDS_PER_PERIOD) + 1
 
@@ -549,6 +630,22 @@ def partner_survey_vars(player: Player, slot):
 
 def partner_survey_error_message(values, slot):
     prefix = f"partner_{slot}"
+    required_fields = [
+        f"{prefix}_age_guess",
+        f"{prefix}_age_confidence",
+        f"{prefix}_ethnicity_guess",
+        f"{prefix}_ethnicity_confidence",
+        f"{prefix}_race_guess",
+        f"{prefix}_race_confidence",
+        f"{prefix}_gender_guess",
+        f"{prefix}_gender_confidence",
+        f"{prefix}_sexuality_guess",
+        f"{prefix}_sexuality_confidence",
+        f"{prefix}_existing_relationship",
+    ]
+    for field in required_fields:
+        if values[field] in {None, ""}:
+            return {field: "Please answer this question before continuing."}
     age = values[f"{prefix}_age_guess"]
     if age is not None and age < C.MIN_AGE:
         return {f"{prefix}_age_guess": "Please guess an age of 18 or older."}
@@ -564,6 +661,39 @@ def proposer_round_points(group: Group):
 
 def responder_round_points(group: Group):
     return group.multiplied_amount() - group.intended_return
+
+
+def round_summary_vars(player: Player):
+    group = player.group
+    offer = group.field_maybe_none("offer") or 0
+    returned = group.field_maybe_none("delivered_return") or 0
+    multiplied_amount = group.multiplied_amount()
+    low_multiplier = get_low_multiplier(player.session)
+    high_multiplier = get_high_multiplier(player.session)
+    low_available = offer * low_multiplier
+    high_available = offer * high_multiplier
+
+    if player.role_name == "proposer":
+        received_label = "Points you received back"
+        received_amount = returned
+        final_payoff = C.ENDOWMENT - offer + returned
+    else:
+        received_label = "Points available to you"
+        received_amount = multiplied_amount
+        final_payoff = multiplied_amount - returned
+
+    return dict(
+        summary_offer=display_number(offer),
+        summary_returned=display_number(returned),
+        summary_received_label=received_label,
+        summary_received_amount=display_number(received_amount),
+        summary_payoff=display_number(final_payoff),
+        summary_low_multiplier=display_number(low_multiplier),
+        summary_high_multiplier=display_number(high_multiplier),
+        summary_offer_number=display_number(offer),
+        summary_low_available_number=display_number(low_available),
+        summary_high_available_number=display_number(high_available),
+    )
 
 
 def set_round_outcomes(group: Group):
@@ -672,6 +802,12 @@ INSTRUCTION_QUIZ_CORRECT_ANSWERS = dict(
 )
 
 
+def randomized_instruction_quiz_fields():
+    fields = INSTRUCTION_QUIZ_FIELDS.copy()
+    random.shuffle(fields)
+    return fields
+
+
 def instruction_quiz_failed(player: Player):
     return bool(player.participant.vars.get("instruction_quiz_failed", False))
 
@@ -691,54 +827,106 @@ class RoleNotice(Page):
                     player_profile=profile_for(player), show_profile=treatment_picture(player))
 
 
-class Instructions(Page):
+class InstructionsIntro(Page):
+    form_model = "player"
+    form_fields = ["skip_instructions"]
+
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == 1
+        return instruction_page_is_displayed(player)
 
     @staticmethod
     def vars_for_template(player: Player):
-        return page_common_vars(player)
+        return instruction_page_vars(player)
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        instruction_page_before_next(player, timeout_happened)
+
+
+class Instructions(Page):
+    form_model = "player"
+    form_fields = ["skip_instructions"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return instruction_page_is_displayed(player)
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return instruction_page_vars(player)
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        instruction_page_before_next(player, timeout_happened)
 
 
 class Instructions2(Page):
+    form_model = "player"
+    form_fields = ["skip_instructions"]
+
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == 1
+        return instruction_page_is_displayed(player)
 
     @staticmethod
     def vars_for_template(player: Player):
-        return page_common_vars(player)
+        return instruction_page_vars(player)
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        instruction_page_before_next(player, timeout_happened)
 
 
 class Instructions3(Page):
+    form_model = "player"
+    form_fields = ["skip_instructions"]
+
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == 1
+        return instruction_page_is_displayed(player)
 
     @staticmethod
     def vars_for_template(player: Player):
-        return page_common_vars(player)
+        return instruction_page_vars(player)
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        instruction_page_before_next(player, timeout_happened)
 
 
 class Instructions4(Page):
+    form_model = "player"
+    form_fields = ["skip_instructions"]
+
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == 1
+        return instruction_page_is_displayed(player)
 
     @staticmethod
     def vars_for_template(player: Player):
-        return page_common_vars(player)
+        return instruction_page_vars(player)
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        instruction_page_before_next(player, timeout_happened)
 
 
 class Instructions5(Page):
+    form_model = "player"
+    form_fields = ["skip_instructions"]
+
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == 1
+        return instruction_page_is_displayed(player)
 
     @staticmethod
     def vars_for_template(player: Player):
-        return page_common_vars(player)
+        return instruction_page_vars(player)
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        instruction_page_before_next(player, timeout_happened)
 
 
 class InstructionQuiz(Page):
@@ -747,13 +935,20 @@ class InstructionQuiz(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == 1 and not instruction_quiz_failed(player)
+        return (
+            player.round_number == 1
+            and is_real_experiment_session(player.session)
+            and not instruction_quiz_failed(player)
+            and not instructions_skipped(player)
+        )
 
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
             **page_common_vars(player),
             attempts_remaining=C.INSTRUCTION_QUIZ_MAX_ATTEMPTS - instruction_quiz_wrong_attempts(player),
+            quiz_fields=randomized_instruction_quiz_fields(),
+            randomize_quiz_answers=is_real_experiment_session(player.session),
         )
 
     @staticmethod
@@ -775,7 +970,11 @@ class InstructionQuiz(Page):
 class InstructionQuizFailed(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == 1 and instruction_quiz_failed(player)
+        return (
+            player.round_number == 1
+            and is_real_experiment_session(player.session)
+            and instruction_quiz_failed(player)
+        )
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -865,7 +1064,8 @@ class ProposerBeliefPost(Page):
     def vars_for_template(player: Player):
         return dict(**page_common_vars(player), is_practice=player.is_practice_round,
                     offer=player.group.offer, delivered_return=player.group.delivered_return,
-                    initial_probability=round((1 - get_high_multiplier_probability(player.session)) * 100))
+                    initial_probability=round((1 - get_high_multiplier_probability(player.session)) * 100),
+                    **round_summary_vars(player))
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
@@ -874,7 +1074,7 @@ class ProposerBeliefPost(Page):
 
 class WaitForPostBelief(WaitPage):
     title_text = "Waiting"
-    body_text = "Please wait while the proposer completes the second probability report."
+    body_text = "Please wait while the proposer completes the second belief report."
 
     @staticmethod
     def is_displayed(player: Player):
@@ -905,6 +1105,16 @@ class RoundComplete(WaitPage):
         return player.is_active_round
 
 
+class QuestionnaireInstructions(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return show_end_demographic_survey(player)
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return page_common_vars(player)
+
+
 class SelfIdentification(Page):
     form_model = "player"
     form_fields = ["age", "age_prefer_not_to_say", "ethnicity", "race", "gender", "sexuality"]
@@ -919,6 +1129,16 @@ class SelfIdentification(Page):
 
     @staticmethod
     def error_message(player: Player, values):
+        required_fields = ["ethnicity", "race", "gender", "sexuality"]
+        missing = {
+            field: "Please answer this question before continuing."
+            for field in required_fields
+            if values[field] in {None, ""}
+        }
+        if not values["age_prefer_not_to_say"] and values["age"] is None:
+            missing["age"] = "Please enter your age or select prefer not to say."
+        if missing:
+            return missing
         if not values["age_prefer_not_to_say"] and values["age"] is not None and values["age"] < C.MIN_AGE:
             return dict(age="You must be 18 or older")
 
@@ -1111,12 +1331,12 @@ class PaymentSummary(Page):
 
 
 page_sequence = [
-    Instructions, Instructions2, Instructions3, Instructions4, Instructions5,
+    InstructionsIntro, Instructions, Instructions2, Instructions3, Instructions4, Instructions5,
     InstructionQuiz, InstructionQuizFailed, RoleNotice,
     ProposerDecision, WaitForProposer, ResponderDecision, WaitForResponder,
     ProposerReceipt, ProposerBeliefPost,
     WaitForPostBelief, ResponderReceipt, RoundComplete,
-    SelfIdentification,
+    QuestionnaireInstructions, SelfIdentification,
     PartnerIdentification1,
     PartnerIdentification2,
     PartnerIdentification3,
@@ -1183,7 +1403,8 @@ def partner_survey_values(player):
 def custom_export(players):
     base_headers = [
         "session_code", "session_config", "active_periods", "unique_cross_role_pairs",
-        "picture_condition", "high_multiplier_probability", "low_multiplier", "high_multiplier",
+        "is_real_experiment", "picture_condition", "low_multiplier_probability",
+        "high_multiplier_probability", "low_multiplier", "high_multiplier",
         "realized_multiplier", "high_multiplier_applied", "paid_period",
         "period", "round_in_period", "otree_round",
         "is_practice_round", "is_active_round", "proposer_code", "proposer_name",
@@ -1207,7 +1428,8 @@ def custom_export(players):
         multiplied_amount = offer * group.realized_multiplier if offer is not None else None
         base_values = [
             player.session.code, player.session.config["name"], get_active_periods(player.session),
-            player.session.vars.get("unique_cross_role_pairs"), group.treatment_picture,
+            player.session.vars.get("unique_cross_role_pairs"), is_real_experiment_session(player.session),
+            group.treatment_picture, get_low_multiplier_probability(player.session),
             group.high_multiplier_probability, group.low_multiplier, group.high_multiplier,
             group.realized_multiplier, group.high_multiplier_applied, get_paid_period(player.session),
             player.period_number, player.round_in_period,

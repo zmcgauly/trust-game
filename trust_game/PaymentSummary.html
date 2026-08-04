@@ -10,7 +10,7 @@
 <div class="trust-panel">
   <h3>Belief payments from period {{ paid_period }}</h3>
   {{ for row in belief_rows }}
-    <p><strong>Round {{ row.round_in_period }}:</strong> You reported \(X = {{ row.selected_belief_probability }}\%\) for the low multiplier, and the realized multiplier was {{ row.realized_multiplier }}. This produced \(W = {{ row.belief_winning_chance }}\); the computer drew \(Y = {{ row.belief_bonus_draw }}\). Belief bonus: <strong>{{ row.belief_bonus }}</strong>.</p>
+    <p><strong>Round {{ row.round_in_period }}:</strong> You reported {{ row.selected_belief_probability }}% for the low multiplier, and the realized multiplier was {{ row.realized_multiplier }}. This produced a winning chance of {{ row.belief_winning_chance }}; the computer drew {{ row.belief_bonus_draw }}. Belief bonus: <strong>{{ row.belief_bonus }}</strong>.</p>
   {{ endfor }}
   <p>Total belief bonus from the selected period: <strong>{{ total_belief_bonus }}</strong>.</p>
 </div>

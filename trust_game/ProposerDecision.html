@@ -49,6 +49,12 @@ Proposer Decision
   <p>The points you send will be multiplied by either {{ low_multiplier }} or {{ high_multiplier }}.</p>
   <p>The high multiplier is selected for this round with probability {{ high_multiplier_probability_percent }}%.</p>
   <p>You will not be told which multiplier applies while making this decision.</p>
+  <p>Your payoff equation for this round is:</p>
+  <p class="formula-line compact-formula">
+    \[
+      \text{proposer round points} = 20 - \text{points sent} + \text{points returned}
+    \]
+  </p>
 </div>
 
 {{ formfields }}

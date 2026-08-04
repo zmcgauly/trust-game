@@ -2,6 +2,7 @@ from otree.api import Bot
 
 from . import (
     C,
+    InstructionsIntro,
     Instructions,
     Instructions2,
     Instructions3,
@@ -14,6 +15,7 @@ from . import (
     ResponderDecision,
     ResponderReceipt,
     RoleNotice,
+    QuestionnaireInstructions,
     SelfIdentification,
     PaymentSummary,
     get_active_periods,
@@ -24,6 +26,7 @@ from . import (
 class PlayerBot(Bot):
     def play_round(self):
         if self.round_number == 1:
+            yield InstructionsIntro
             yield Instructions
             yield Instructions2
             yield Instructions3
@@ -56,6 +59,7 @@ class PlayerBot(Bot):
             yield ResponderReceipt
 
         if self.round_number == C.PRACTICE_ROUNDS + get_active_periods(self.player.session) * C.ROUNDS_PER_PERIOD:
+            yield QuestionnaireInstructions
             identification = dict(
                 age=None,
                 age_prefer_not_to_say=True,

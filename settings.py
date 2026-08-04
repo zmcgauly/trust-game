@@ -13,9 +13,11 @@ SESSION_CONFIGS = [
         # configuration without changing the app's decision logic.
         low_multiplier=3.0,
         high_multiplier=6.0,
+        low_multiplier_probability=0.50,
         high_multiplier_probability=0.50,
         trust_point_dollar_value=0.30,
         belief_prize_dollars=2.00,
+        is_real_experiment=True,
         # Between-session treatment. Set to True for picture sessions and
         # False for sessions in which participants never see pictures.
         picture_condition=False,
@@ -27,9 +29,11 @@ SESSION_CONFIGS = [
         app_sequence=["trust_game"],
         low_multiplier=3.0,
         high_multiplier=6.0,
+        low_multiplier_probability=0.50,
         high_multiplier_probability=0.50,
         trust_point_dollar_value=0.30,
         belief_prize_dollars=2.00,
+        is_real_experiment=True,
         picture_condition=True,
     ),
 ]
@@ -39,9 +43,11 @@ SESSION_CONFIG_DEFAULTS = dict(
     participation_fee=10.00,
     low_multiplier=3.0,
     high_multiplier=6.0,
+    low_multiplier_probability=0.50,
     high_multiplier_probability=0.50,
     trust_point_dollar_value=0.30,
     belief_prize_dollars=2.00,
+    is_real_experiment=True,
     picture_condition=False,
     doc="",
 )

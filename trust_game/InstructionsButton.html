@@ -10,20 +10,19 @@
       <p>There are two unpaid practice rounds.</p>
       <p>The practice rounds are followed by {{ total_periods }} periods with rotating partners.</p>
       <p>Each period consists of two rounds.</p>
-      <p>The proposer sends 0–20 points.</p>
+      <p>The proposer sends 0 to 20 points.</p>
       <p>The amount is multiplied by {{ low_multiplier }} or {{ high_multiplier }}.</p>
       <p>The high multiplier occurs with probability {{ high_multiplier_probability_percent }}% in each round.</p>
-      <p>Let \(S\) be the amount sent, \(M\) the realized multiplier, and \(R\) the amount returned.</p>
-      <p>The proposer earns \(\mathit{payoff}_P = 20 - S + R\) round points.</p>
-      <p>The responder earns \(\mathit{payoff}_R = S M - R\) round points.</p>
+      <p>The proposer earns \(\text{proposer round points} = 20 - \text{points sent} + \text{points returned}\).</p>
+      <p>The responder earns \(\text{responder round points} = \text{points sent} \times \text{realized multiplier} - \text{points returned}\).</p>
       <p>One period is selected at random for payment.</p>
       <p>Trust-game points from both rounds in that period are paid at ${{ trust_point_value }} per point.</p>
       <p>The ${{ participation_fee }} show-up payment is added to these earnings.</p>
-      <p>After seeing each return, proposers report \(X\), the probability that the low multiplier was used.</p>
+      <p>After seeing each return, proposers report the probability that the low multiplier was used.</p>
       <p>Both reports from the selected period are evaluated.</p>
-      <p>For each report, \(X\) and the actual multiplier determine a winning chance \(W\).</p>
-      <p>The computer draws \(Y\), which is equally likely to be any integer from 0 through 100.</p>
-      <p>That round's ${{ belief_prize }} belief prize is paid when \(Y \leq W\).</p>
+      <p>For each report, the reported probability and the actual multiplier determine a winning chance.</p>
+      <p>The computer draws a number, which is equally likely to be any integer from 0 through 100.</p>
+      <p>That round's ${{ belief_prize }} belief prize is paid when \(\text{random draw} \leq \text{winning chance}\).</p>
     </div>
   </div>
 </div>
