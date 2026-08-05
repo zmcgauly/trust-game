@@ -4,12 +4,8 @@
 {{ include_sibling 'InstructionsButton.html' }}
 {{ include_sibling 'TestingSkipButton.html' }}
 <div class="trust-panel">
-  <p>In every round, after seeing how many points the responder returned, the proposer reports the probability (from 0% to 100%) that the low multiplier was used.</p>
-  <p>For example, reporting 70% means you believe there is a 70% chance that the low multiplier was used.</p>
-  <p>The same period selected for trust-game payment is also used for belief payment.</p>
-  <p>A period consists of two rounds.</p>
-  <p>The proposer's report from <strong>each round</strong> in the selected period is evaluated for a <strong>${{ belief_prize }}</strong> belief prize.</p>
-  <p>For each report in the selected period, your report and the actual multiplier determine your chance of winning that round's belief prize.</p>
+  <p>In every round, after seeing how many points the responder returned, the proposer reports the probability (from 0% to 100%) that the low multiplier was used. For example, reporting 70% means you believe there is a 70% chance that the low multiplier was used.</p>
+  <p>The same period selected for trust-game payment is also used for belief payment. A period consists of two rounds, and the proposer's report from <strong>each round</strong> in the selected period is evaluated for a <strong>${{ belief_prize }}</strong> belief prize. For each report in the selected period, your report and the actual multiplier determine your chance of winning that round's belief prize.</p>
   <p>If the multiplier was low:</p>
   \[
     \text{winning chance} =
@@ -20,14 +16,11 @@
     \text{winning chance} =
     100 - \frac{(\text{reported probability})^2}{100}.
   \]
-  <p>The computer then draws a number.</p>
-  <p>The random draw is equally likely to be any integer from 0 through 100.</p>
-  <p>You receive the belief prize when:</p>
+  <p>The computer then draws a number that is equally likely to be any integer from 0 through 100. You receive the belief prize when:</p>
   \[
     \text{random draw} \leq \text{winning chance}.
   \]
-  <p>Higher values of the winning chance give you a better chance of receiving the prize.</p>
-  <p>Reporting your true belief about the low multiplier gives you the best chance of receiving it.</p>
+  <p>Higher values of the winning chance give you a better chance of receiving the prize. Reporting your true belief about the low multiplier gives you the best chance of receiving it.</p>
   <p>These instructions are for Part 1. Once Part 1 is completed, you will receive the instructions for Part 2.</p>
 </div>
 {{ next_button }}

@@ -6,23 +6,13 @@
       <button class="instructions-close" type="button" aria-label="Close instructions" data-instructions-close>x</button>
     </div>
     <div class="instructions-modal-body">
-      <p>Your proposer or responder role remains fixed.</p>
-      <p>There are two unpaid practice rounds.</p>
-      <p>The practice rounds are followed by {{ total_periods }} periods with rotating partners.</p>
-      <p>Each period consists of two rounds.</p>
-      <p>The proposer sends 0 to 20 points.</p>
-      <p>The amount is multiplied by {{ low_multiplier }} or {{ high_multiplier }}.</p>
-      <p>The high multiplier occurs with probability {{ high_multiplier_probability_percent }}% in each round.</p>
+      <p>Your proposer or responder role remains fixed. There are two unpaid practice rounds, followed by {{ total_periods }} periods with rotating partners. Each period consists of two rounds.</p>
+      <p>The proposer sends 0 to 20 points. The amount is multiplied by {{ low_multiplier }} or {{ high_multiplier }}, and the high multiplier occurs with probability {{ high_multiplier_probability_percent }}% in each round.</p>
       <p>The proposer earns \(\text{proposer round points} = 20 - \text{points sent} + \text{points returned}\).</p>
       <p>The responder earns \(\text{responder round points} = \text{points sent} \times \text{realized multiplier} - \text{points returned}\).</p>
-      <p>One period is selected at random for payment.</p>
-      <p>Trust-game points from both rounds in that period are paid at ${{ trust_point_value }} per point.</p>
-      <p>The ${{ participation_fee }} show-up payment is added to these earnings.</p>
-      <p>After seeing each return, proposers report the probability that the low multiplier was used.</p>
-      <p>Both reports from the selected period are evaluated.</p>
-      <p>For each report, the reported probability and the actual multiplier determine a winning chance.</p>
-      <p>The computer draws a number, which is equally likely to be any integer from 0 through 100.</p>
-      <p>That round's ${{ belief_prize }} belief prize is paid when \(\text{random draw} \leq \text{winning chance}\).</p>
+      <p>One period is selected at random for payment. Trust-game points from both rounds in that period are paid at ${{ trust_point_value }} per point, and the ${{ participation_fee }} show-up payment is added to these earnings.</p>
+      <p>After seeing each return, proposers report the probability that the low multiplier was used. Both reports from the selected period are evaluated. For each report, the reported probability and the actual multiplier determine a winning chance.</p>
+      <p>The computer draws a number, which is equally likely to be any integer from 0 through 100. That round's ${{ belief_prize }} belief prize is paid when \(\text{random draw} \leq \text{winning chance}\).</p>
     </div>
   </div>
 </div>

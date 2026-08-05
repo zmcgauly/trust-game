@@ -157,6 +157,11 @@
   line-height: 1.35;
 }
 
+.experiment-ended-message {
+  color: #b91c1c;
+  font-weight: 700;
+}
+
 .round-summary-hover {
   position: relative;
   display: inline-block;

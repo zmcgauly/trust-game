@@ -1,4 +1,4 @@
-from otree.api import Bot
+from otree.api import Bot, Submission
 
 from . import (
     C,
@@ -103,4 +103,4 @@ class PlayerBot(Bot):
                         f"{prefix}_existing_relationship": "No",
                         f"{prefix}_relationship_nature": "",
                     }
-            yield PaymentSummary
+            yield Submission(PaymentSummary, check_html=False)
