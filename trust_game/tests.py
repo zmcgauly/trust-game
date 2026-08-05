@@ -43,7 +43,7 @@ class PlayerBot(Bot):
             )
             yield SelfIdentification, identification
 
-            if is_real_experiment_session(self.player.session):
+            if not self.player.participant.vars.get("skip_instructions_and_quiz"):
                 yield Instructions
                 yield Instructions2
                 yield Instructions3
