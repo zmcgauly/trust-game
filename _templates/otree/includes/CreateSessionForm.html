@@ -75,11 +75,11 @@
       <select class="form-select w-auto"
               id="trust-game-session-type">
         <option value="true" selected>Real experiment</option>
-        <option value="false">Testing session</option>
+        <option value="false">Not real experiment (testing)</option>
       </select>
     </div>
     <p class="help-block">
-      Testing sessions show the skip button for instructions and skip the quiz.
+      Not real experiment sessions show the skip button for instructions and skip the quiz.
     </p>
   </div>
 
@@ -161,18 +161,6 @@
             highMultiplier: '6',
             lowMultiplierProbability: '0.50',
             isRealExperiment: true
-        },
-        trust_game_testing: {
-            lowMultiplier: '3',
-            highMultiplier: '6',
-            lowMultiplierProbability: '0.50',
-            isRealExperiment: false
-        },
-        trust_game_testing_pictures: {
-            lowMultiplier: '3',
-            highMultiplier: '6',
-            lowMultiplierProbability: '0.50',
-            isRealExperiment: false
         }
     };
 
@@ -184,7 +172,7 @@
         $('#trust-game-low-multiplier').attr('name', sessionconfigname + '.low_multiplier');
         $('#trust-game-high-multiplier').attr('name', sessionconfigname + '.high_multiplier');
         $('#trust-game-low-multiplier-probability').attr('name', sessionconfigname + '.low_multiplier_probability');
-        $('#trust-game-session-type').attr('name', sessionconfigname + '.is_real_experiment');
+        $('#trust-game-session-type').removeAttr('name');
     }
 
     function applyTrustGameDefaults(sessionconfigname) {
@@ -268,7 +256,11 @@
                 form_data[selectedConfig + '.low_multiplier'] = $('#trust-game-low-multiplier').val();
                 form_data[selectedConfig + '.high_multiplier'] = $('#trust-game-high-multiplier').val();
                 form_data[selectedConfig + '.low_multiplier_probability'] = $('#trust-game-low-multiplier-probability').val();
-                form_data[selectedConfig + '.is_real_experiment'] = $('#trust-game-session-type').val();
+                if ($('#trust-game-session-type').val() === 'true') {
+                    form_data[selectedConfig + '.is_real_experiment'] = 'on';
+                } else {
+                    delete form_data[selectedConfig + '.is_real_experiment'];
+                }
             }
             socket.send(JSON.stringify(form_data));
             e.preventDefault();
