@@ -1,5 +1,5 @@
 {{ block title }}
-Self Identification
+Part 1: About You
 {{ endblock }}
 
 {{ block styles }}
@@ -9,11 +9,12 @@ Self Identification
 {{ block content }}
 {{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-meta">
-  <span>End of game</span>
+  <span>Part 1 of 3</span>
 </div>
 
 <div class="trust-panel">
   <p>Please answer the following questions about yourself. You may choose "Prefer not to say" for any question.</p>
+  <p>Your answers may be used in Part 2 to identify you to participants you are matched with.</p>
 </div>
 
 {{ formfield 'age' }}

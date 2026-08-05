@@ -586,13 +586,55 @@ def treatment_partner_cue(player: Player):
     return treatment_picture(player) or treatment_written_description(player)
 
 
+def self_demographic_player(player: Player):
+    return player.in_round(1)
+
+
+def normalized_demographic_value(value):
+    if value in {None, "", "Prefer not to say"}:
+        return None
+    return value
+
+
+def self_demographic_description_for(player: Player):
+    source = self_demographic_player(player)
+    statements = []
+
+    age = source.field_maybe_none("age")
+    if age is not None and not source.field_maybe_none("age_prefer_not_to_say"):
+        statements.append(f"is {age} years old")
+
+    ethnicity = normalized_demographic_value(source.field_maybe_none("ethnicity"))
+    if ethnicity is not None:
+        if ethnicity == "Yes":
+            statements.append("identifies as Hispanic or Latino")
+        elif ethnicity == "No":
+            statements.append("does not identify as Hispanic or Latino")
+
+    race = normalized_demographic_value(source.field_maybe_none("race"))
+    if race is not None:
+        statements.append(f"identifies their race as {race}")
+
+    gender = normalized_demographic_value(source.field_maybe_none("gender"))
+    if gender is not None:
+        statements.append(f"identifies their gender as {gender}")
+
+    sexuality = normalized_demographic_value(source.field_maybe_none("sexuality"))
+    if sexuality is not None:
+        statements.append(f"identifies their sexuality as {sexuality}")
+
+    if not statements:
+        return "This participant chose not to report demographic information."
+    return "This participant " + "; ".join(statements) + "."
+
+
 def written_description_for(player: Player, partner: Player):
     descriptions = player.session.config.get("written_profile_descriptions", C.PROFILE_DESCRIPTIONS) or {}
     title = profile_for(partner)["title"]
     return (
         descriptions.get(title)
         or descriptions.get(str(partner.id_in_subsession))
-        or f"The {partner.role_name} you are paired with is {title}."
+        or self_demographic_description_for(partner)
     )
 
 
@@ -613,8 +655,16 @@ def page_common_vars(player: Player):
     )
 
 
-def show_end_demographic_survey(player: Player):
+def show_part1_self_survey(player: Player):
+    return player.round_number == 1 and not instruction_quiz_failed(player)
+
+
+def show_part3_partner_survey(player: Player):
     return player.round_number == last_active_round(player.session)
+
+
+def show_end_demographic_survey(player: Player):
+    return show_part3_partner_survey(player)
 
 
 def is_real_experiment_session(session):
@@ -1174,11 +1224,15 @@ class RoundComplete(WaitPage):
 class QuestionnaireInstructions(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player)
+        return show_part1_self_survey(player) or show_part3_partner_survey(player)
 
     @staticmethod
     def vars_for_template(player: Player):
-        return page_common_vars(player)
+        return dict(
+            **page_common_vars(player),
+            is_part1_self_survey=show_part1_self_survey(player),
+            is_part3_partner_survey=show_part3_partner_survey(player),
+        )
 
 
 class SelfIdentification(Page):
@@ -1187,7 +1241,7 @@ class SelfIdentification(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player)
+        return show_part1_self_survey(player)
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -1215,6 +1269,16 @@ class SelfIdentification(Page):
             player.age_prefer_not_to_say = True
 
 
+class WaitForSelfIdentification(WaitPage):
+    wait_for_all_groups = True
+    title_text = "Waiting for Part 1 to finish"
+    body_text = "Please wait for the other participants to finish Part 1."
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return show_part1_self_survey(player)
+
+
 class PartnerIdentification1(Page):
     template_name = "trust_game/PartnerIdentification.html"
     form_model = "player"
@@ -1222,7 +1286,7 @@ class PartnerIdentification1(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player) and treatment_partner_cue(player) and 1 <= get_active_periods(player.session)
+        return show_part3_partner_survey(player) and 1 <= get_active_periods(player.session)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1239,7 +1303,7 @@ class PartnerIdentification2(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player) and treatment_partner_cue(player) and 2 <= get_active_periods(player.session)
+        return show_part3_partner_survey(player) and 2 <= get_active_periods(player.session)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1256,7 +1320,7 @@ class PartnerIdentification3(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player) and treatment_partner_cue(player) and 3 <= get_active_periods(player.session)
+        return show_part3_partner_survey(player) and 3 <= get_active_periods(player.session)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1273,7 +1337,7 @@ class PartnerIdentification4(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player) and treatment_partner_cue(player) and 4 <= get_active_periods(player.session)
+        return show_part3_partner_survey(player) and 4 <= get_active_periods(player.session)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1290,7 +1354,7 @@ class PartnerIdentification5(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player) and treatment_partner_cue(player) and 5 <= get_active_periods(player.session)
+        return show_part3_partner_survey(player) and 5 <= get_active_periods(player.session)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1307,7 +1371,7 @@ class PartnerIdentification6(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player) and treatment_partner_cue(player) and 6 <= get_active_periods(player.session)
+        return show_part3_partner_survey(player) and 6 <= get_active_periods(player.session)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1324,7 +1388,7 @@ class PartnerIdentification7(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player) and treatment_partner_cue(player) and 7 <= get_active_periods(player.session)
+        return show_part3_partner_survey(player) and 7 <= get_active_periods(player.session)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1341,7 +1405,7 @@ class PartnerIdentification8(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player) and treatment_partner_cue(player) and 8 <= get_active_periods(player.session)
+        return show_part3_partner_survey(player) and 8 <= get_active_periods(player.session)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1358,7 +1422,7 @@ class PartnerIdentification9(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player) and treatment_partner_cue(player) and 9 <= get_active_periods(player.session)
+        return show_part3_partner_survey(player) and 9 <= get_active_periods(player.session)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1375,7 +1439,7 @@ class PartnerIdentification10(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_end_demographic_survey(player) and treatment_partner_cue(player) and 10 <= get_active_periods(player.session)
+        return show_part3_partner_survey(player) and 10 <= get_active_periods(player.session)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1398,11 +1462,13 @@ class PaymentSummary(Page):
 
 page_sequence = [
     InstructionsIntro, Instructions, Instructions2, Instructions3, Instructions4, Instructions5,
-    InstructionQuiz, InstructionQuizFailed, RoleNotice,
+    InstructionQuiz, InstructionQuizFailed,
+    QuestionnaireInstructions, SelfIdentification, WaitForSelfIdentification,
+    RoleNotice,
     ProposerDecision, WaitForProposer, ResponderDecision, WaitForResponder,
     ProposerReceipt, ProposerBeliefPost,
     WaitForPostBelief, ResponderReceipt, RoundComplete,
-    QuestionnaireInstructions, SelfIdentification,
+    QuestionnaireInstructions,
     PartnerIdentification1,
     PartnerIdentification2,
     PartnerIdentification3,
@@ -1438,8 +1504,8 @@ def self_demographic_headers(role_prefix):
 
 
 def self_demographic_values(player):
-    final_player = final_active_player(player)
-    return [nullable_field(final_player, field) for field in SELF_DEMOGRAPHIC_EXPORT_FIELDS]
+    part1_player = self_demographic_player(player)
+    return [nullable_field(part1_player, field) for field in SELF_DEMOGRAPHIC_EXPORT_FIELDS]
 
 
 def partner_survey_headers(role_prefix):
@@ -1453,8 +1519,6 @@ def partner_survey_headers(role_prefix):
 def partner_survey_values(player):
     final_player = final_active_player(player)
     values = []
-    if not treatment_partner_cue(player):
-        return [None] * (C.MAX_PERIODS * (1 + len(PARTNER_SURVEY_EXPORT_SUFFIXES)))
     active_periods = get_active_periods(player.session)
     for slot in range(1, C.MAX_PERIODS + 1):
         if slot <= active_periods:

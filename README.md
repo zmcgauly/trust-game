@@ -6,11 +6,14 @@ An oTree 6 experiment with fixed proposer and responder roles, rotating partners
 
 - Participants are divided evenly between proposers and responders.
 - Roles remain fixed throughout the session.
+- Part 1 collects participants' self-demographic information.
+- Part 2 is the trust-game decision task.
 - The session begins with two unpaid practice rounds.
 - Each real period consists of two rounds with the same partner.
 - Partners rotate after each period.
 - A participant is not matched with the same partner in two different real periods.
 - The number of real periods is the smaller of 10 and the number of participants in the opposite role.
+- Part 3 asks participants to guess the demographics of the partners with whom they were matched.
 
 In each round, the proposer receives 20 points and sends an integer from 0 through 20 to the responder.
 
@@ -92,13 +95,15 @@ Picture exposure is controlled by `picture_condition`.
 
 Written descriptions are controlled by `written_description_condition`.
 
-All participants answer demographic questions about themselves.
+All participants answer demographic questions about themselves in Part 1, before the trust-game decisions begin.
 
-Participants in any partner-cue treatment session, meaning any session with pictures or written descriptions, make demographic guesses about their matched partners.
+All participants make demographic guesses about their matched partners in Part 3, after the trust-game decisions are complete.
 
 The relevant partner's available cues are displayed while each set of guesses is made.
 
-Written descriptions are read from `C.PROFILE_DESCRIPTIONS` in `trust_game/__init__.py`, or from optional session config metadata, keyed by player title or player number. If no profile metadata is supplied, the app falls back to a non-demographic player label. Demographic written-description treatments should define these descriptions before data collection.
+Written descriptions are generated from the partner's Part 1 self-demographic survey responses. If `C.PROFILE_DESCRIPTIONS` in `trust_game/__init__.py`, or optional session config metadata, defines a description keyed by player title or player number, that predefined text overrides the generated survey-based description.
+
+The app waits for all participants to complete Part 1 before Part 2 begins, so written partner descriptions are available during the decision task.
 
 ## Default configuration
 
@@ -143,10 +148,10 @@ The custom export contains one row for each active proposer-responder round, inc
 - sent, multiplied, intended-return, and delivered-return amounts;
 - trust-game points and payments;
 - belief reports, quadratic winning chances, random draws, and bonuses;
-- self-demographic responses;
-- partner-demographic guesses in partner-cue treatment sessions.
+- Part 1 self-demographic responses;
+- Part 3 partner-demographic guesses.
 
-Partner-demographic export fields are empty only in the no-picture/no-description baseline.
+Partner-demographic export fields are populated for all treatment cells.
 
 ## Production settings
 

@@ -9,6 +9,7 @@ Role Assignment
 {{ block content }}
 {{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-meta">
+  <span>Part 2 of 3</span>
   {{ if player.is_practice_round }}
     <span>Practice round {{ player.round_in_period }} of {{ C.PRACTICE_ROUNDS }}</span>
   {{ else }}
