@@ -4,15 +4,19 @@ An oTree 6 experiment with fixed proposer and responder roles, rotating partners
 
 ## Experimental design
 
+- Participants first receive general instructions about the show-up payment and the option to leave at any time.
+- Part 1 instructions explain that the experiment has three parts and that instructions for Part 2 will be provided after Part 1 is complete.
 - Participants are divided evenly between proposers and responders.
 - Roles remain fixed throughout the session.
 - Part 1 collects participants' self-demographic information.
+- Part 2 instructions and the instruction quiz are shown after Part 1 is complete.
 - Part 2 is the trust-game decision task.
 - The session begins with two unpaid practice rounds.
 - Each real period consists of two rounds with the same partner.
 - Partners rotate after each period.
 - A participant is not matched with the same partner in two different real periods.
 - The number of real periods is the smaller of 10 and the number of participants in the opposite role.
+- Part 3 instructions are shown after Part 2 is complete.
 - Part 3 asks participants to guess the demographics of the partners with whom they were matched.
 
 In each round, the proposer receives 20 points and sends an integer from 0 through 20 to the responder.

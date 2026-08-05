@@ -1,17 +1,11 @@
-{{ block title }}Instructions{{ endblock }}
+{{ block title }}General Instructions{{ endblock }}
 {{ block styles }}<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">{{ endblock }}
 {{ block content }}
 {{ include_sibling 'TestingSkipButton.html' }}
 <div class="trust-panel">
-  <p>
-    The instructions you will read are the exact same as all other participants
-    for this session.
-  </p>
-  <p>
-    The experiment has three parts. In Part 1, you answer questions about yourself.
-    In Part 2, you complete the decision-making task. In Part 3, you answer questions
-    about the participants with whom you were matched.
-  </p>
+  <p>Please put all electronic devices away and remain quiet during the experiment. If you have a question, raise your hand and an experimenter will come to you.</p>
+  <p>You receive a guaranteed show-up payment of <strong>${{ participation_fee }}</strong>.</p>
+  <p>You may leave at any time. If you leave before completing the experiment, you keep the show-up payment but forfeit any additional earnings.</p>
 </div>
 {{ next_button }}
 {{ endblock }}

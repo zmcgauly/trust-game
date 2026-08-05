@@ -1221,17 +1221,35 @@ class RoundComplete(WaitPage):
         return player.is_active_round
 
 
-class QuestionnaireInstructions(Page):
+class Part1Instructions(Page):
+    template_name = "trust_game/QuestionnaireInstructions.html"
+
     @staticmethod
     def is_displayed(player: Player):
-        return show_part1_self_survey(player) or show_part3_partner_survey(player)
+        return show_part1_self_survey(player)
 
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
             **page_common_vars(player),
-            is_part1_self_survey=show_part1_self_survey(player),
-            is_part3_partner_survey=show_part3_partner_survey(player),
+            is_part1_self_survey=True,
+            is_part3_partner_survey=False,
+        )
+
+
+class Part3Instructions(Page):
+    template_name = "trust_game/QuestionnaireInstructions.html"
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return show_part3_partner_survey(player)
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            **page_common_vars(player),
+            is_part1_self_survey=False,
+            is_part3_partner_survey=True,
         )
 
 
@@ -1461,14 +1479,14 @@ class PaymentSummary(Page):
 
 
 page_sequence = [
-    InstructionsIntro, Instructions, Instructions2, Instructions3, Instructions4, Instructions5,
-    InstructionQuiz, InstructionQuizFailed,
-    QuestionnaireInstructions, SelfIdentification, WaitForSelfIdentification,
-    RoleNotice,
+    InstructionsIntro,
+    Part1Instructions, SelfIdentification, WaitForSelfIdentification,
+    Instructions, Instructions2, Instructions3, Instructions4, Instructions5,
+    InstructionQuiz, InstructionQuizFailed, RoleNotice,
     ProposerDecision, WaitForProposer, ResponderDecision, WaitForResponder,
     ProposerReceipt, ProposerBeliefPost,
     WaitForPostBelief, ResponderReceipt, RoundComplete,
-    QuestionnaireInstructions,
+    Part3Instructions,
     PartnerIdentification1,
     PartnerIdentification2,
     PartnerIdentification3,

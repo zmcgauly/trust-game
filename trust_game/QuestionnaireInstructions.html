@@ -3,13 +3,15 @@
 {{ endblock }}
 {{ block styles }}<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">{{ endblock }}
 {{ block content }}
-{{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-panel">
   {{ if is_part1_self_survey }}
-    <p>You will first answer demographic questions about yourself. For any demographic question, you may select "Prefer not to answer" if you do not wish to provide a response.</p>
-    <p>Information from Part 1 may be used in Part 2 to identify you to participants you are matched with during the decision-making task.</p>
+    <p>The experiment has three parts. You will receive instructions for each part after the previous part is completed.</p>
+    <p>In Part 1, you will answer demographic questions about yourself. For any demographic question, you may select "Prefer not to answer" if you do not wish to provide a response.</p>
+    <p>Your answers in Part 1 may be used in Part 2 to identify you to participants you are matched with.</p>
+    <p>After Part 1 is completed, you will receive the instructions for Part 2.</p>
   {{ else }}
-    <p>You have completed the decision-making portion. You will now answer questions about the participants with whom you were matched during the experiment.</p>
+    <p>You have completed Part 2. You will now receive the instructions for Part 3.</p>
+    <p>In Part 3, you will answer questions about the participants with whom you were matched.</p>
     <p>Your answers will not affect your payoff from the game in any way, and your responses are confidential and will be used solely for research purposes.</p>
   {{ endif }}
 </div>

@@ -15,7 +15,8 @@ from . import (
     ResponderDecision,
     ResponderReceipt,
     RoleNotice,
-    QuestionnaireInstructions,
+    Part1Instructions,
+    Part3Instructions,
     SelfIdentification,
     PaymentSummary,
     get_active_periods,
@@ -28,6 +29,21 @@ class PlayerBot(Bot):
         if self.round_number == 1:
             if is_real_experiment_session(self.player.session):
                 yield InstructionsIntro
+            else:
+                yield InstructionsIntro, dict(skip_instructions="1")
+
+            yield Part1Instructions
+            identification = dict(
+                age=None,
+                age_prefer_not_to_say=True,
+                ethnicity="Prefer not to say",
+                race="Prefer not to say",
+                gender="Prefer not to say",
+                sexuality="Prefer not to say",
+            )
+            yield SelfIdentification, identification
+
+            if is_real_experiment_session(self.player.session):
                 yield Instructions
                 yield Instructions2
                 yield Instructions3
@@ -42,19 +58,6 @@ class PlayerBot(Bot):
                     instruction_quiz_6="both_rounds",
                     instruction_quiz_7="eighty_four",
                 )
-            else:
-                yield InstructionsIntro, dict(skip_instructions="1")
-
-            yield QuestionnaireInstructions
-            identification = dict(
-                age=None,
-                age_prefer_not_to_say=True,
-                ethnicity="Prefer not to say",
-                race="Prefer not to say",
-                gender="Prefer not to say",
-                sexuality="Prefer not to say",
-            )
-            yield SelfIdentification, identification
 
         if not self.player.is_active_round:
             return
@@ -73,7 +76,7 @@ class PlayerBot(Bot):
             yield ResponderReceipt
 
         if self.round_number == C.PRACTICE_ROUNDS + get_active_periods(self.player.session) * C.ROUNDS_PER_PERIOD:
-            yield QuestionnaireInstructions
+            yield Part3Instructions
             from . import (
                 PartnerIdentification1, PartnerIdentification2, PartnerIdentification3,
                 PartnerIdentification4, PartnerIdentification5, PartnerIdentification6,
