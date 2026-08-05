@@ -9,7 +9,7 @@
   background: #fff;
   padding: 16px;
   margin-bottom: 16px;
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
 .practice-note {
@@ -57,7 +57,7 @@
 
 .trust-card p,
 .trust-panel p {
-  margin: 0 0 12px;
+  margin: 0 0 7px;
 }
 
 .trust-card p:last-child,
@@ -67,12 +67,12 @@
 
 .trust-panel ul,
 .trust-panel ol {
-  margin: 0 0 14px 1.25rem;
+  margin: 0 0 9px 1.25rem;
   padding-left: 1rem;
 }
 
 .trust-panel li {
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 
 .trust-panel li:last-child {
@@ -124,7 +124,7 @@
   position: fixed;
   top: 54px;
   right: 14px;
-  z-index: 20;
+  z-index: 1001;
   border: 1px solid #b91c1c;
   background: #fff;
   color: #b91c1c;
@@ -250,12 +250,12 @@
 
 .instructions-modal-body {
   padding: 16px;
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
 .instructions-modal-body p,
 .instructions-modal-body li {
-  margin: 0 0 12px;
+  margin: 0 0 7px;
 }
 
 .instructions-modal-body p:last-child,

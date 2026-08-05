@@ -19,6 +19,7 @@ from . import (
     SelfIdentification,
     PaymentSummary,
     get_active_periods,
+    is_real_experiment_session,
     treatment_picture,
 )
 
@@ -26,21 +27,24 @@ from . import (
 class PlayerBot(Bot):
     def play_round(self):
         if self.round_number == 1:
-            yield InstructionsIntro
-            yield Instructions
-            yield Instructions2
-            yield Instructions3
-            yield Instructions4
-            yield Instructions5
-            yield InstructionQuiz, dict(
-                instruction_quiz_1="same",
-                instruction_quiz_2="learning",
-                instruction_quiz_3="zero_to_twenty",
-                instruction_quiz_4="sent_available",
-                instruction_quiz_5="correct",
-                instruction_quiz_6="both_rounds",
-                instruction_quiz_7="quadratic",
-            )
+            if is_real_experiment_session(self.player.session):
+                yield InstructionsIntro
+                yield Instructions
+                yield Instructions2
+                yield Instructions3
+                yield Instructions4
+                yield Instructions5
+                yield InstructionQuiz, dict(
+                    instruction_quiz_1="same",
+                    instruction_quiz_2="learning",
+                    instruction_quiz_3="zero_to_twenty",
+                    instruction_quiz_4="sent_available",
+                    instruction_quiz_5="correct",
+                    instruction_quiz_6="both_rounds",
+                    instruction_quiz_7="eighty_four",
+                )
+            else:
+                yield InstructionsIntro, dict(skip_instructions="1")
 
         if not self.player.is_active_round:
             return

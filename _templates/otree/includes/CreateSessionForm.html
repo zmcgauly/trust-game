@@ -151,9 +151,35 @@
 </form>
 
 <script>
+    const trustGameConfigDefaults = {
+        trust_game_randomized: {
+            lowMultiplier: '3',
+            highMultiplier: '6',
+            lowMultiplierProbability: '0.50',
+            isRealExperiment: true
+        },
+        trust_game_randomized_pictures: {
+            lowMultiplier: '3',
+            highMultiplier: '6',
+            lowMultiplierProbability: '0.50',
+            isRealExperiment: true
+        },
+        trust_game_testing: {
+            lowMultiplier: '3',
+            highMultiplier: '6',
+            lowMultiplierProbability: '0.50',
+            isRealExperiment: false
+        },
+        trust_game_testing_pictures: {
+            lowMultiplier: '3',
+            highMultiplier: '6',
+            lowMultiplierProbability: '0.50',
+            isRealExperiment: false
+        }
+    };
 
     function isTrustGameConfig(sessionconfigname) {
-        return sessionconfigname === 'trust_game_randomized' || sessionconfigname === 'trust_game_randomized_pictures';
+        return Object.prototype.hasOwnProperty.call(trustGameConfigDefaults, sessionconfigname);
     }
 
     function setTrustGameFieldNames(sessionconfigname) {
@@ -161,6 +187,14 @@
         $('#trust-game-high-multiplier').attr('name', sessionconfigname + '.high_multiplier');
         $('#trust-game-low-multiplier-probability').attr('name', sessionconfigname + '.low_multiplier_probability');
         $('#trust-game-real-experiment').attr('name', sessionconfigname + '.is_real_experiment');
+    }
+
+    function applyTrustGameDefaults(sessionconfigname) {
+        let defaults = trustGameConfigDefaults[sessionconfigname];
+        $('#trust-game-low-multiplier').val(defaults.lowMultiplier);
+        $('#trust-game-high-multiplier').val(defaults.highMultiplier);
+        $('#trust-game-low-multiplier-probability').val(defaults.lowMultiplierProbability);
+        $('#trust-game-real-experiment').prop('checked', defaults.isRealExperiment);
     }
 
     function showSessionConfigInfo(sessionconfigname) {
@@ -172,6 +206,7 @@
         $('.trust-game-session-field').toggle(isTrustGameConfig(sessionconfigname));
         if (isTrustGameConfig(sessionconfigname)) {
             setTrustGameFieldNames(sessionconfigname);
+            applyTrustGameDefaults(sessionconfigname);
         }
     }
 

@@ -204,10 +204,17 @@ class Player(BasePlayer):
         label="Which decisions determine payment?", widget=widgets.RadioSelect,
     )
     instruction_quiz_7 = models.StringField(
-        choices=[["quadratic", "The report and realized multiplier determine a winning chance. The prize is paid when the random draw is no greater than that winning chance."],
-                 ["accuracy", "The prize is paid only when the report exactly matches the true probability."],
-                 ["random", "The report does not affect the chance of receiving the belief prize."]],
-        label="How can a selected belief report determine the belief prize?", widget=widgets.RadioSelect,
+        choices=[
+            ["sixty", "60%"],
+            ["eighty_four", "84%"],
+            ["forty", "40%"],
+            ["sixteen", "16%"],
+        ],
+        label=(
+            r"Suppose the multiplier really was low and you reported \(X = 60\%\). "
+            r"What is your probability of winning that round's belief prize?"
+        ),
+        widget=widgets.RadioSelect,
     )
 
     gender = models.StringField(choices=C.GENDER_CHOICES, label="What is your gender?", blank=True)
@@ -798,7 +805,7 @@ INSTRUCTION_QUIZ_CORRECT_ANSWERS = dict(
     instruction_quiz_1="same", instruction_quiz_2="learning",
     instruction_quiz_3="zero_to_twenty", instruction_quiz_4="sent_available",
     instruction_quiz_5="correct", instruction_quiz_6="both_rounds",
-    instruction_quiz_7="quadratic",
+    instruction_quiz_7="eighty_four",
 )
 
 
