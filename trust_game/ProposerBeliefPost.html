@@ -1,0 +1,21 @@
+{{ block title }}Belief Report{{ endblock }}
+{{ block styles }}<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">{{ endblock }}
+{{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
+<div class="trust-meta">
+  {{ if is_practice }}<span>Practice round {{ player.round_in_period }} of {{ C.PRACTICE_ROUNDS }}</span>
+  {{ else }}<span>Period {{ player.period_number }} of {{ total_periods }}</span><span>Round {{ player.round_in_period }} of 2</span>{{ endif }}
+</div>
+{{ if is_practice }}<div class="trust-panel practice-note"><p>This report is for practice and cannot be selected for payment.</p></div>{{ endif }}
+{{ include_sibling 'RoundSummaryHover.html' }}
+<div class="trust-panel">
+  <p>You sent <strong>{{ offer }}</strong> points and received <strong>{{ delivered_return }}</strong> points back.</p>
+  <label for="belief-slider"><strong>Report the probability that the multiplier was {{ low_multiplier }}:</strong> <span data-probability-output>{{ initial_probability }}%</span></label>
+  <input id="belief-slider" class="probability-slider" type="range" min="0" max="100" step="1" name="belief_post_probability_low" value="{{ initial_probability }}" required>
+  <div class="probability-labels"><span>0%</span><span>{{ initial_probability }}%</span><span>100%</span></div>
+</div>
+{{ next_button }}
+<script>
+(function(){var s=document.getElementById('belief-slider'),o=document.querySelector('[data-probability-output]');function u(){o.textContent=s.value+'%';}s.addEventListener('input',u);u();})();
+</script>
+{{ endblock }}

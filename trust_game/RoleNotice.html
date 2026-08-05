@@ -1,0 +1,30 @@
+{{ block title }}
+Role Assignment
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
+<div class="trust-meta">
+  {{ if player.is_practice_round }}
+    <span>Practice round {{ player.round_in_period }} of {{ C.PRACTICE_ROUNDS }}</span>
+  {{ else }}
+    <span>Period {{ player.period_number }} of {{ total_periods }}</span>
+  {{ endif }}
+</div>
+
+<div class="trust-panel">
+  <p>
+    You are {{ player_profile.title }}. Your role is {{ role_label }}.
+    This role stays the same for the full session.
+  </p>
+  {{ if show_profile }}
+    <img class="profile-image" src="{{ player_profile.picture_url }}" alt="">
+  {{ endif }}
+</div>
+
+{{ next_button }}
+{{ endblock }}

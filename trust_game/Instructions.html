@@ -1,0 +1,12 @@
+{{ block title }}Instructions{{ endblock }}
+{{ block styles }}<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">{{ endblock }}
+{{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
+{{ include_sibling 'TestingSkipButton.html' }}
+<div class="trust-panel">
+  <p>Please put all electronic devices away and remain quiet during the experiment. If you have a question, raise your hand and an experimenter will come to you.</p>
+  <p>This is an experiment in economic decision making. Your choices and the choices of others determine your earnings. You receive a guaranteed show-up payment of <strong>${{ participation_fee }}</strong>, and earnings from the decisions described below are added to that amount.</p>
+  <p>You may leave at any time. If you leave before completing the experiment, you keep the show-up payment but forfeit decision-based earnings.</p>
+</div>
+{{ next_button }}
+{{ endblock }}

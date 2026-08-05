@@ -1,0 +1,322 @@
+<form id="form">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label class="col-form-label" for="session_config">
+      {{ form.session_config.label }}
+    </label>
+    {{ form.session_config }}
+  </div>
+
+  <div class="mb-3">
+    <label class="col-form-label" for="num_participants">
+      {{ form.num_participants.label }}
+    </label>
+    <div class="controls">
+      {{ form.num_participants }}
+      {% for config in configs %}
+        <div id="lcm-{{ config.name }}" class="lcm"
+             style="display:none">
+          <p>Must be a multiple of {{ config.get_lcm() }}</p></div>
+      {% endfor %}
+      <p class="help-block">{{ form.num_participants.description }}</p>
+    </div>
+  </div>
+
+  <div class="mb-3 trust-game-session-field">
+    <label class="col-form-label" for="trust-game-low-multiplier">
+      Low multiplier
+    </label>
+    <div class="controls">
+      <input class="form-control w-auto"
+             id="trust-game-low-multiplier"
+             type="number"
+             step="0.01"
+             min="0.01"
+             value="3"
+             required>
+    </div>
+  </div>
+
+  <div class="mb-3 trust-game-session-field">
+    <label class="col-form-label" for="trust-game-high-multiplier">
+      High multiplier
+    </label>
+    <div class="controls">
+      <input class="form-control w-auto"
+             id="trust-game-high-multiplier"
+             type="number"
+             step="0.01"
+             min="0.01"
+             value="6"
+             required>
+    </div>
+  </div>
+
+  <div class="mb-3 trust-game-session-field">
+    <label class="col-form-label" for="trust-game-low-multiplier-probability">
+      Chance of low multiplier
+    </label>
+    <div class="controls">
+      <select class="form-select w-auto"
+              id="trust-game-low-multiplier-probability">
+        <option value="0.25">25%</option>
+        <option value="0.50" selected>50%</option>
+        <option value="0.75">75%</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mb-3 trust-game-session-field">
+    <label class="col-form-label" for="trust-game-session-type">
+      Session type
+    </label>
+    <div class="controls">
+      <select class="form-select w-auto"
+              id="trust-game-session-type">
+        <option value="true" selected>Real experiment</option>
+        <option value="false">Not real experiment (testing)</option>
+      </select>
+    </div>
+    <p class="help-block">
+      Not real experiment sessions show the skip button for instructions and skip the quiz.
+    </p>
+  </div>
+
+  {% if form.is_mturk.object_data %}
+    <input id="is_mturk" name="is_mturk" type="hidden" value="y">
+  {% endif %}
+  {{ form.room_name }}
+
+  <div>
+    <input class="btn btn-primary"
+           value="Create"
+           id="btn-create-session"
+           type="submit">
+  </div>
+  <br>
+
+  <progress id="create-session-wait" style="display:none"></progress>
+  <div id="create-session-progress" style="display:none; margin-top: 10px; font-style: italic;"></div>
+  <div id="create-session-error" class="alert alert-danger" style="display:none"></div>
+  <br>
+  {% for config in configs %}
+
+    <div class="config" id="config-{{ config.name }}" style="display: none">
+      <div class="edit-config"
+           id="edit-config-{{ config.name }}">
+        <h5>
+          <a data-bs-toggle="collapse"
+             href="#edit-config-table-{{ config.name }}"
+             class="btn-block">
+            Configure session
+            <img src='{% static "glyphicons/cogwheel.png" %}'>
+          </a>
+        </h5>
+        <div class="collapse"
+             id="edit-config-table-{{ config.name }}">
+          {% if config.custom_editable_fields() %}
+            <h5>Custom</h5>
+            <table class="table">
+              {% for field in config.custom_editable_fields_html() %}
+                {{ field|safe }}
+              {% endfor %}
+            </table>
+          {% else %}
+            <p><i>
+              You can make more properties configurable
+              by adding them to your session config in
+              settings.py.
+            </i></p>
+          {% endif %}
+
+          {% if config.custom_editable_fields() %}
+            <h5>General</h5>{% endif %}
+          <table class="table">
+            {% for field in config.builtin_editable_fields_html() %}
+              {{ field|safe }}
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+
+      {% with config=config %}
+        {% include "otree/includes/SessionInfo.html" %}
+      {% endwith %}
+    </div>
+
+  {% endfor %}
+</form>
+
+<script>
+    const trustGameConfigDefaults = {
+        trust_game_no_picture_no_description: {
+            lowMultiplier: '3',
+            highMultiplier: '6',
+            lowMultiplierProbability: '0.50',
+            isRealExperiment: true
+        },
+        trust_game_no_picture_description: {
+            lowMultiplier: '3',
+            highMultiplier: '6',
+            lowMultiplierProbability: '0.50',
+            isRealExperiment: true
+        },
+        trust_game_picture_no_description: {
+            lowMultiplier: '3',
+            highMultiplier: '6',
+            lowMultiplierProbability: '0.50',
+            isRealExperiment: true
+        },
+        trust_game_picture_description: {
+            lowMultiplier: '3',
+            highMultiplier: '6',
+            lowMultiplierProbability: '0.50',
+            isRealExperiment: true
+        }
+    };
+
+    function isTrustGameConfig(sessionconfigname) {
+        return Object.prototype.hasOwnProperty.call(trustGameConfigDefaults, sessionconfigname);
+    }
+
+    function setTrustGameFieldNames(sessionconfigname) {
+        $('#trust-game-low-multiplier').attr('name', sessionconfigname + '.low_multiplier');
+        $('#trust-game-high-multiplier').attr('name', sessionconfigname + '.high_multiplier');
+        $('#trust-game-low-multiplier-probability').attr('name', sessionconfigname + '.low_multiplier_probability');
+        $('#trust-game-session-type').removeAttr('name');
+    }
+
+    function applyTrustGameDefaults(sessionconfigname) {
+        let defaults = trustGameConfigDefaults[sessionconfigname];
+        $('#trust-game-low-multiplier').val(defaults.lowMultiplier);
+        $('#trust-game-high-multiplier').val(defaults.highMultiplier);
+        $('#trust-game-low-multiplier-probability').val(defaults.lowMultiplierProbability);
+        $('#trust-game-session-type').val(defaults.isRealExperiment ? 'true' : 'false');
+    }
+
+    function showSessionConfigInfo(sessionconfigname) {
+        $('.summary').hide();
+        $('.config').hide();
+        $('#config-' + sessionconfigname).show();
+        $('.lcm').hide();
+        $('#lcm-' + sessionconfigname).show();
+        $('.trust-game-session-field').toggle(isTrustGameConfig(sessionconfigname));
+        if (isTrustGameConfig(sessionconfigname)) {
+            setTrustGameFieldNames(sessionconfigname);
+            applyTrustGameDefaults(sessionconfigname);
+        }
+    }
+
+    $(document).ready(function () {
+        let dropdown = $('[name=session_config]')
+        $('.summary').hide();
+        $('.config').hide();
+        $('.lcm').hide();
+        var current_session_config = dropdown.val();
+        if (current_session_config) {
+            showSessionConfigInfo(current_session_config);
+        }
+
+        dropdown.change(function () {
+            showSessionConfigInfo(dropdown.val());
+        })
+
+        $("[name$='.low_multiplier']")
+            .not("#trust-game-low-multiplier")
+            .prop("disabled", true)
+            .closest("tr")
+            .hide();
+        $("[name$='.high_multiplier']")
+            .not("#trust-game-high-multiplier")
+            .prop("disabled", true)
+            .closest("tr")
+            .hide();
+        $("[name$='.low_multiplier_probability']")
+            .not("#trust-game-low-multiplier-probability")
+            .prop("disabled", true)
+            .closest("tr")
+            .hide();
+        $("[name$='.high_multiplier_probability']")
+            .prop("disabled", true)
+            .closest("tr")
+            .hide();
+        $("[name$='.is_real_experiment']")
+            .not("#trust-game-session-type")
+            .prop("disabled", true)
+            .closest("tr")
+            .hide();
+        $("[name$='.picture_condition']")
+            .prop("disabled", true)
+            .closest("tr")
+            .hide();
+        $("[name$='.written_description_condition']")
+            .prop("disabled", true)
+            .closest("tr")
+            .hide();
+
+        let $createSessionError = $("#create-session-error");
+        let $createSessionWait = $("#create-session-wait");
+        let $createSessionProgress = $("#create-session-progress");
+        let socket = makeReconnectingWebSocket("/create_session");
+        let $btnCreateSession = $('#btn-create-session');
+        $btnCreateSession.click(function (e) {
+            $btnCreateSession.prop('disabled', true);
+            $createSessionError.hide();
+            $createSessionProgress.hide();
+            $createSessionWait.show();
+
+            let selectedConfig = dropdown.val();
+            let ary = $('#form').serializeArray();
+            let form_data = {};
+            for (let entry of ary) {
+                form_data[entry.name] = entry.value;
+            }
+            if (isTrustGameConfig(selectedConfig)) {
+                form_data[selectedConfig + '.low_multiplier'] = $('#trust-game-low-multiplier').val();
+                form_data[selectedConfig + '.high_multiplier'] = $('#trust-game-high-multiplier').val();
+                form_data[selectedConfig + '.low_multiplier_probability'] = $('#trust-game-low-multiplier-probability').val();
+                if ($('#trust-game-session-type').val() === 'true') {
+                    form_data[selectedConfig + '.is_real_experiment'] = 'on';
+                } else {
+                    delete form_data[selectedConfig + '.is_real_experiment'];
+                }
+            }
+            socket.send(JSON.stringify(form_data));
+            e.preventDefault();
+        });
+
+        socket.onmessage = function (message) {
+            let data = JSON.parse(message.data);
+            if (data.progress) {
+                $createSessionProgress.text(data.progress);
+                $createSessionProgress.show();
+            } else if (data.traceback) {
+                $createSessionWait.hide();
+                $createSessionProgress.hide();
+                $createSessionError.text(data.error);
+                $createSessionError.append('<pre>' + data.traceback + '</pre>');
+                $createSessionError.show();
+                $btnCreateSession.prop('disabled', false);
+            } else if (data.validation_errors) {
+                $createSessionWait.hide();
+                $createSessionProgress.hide();
+                $createSessionError.text(JSON.stringify(data.validation_errors));
+                $createSessionError.show();
+                $btnCreateSession.prop('disabled', false);
+            } else if (data.session_url) {
+                $createSessionError.hide();
+                $createSessionProgress.hide();
+                $createSessionWait.hide();
+                window.location.href = data.session_url;
+                return;
+            } else {
+                $createSessionWait.hide();
+                $createSessionProgress.hide();
+                $createSessionError.text("Unexpected error: " + message.data);
+                $createSessionError.show();
+                $btnCreateSession.prop('disabled', false);
+            }
+        }
+    });
+</script>

@@ -1,0 +1,26 @@
+{{ block title }}Payment Summary{{ endblock }}
+{{ block styles }}<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">{{ endblock }}
+{{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
+<div class="trust-panel">
+  <h3>Selected period</h3>
+  <p>Period {{ paid_period }} was selected for payment. Your two trust-game rounds in that period produced {{ trust_points }} points, worth <strong>{{ trust_payment }}</strong>.</p>
+</div>
+{{ if is_proposer }}
+<div class="trust-panel">
+  <h3>Belief payments from period {{ paid_period }}</h3>
+  {{ for row in belief_rows }}
+    <p><strong>Round {{ row.round_in_period }}:</strong> You reported {{ row.selected_belief_probability }}% for the low multiplier, and the realized multiplier was {{ row.realized_multiplier }}. This produced a winning chance of {{ row.belief_winning_chance }}; the computer drew {{ row.belief_bonus_draw }}. Belief bonus: <strong>{{ row.belief_bonus }}</strong>.</p>
+  {{ endfor }}
+  <p>Total belief bonus from the selected period: <strong>{{ total_belief_bonus }}</strong>.</p>
+</div>
+{{ endif }}
+<div class="trust-panel">
+  <p>Decision-based earnings: <strong>{{ decision_payment }}</strong></p>
+  <p>Show-up payment: <strong>{{ participation_fee }}</strong></p>
+  <p>Total payment: <strong>{{ total_payment }}</strong></p>
+</div>
+<p class="experiment-ended-message">
+  The experiment has ended. Please find an experiment lead and collect your payment.
+</p>
+{{ endblock }}

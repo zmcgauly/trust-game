@@ -1,0 +1,8 @@
+{{ block title }}Instructions Quiz{{ endblock }}
+{{ block styles }}<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">{{ endblock }}
+{{ block content }}
+{{ include_sibling 'InstructionsButton.html' }}
+<div class="trust-panel">
+  <p>You have run out of attempts and are no longer eligible to complete the experiment. Please see the experiment lead to collect the ${{ participation_fee }} show-up payment.</p>
+</div>
+{{ endblock }}
