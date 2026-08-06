@@ -140,20 +140,24 @@
 
 <script>
 
+    function isTrustGameConfig(sessionconfigname) {
+        return (
+            sessionconfigname === 'trust_game_no_picture'
+            || sessionconfigname === 'trust_game_picture'
+        );
+    }
+
     function showSessionConfigInfo(sessionconfigname) {
         $('.summary').hide();
         $('.config').hide();
         $('#config-' + sessionconfigname).show();
         $('.lcm').hide();
         $('#lcm-' + sessionconfigname).show();
-        const isTrustGameConfig = (
-            sessionconfigname === 'trust_game_no_picture'
-            || sessionconfigname === 'trust_game_picture'
-        );
-        $('#real-experiment-session-field').toggle(isTrustGameConfig);
-        $('#trust-game-chance-of-3-field').toggle(isTrustGameConfig);
-        $('#trust-game-large-multiplier-field').toggle(isTrustGameConfig);
-        if (isTrustGameConfig) {
+        const trustGameSelected = isTrustGameConfig(sessionconfigname);
+        $('#real-experiment-session-field').toggle(trustGameSelected);
+        $('#trust-game-chance-of-3-field').toggle(trustGameSelected);
+        $('#trust-game-large-multiplier-field').toggle(trustGameSelected);
+        if (trustGameSelected) {
             $('#trust-game-chance-of-3').attr('name', sessionconfigname + '.chance_of_3');
             $('#trust-game-large-multiplier').attr('name', sessionconfigname + '.large_multiplier');
             $('#trust-game-real-experiment').attr('name', sessionconfigname + '.is_real_experiment');
@@ -209,6 +213,13 @@
             let form_data = {};
             for (let entry of ary) {
                 form_data[entry.name] = entry.value;
+            }
+            let selectedConfig = dropdown.val();
+            if (isTrustGameConfig(selectedConfig)) {
+                form_data[selectedConfig + '.belief_prize_dollars'] = '2.00';
+                if (selectedConfig === 'trust_game_picture') {
+                    form_data[selectedConfig + '.picture_condition'] = 'on';
+                }
             }
             socket.send(JSON.stringify(form_data));
             e.preventDefault();
