@@ -660,11 +660,11 @@ def show_part1_self_survey(player: Player):
 
 
 def show_part3_partner_survey(player: Player):
-    return player.round_number == last_active_round(player.session)
+    return player.round_number == last_active_round(player.session) and treatment_picture(player)
 
 
 def show_end_demographic_survey(player: Player):
-    return show_part3_partner_survey(player)
+    return player.round_number == last_active_round(player.session)
 
 
 def is_real_experiment_session(session):
@@ -1535,6 +1535,8 @@ def partner_survey_headers(role_prefix):
 def partner_survey_values(player):
     final_player = final_active_player(player)
     values = []
+    if not treatment_picture(player):
+        return [None] * (C.MAX_PERIODS * (1 + len(PARTNER_SURVEY_EXPORT_SUFFIXES)))
     active_periods = get_active_periods(player.session)
     for slot in range(1, C.MAX_PERIODS + 1):
         if slot <= active_periods:

@@ -16,8 +16,9 @@ An oTree 6 experiment with fixed proposer and responder roles, rotating partners
 - Partners rotate after each period.
 - A participant is not matched with the same partner in two different real periods.
 - The number of real periods is the smaller of 10 and the number of participants in the opposite role.
-- Part 3 instructions are shown after Part 2 is complete.
+- In picture-treatment sessions, Part 3 instructions are shown after Part 2 is complete.
 - Part 3 asks participants to guess the demographics of the partners with whom they were matched.
+- No-picture sessions skip Part 3 and proceed directly to the payment summary.
 
 In each round, the proposer receives 20 points and sends an integer from 0 through 20 to the responder.
 
@@ -101,7 +102,7 @@ Written descriptions are controlled by `written_description_condition`.
 
 All participants answer demographic questions about themselves in Part 1, before the trust-game decisions begin.
 
-All participants make demographic guesses about their matched partners in Part 3, after the trust-game decisions are complete.
+Only participants in picture-treatment sessions make demographic guesses about their matched partners in Part 3, after the trust-game decisions are complete.
 
 The relevant partner's available cues are displayed while each set of guesses is made.
 
@@ -153,9 +154,9 @@ The custom export contains one row for each active proposer-responder round, inc
 - trust-game points and payments;
 - belief reports, quadratic winning chances, random draws, and bonuses;
 - Part 1 self-demographic responses;
-- Part 3 partner-demographic guesses.
+- Part 3 partner-demographic guesses in picture-treatment sessions.
 
-Partner-demographic export fields are populated for all treatment cells.
+Partner-demographic export fields are empty in no-picture sessions.
 
 ## Production settings
 

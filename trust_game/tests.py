@@ -21,6 +21,7 @@ from . import (
     PaymentSummary,
     get_active_periods,
     is_real_experiment_session,
+    treatment_picture,
 )
 
 
@@ -76,33 +77,34 @@ class PlayerBot(Bot):
             yield ResponderReceipt
 
         if self.round_number == C.PRACTICE_ROUNDS + get_active_periods(self.player.session) * C.ROUNDS_PER_PERIOD:
-            yield Part3Instructions
-            from . import (
-                PartnerIdentification1, PartnerIdentification2, PartnerIdentification3,
-                PartnerIdentification4, PartnerIdentification5, PartnerIdentification6,
-                PartnerIdentification7, PartnerIdentification8, PartnerIdentification9,
-                PartnerIdentification10,
-            )
-            pages = [
-                PartnerIdentification1, PartnerIdentification2, PartnerIdentification3,
-                PartnerIdentification4, PartnerIdentification5, PartnerIdentification6,
-                PartnerIdentification7, PartnerIdentification8, PartnerIdentification9,
-                PartnerIdentification10,
-            ]
-            for slot, page in enumerate(pages[: get_active_periods(self.player.session)], start=1):
-                prefix = f"partner_{slot}"
-                yield page, {
-                    f"{prefix}_age_guess": 30,
-                    f"{prefix}_age_confidence": "Sure",
-                    f"{prefix}_ethnicity_guess": "No",
-                    f"{prefix}_ethnicity_confidence": "Unsure",
-                    f"{prefix}_race_guess": "Other",
-                    f"{prefix}_race_confidence": "Neither Sure or Unsure",
-                    f"{prefix}_gender_guess": "Other",
-                    f"{prefix}_gender_confidence": "Unsure",
-                    f"{prefix}_sexuality_guess": "Other",
-                    f"{prefix}_sexuality_confidence": "Unsure",
-                    f"{prefix}_existing_relationship": "No",
-                    f"{prefix}_relationship_nature": "",
-                }
+            if treatment_picture(self.player):
+                yield Part3Instructions
+                from . import (
+                    PartnerIdentification1, PartnerIdentification2, PartnerIdentification3,
+                    PartnerIdentification4, PartnerIdentification5, PartnerIdentification6,
+                    PartnerIdentification7, PartnerIdentification8, PartnerIdentification9,
+                    PartnerIdentification10,
+                )
+                pages = [
+                    PartnerIdentification1, PartnerIdentification2, PartnerIdentification3,
+                    PartnerIdentification4, PartnerIdentification5, PartnerIdentification6,
+                    PartnerIdentification7, PartnerIdentification8, PartnerIdentification9,
+                    PartnerIdentification10,
+                ]
+                for slot, page in enumerate(pages[: get_active_periods(self.player.session)], start=1):
+                    prefix = f"partner_{slot}"
+                    yield page, {
+                        f"{prefix}_age_guess": 30,
+                        f"{prefix}_age_confidence": "Sure",
+                        f"{prefix}_ethnicity_guess": "No",
+                        f"{prefix}_ethnicity_confidence": "Unsure",
+                        f"{prefix}_race_guess": "Other",
+                        f"{prefix}_race_confidence": "Neither Sure or Unsure",
+                        f"{prefix}_gender_guess": "Other",
+                        f"{prefix}_gender_confidence": "Unsure",
+                        f"{prefix}_sexuality_guess": "Other",
+                        f"{prefix}_sexuality_confidence": "Unsure",
+                        f"{prefix}_existing_relationship": "No",
+                        f"{prefix}_relationship_nature": "",
+                    }
             yield Submission(PaymentSummary, check_html=False)

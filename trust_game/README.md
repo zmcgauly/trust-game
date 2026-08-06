@@ -8,4 +8,4 @@ The participant flow has three parts:
 0. General instructions about the show-up payment and the option to leave.
 1. Self-demographic survey.
 2. Trust-game instructions, instruction quiz, and decisions using the assigned partner-cue treatment.
-3. Partner-demographic guesses after the decision task.
+3. Partner-demographic guesses after the decision task in picture-treatment sessions only.
