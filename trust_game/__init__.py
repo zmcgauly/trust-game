@@ -25,6 +25,7 @@ class C(BaseConstants):
     MULTIPLIER = LOW_MULTIPLIER
     DEFAULT_CHANCE_OF_3 = 0.50
     DEFAULT_LARGE_MULTIPLIER = HIGH_MULTIPLIER
+    DEFAULT_BELIEF_PRIZE_DOLLARS = 2.00
     INSTRUCTION_QUIZ_MAX_ATTEMPTS = 3
     MIN_AGE = 18
     MAX_AGE = 100
@@ -386,13 +387,15 @@ class Player(BasePlayer):
     partner_5_sexuality_confidence = models.StringField(choices=C.CONFIDENCE_CHOICES, label=C.CONFIDENCE_LABEL)
     partner_5_existing_relationship = models.StringField(choices=C.RELATIONSHIP_CHOICES, label="Do you have an existing relationship with this person?")
     partner_5_relationship_nature = models.LongStringField(label="If so, what is the nature of the relationship?", blank=True)
-    proposer_belief_multiplier = models.IntegerField(
-        label="What do you think the multiplier was?",
+    belief_post_probability_low = models.IntegerField(
         min=0,
+        max=100,
+        label="After seeing the returned amount, what is the probability that the low multiplier was used?",
     )
-    proposer_belief_low_balls = models.IntegerField(min=0, max=10, initial=5)
-    proposer_belief_large_balls = models.IntegerField(min=0, max=10, initial=5)
-    multiplier_belief_bonus = models.CurrencyField(initial=0)
+    belief_winning_chance = models.FloatField(initial=0)
+    belief_bonus_draw = models.IntegerField(initial=0)
+    belief_bonus_awarded = models.BooleanField(initial=False)
+    belief_bonus = models.CurrencyField(initial=0)
 
 
 def get_session_picture_condition(session):
@@ -479,6 +482,12 @@ def get_large_multiplier(session):
             f"Large multiplier must be greater than {C.LOW_MULTIPLIER}."
         )
     return large_multiplier
+
+
+def get_belief_prize(session):
+    return float(
+        session.config.get("belief_prize_dollars", C.DEFAULT_BELIEF_PRIZE_DOLLARS)
+    )
 
 
 def get_large_multiplier_probability(session):
@@ -662,6 +671,7 @@ def pair_card_vars(player: Player):
         player_role_label=player_role,
         partner_role_label=partner_role,
         anonymous_partner_label=f"Anonymous {partner.role_name}",
+        belief_prize=f"{get_belief_prize(player.session):.2f}",
     )
 
 
@@ -826,23 +836,30 @@ def responder_round_points(group: Group):
     return group.multiplied_amount() - group.intended_return
 
 
-def proposer_multiplier_belief_bonus(player: Player):
-    realized_multiplier = int(get_group_realized_multiplier(player.group))
+def quadratic_winning_chance(probability_low_percent, realized_multiplier):
     if realized_multiplier == C.LOW_MULTIPLIER:
-        return cu(player.proposer_belief_low_balls)
-    if realized_multiplier == get_large_multiplier(player.session):
-        return cu(player.proposer_belief_large_balls)
-    return cu(0)
+        return 100 - ((100 - probability_low_percent) ** 2 / 100)
+    return 100 - (probability_low_percent ** 2 / 100)
 
 
-def implied_multiplier_belief(player: Player):
-    low_balls = player.proposer_belief_low_balls
-    large_balls = player.proposer_belief_large_balls
-    if low_balls > large_balls:
-        return C.LOW_MULTIPLIER
-    if large_balls > low_balls:
-        return get_large_multiplier(player.session)
-    return 0
+def record_belief(player: Player):
+    if player.is_practice_round:
+        player.belief_bonus = cu(0)
+        return
+
+    reported_probability = player.belief_post_probability_low
+    winning_chance = quadratic_winning_chance(
+        reported_probability,
+        get_group_realized_multiplier(player.group),
+    )
+    bonus_draw = random.randint(0, 100)
+    player.belief_winning_chance = winning_chance
+    player.belief_bonus_draw = bonus_draw
+    player.belief_bonus_awarded = bonus_draw <= winning_chance
+    player.belief_bonus = cu(
+        get_belief_prize(player.session) if player.belief_bonus_awarded else 0
+    )
+    player.payoff = proposer_round_points(player.group) + player.belief_bonus
 
 
 def set_payoffs(group: Group):
@@ -933,6 +950,8 @@ def instruction_page_vars(player: Player):
         show_testing_skip=not is_real_experiment_session(player.session),
         low_multiplier=C.LOW_MULTIPLIER,
         large_multiplier=get_large_multiplier(player.session),
+        belief_prize=f"{get_belief_prize(player.session):.2f}",
+        participation_fee=f"{float(player.session.config.get('participation_fee', 10.00)):.2f}",
     )
 
 
@@ -1098,6 +1117,7 @@ class InstructionQuiz(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
+            instruction_page_vars(player),
             attempts_remaining=(
                 C.INSTRUCTION_QUIZ_MAX_ATTEMPTS
                 - instruction_quiz_wrong_attempts(player)
@@ -1135,6 +1155,10 @@ class InstructionQuizFailed(Page):
             and is_real_experiment_session(player.session)
             and instruction_quiz_failed(player)
         )
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return instruction_page_vars(player)
 
 
 class ProposerDecision(Page):
@@ -1220,7 +1244,7 @@ class ProposerReceipt(Page):
 
 class ProposerBelief(Page):
     form_model = "player"
-    form_fields = ["proposer_belief_low_balls", "proposer_belief_large_balls"]
+    form_fields = ["belief_post_probability_low"]
 
     @staticmethod
     def is_displayed(player: Player):
@@ -1234,27 +1258,25 @@ class ProposerBelief(Page):
             "is_practice": player.is_practice_round,
             "low_multiplier": C.LOW_MULTIPLIER,
             "large_multiplier": get_large_multiplier(player.session),
+            "offer": player.group.offer,
+            "delivered_return": player.group.delivered_return,
+            "initial_probability": round(get_chance_of_3(player.session) * 100),
         }
 
     @staticmethod
     def error_message(player: Player, values):
-        low_balls = values["proposer_belief_low_balls"]
-        large_balls = values["proposer_belief_large_balls"]
-        if low_balls is None or large_balls is None:
-            return "Please place all 10 balls."
-        if low_balls + large_balls != 10:
-            return "Please place exactly 10 balls across the two multipliers."
+        probability = values["belief_post_probability_low"]
+        if probability is None:
+            return "Please report a probability from 0 to 100."
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        player.proposer_belief_multiplier = implied_multiplier_belief(player)
         if player.is_practice_round:
-            player.multiplier_belief_bonus = cu(0)
+            player.belief_bonus = cu(0)
             player.payoff = cu(0)
             return
 
-        player.multiplier_belief_bonus = proposer_multiplier_belief_bonus(player)
-        player.payoff = proposer_round_points(player.group) + player.multiplier_belief_bonus
+        record_belief(player)
 
 
 class ResponderReceipt(Page):
@@ -1535,10 +1557,11 @@ def custom_export(players):
         "multiplied_amount",
         "intended_return",
         "delivered_return",
-        "proposer_belief_multiplier",
-        "proposer_belief_low_balls",
-        "proposer_belief_large_balls",
-        "multiplier_belief_bonus",
+        "belief_post_probability_low",
+        "belief_winning_chance",
+        "belief_bonus_draw",
+        "belief_bonus_awarded",
+        "belief_bonus",
         "proposer_payoff",
         "responder_payoff",
     ]
@@ -1596,10 +1619,11 @@ def custom_export(players):
             multiplied_amount,
             nullable_field(group, "intended_return"),
             nullable_field(group, "delivered_return"),
-            nullable_field(proposer, "proposer_belief_multiplier"),
-            nullable_field(proposer, "proposer_belief_low_balls"),
-            nullable_field(proposer, "proposer_belief_large_balls"),
-            nullable_field(proposer, "multiplier_belief_bonus"),
+            nullable_field(proposer, "belief_post_probability_low"),
+            nullable_field(proposer, "belief_winning_chance"),
+            nullable_field(proposer, "belief_bonus_draw"),
+            nullable_field(proposer, "belief_bonus_awarded"),
+            nullable_field(proposer, "belief_bonus"),
             nullable_field(proposer, "payoff"),
             nullable_field(responder, "payoff"),
         ]

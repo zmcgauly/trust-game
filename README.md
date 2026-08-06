@@ -1,6 +1,7 @@
 # Trust Game Experiment
 
-This repository contains an oTree-compatible implementation of a 2x2 trust-game design.
+This repository contains an oTree-compatible implementation of the Trust Game 1.5 design:
+the original trust-game design with the Trust Game 2.0 sliding-scale belief elicitation.
 The original standalone browser prototype remains in `index.html`, but the oTree project
 entry point is `settings.py` and the app is `trust_game`.
 
@@ -15,7 +16,9 @@ entry point is `settings.py` and the app is `trust_game`.
 - Proposers start each round with 20 points and can send whole points.
 - Sent points are multiplied for the responder.
 - Responders choose how many whole points to send back.
-- After each round result, proposers answer how many points they think the responder sent back.
+- After each round result, proposers report the probability from 0% to 100% that the low multiplier was used.
+- The default show-up fee is `$10.00`.
+- Each real-round proposer belief report is evaluated for a `$2.00` belief prize using the quadratic winning-chance rule.
 - The session is created as either a picture session or a no-picture session.
 - At the start of each period, the app independently randomizes the multiplier condition.
 - The two rounds in the same period use the same multiplier condition.
@@ -63,6 +66,7 @@ The random multiplier parameter is set in `settings.py`:
 ```python
 chance_of_3=0.50
 large_multiplier=6
+belief_prize_dollars=2.00
 ```
 
 The create-session form exposes `Chance of 3` as 25%, 50%, or 75%, and `Large
@@ -140,5 +144,6 @@ proposer-responder round. The export includes:
 - responder's intended return
 - whether the 6x multiplier applied
 - points delivered back to the proposer
-- proposer's belief about how many points the responder sent back
+- proposer's slider belief report about the low multiplier
+- belief winning chance, random draw, and awarded belief bonus
 - final proposer and responder points

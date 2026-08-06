@@ -240,6 +240,18 @@
   background: #eef2f7;
 }
 
+.probability-slider {
+  width: 100%;
+  margin: 1rem 0 0.25rem;
+}
+
+.probability-labels {
+  display: flex;
+  justify-content: space-between;
+  color: #5f6670;
+  font-size: 0.9rem;
+}
+
 .testing-skip-button {
   position: fixed;
   right: 14px;

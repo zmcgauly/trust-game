@@ -1,5 +1,5 @@
 {{ block title }}
-Review Screen and Belief Elicitation Instructions
+Belief Report Instructions
 {{ endblock }}
 
 {{ block styles }}
@@ -10,38 +10,45 @@ Review Screen and Belief Elicitation Instructions
 {{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-panel">
   <p>
-    After you and your partner have concluded your decisions, you will be
-    provided with a screen to review the rounds' results including how much was
-    sent, received, and your final payoffs.
+    In every round, after seeing how many points the responder returned, the
+    proposer reports the probability, from 0% to 100%, that the multiplier was
+    {{ low_multiplier }}. For example, reporting 70% means you believe there is
+    a 70% chance that the multiplier was {{ low_multiplier }}.
   </p>
   <p>
-    If you were assigned the role of the proposer, you will then be asked
-    questions regarding what you believe the multiplier for that round was. To
-    answer you will stack the balls on the two multiplier options. You will have
-    ten balls to place across the two options. If you are confident in one, you
-    may place all ten on one. You may also split them up according to what you
-    believe and how confident you are in that belief.
+    Each real-round belief report is evaluated for a
+    <strong>${{ belief_prize }}</strong> belief prize. Your reported probability
+    and the actual multiplier determine your chance of winning that round's
+    belief prize.
   </p>
+  <p>If the multiplier was {{ low_multiplier }}:</p>
+  \[
+    \text{winning chance}
+    =
+    100
+    -
+    \frac{(100 - \text{reported probability})^2}{100}.
+  \]
+  <p>If the multiplier was {{ large_multiplier }}:</p>
+  \[
+    \text{winning chance}
+    =
+    100
+    -
+    \frac{(\text{reported probability})^2}{100}.
+  \]
   <p>
-    For every ball placed correctly you will receive an additional $1 if that
-    round is selected. See the visual below for a demonstration of what it could
-    look like.
+    The computer then draws a number that is equally likely to be any integer
+    from 0 through 100. You receive the belief prize when:
   </p>
-  <img
-    class="instruction-screenshot instruction-screenshot-narrow"
-    src="{{ static 'trust_game/instruction_images/belief-balls-demo.png' }}"
-    alt="Example belief elicitation screen with balls stacked on multiplier options"
-  >
+  \[
+    \text{random draw} \leq \text{winning chance}.
+  \]
   <p>
-    If at anytime you would like to access your round review while answering
-    this question, simply hover your mouse over the bolded and underlined title
-    round review and a box will pop up with the results.
+    Higher values of the winning chance give you a better chance of receiving
+    the prize. Reporting your true belief about the {{ low_multiplier }}
+    multiplier gives you the best chance of receiving it.
   </p>
-  <img
-    class="instruction-screenshot"
-    src="{{ static 'trust_game/instruction_images/round-review-hover-demo.png' }}"
-    alt="Example round review hover box"
-  >
 </div>
 
 {{ include_sibling 'TestingSkipButton.html' }}

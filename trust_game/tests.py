@@ -52,8 +52,7 @@ class PlayerBot(Bot):
             yield ProposerDecision, dict(offer=10)
             yield ProposerReceipt
             yield ProposerBelief, dict(
-                proposer_belief_low_balls=10,
-                proposer_belief_large_balls=0,
+                belief_post_probability_low=50,
             )
         else:
             yield ResponderDecision, dict(

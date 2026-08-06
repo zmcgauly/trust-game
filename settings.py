@@ -12,6 +12,7 @@ SESSION_CONFIGS = [
         treatment_randomization_level="period_multiplier",
         is_real_experiment=True,
         picture_condition=False,
+        belief_prize_dollars=2.00,
         chance_of_3=0.50,
         large_multiplier=6,
     ),
@@ -23,6 +24,7 @@ SESSION_CONFIGS = [
         treatment_randomization_level="period_multiplier",
         is_real_experiment=True,
         picture_condition=True,
+        belief_prize_dollars=2.00,
         chance_of_3=0.50,
         large_multiplier=6,
     ),
@@ -30,8 +32,9 @@ SESSION_CONFIGS = [
 
 SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00,
-    participation_fee=0.00,
+    participation_fee=10.00,
     picture_condition=False,
+    belief_prize_dollars=2.00,
     doc="",
 )
 

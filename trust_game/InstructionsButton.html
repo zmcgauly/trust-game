@@ -62,6 +62,17 @@
           \text{points returned by responder}
         \]
       </p>
+      <p>
+        After seeing each return, proposers report the probability from 0% to
+        100% that the multiplier was {{ C.LOW_MULTIPLIER }}. For each real-round
+        report, the reported probability and the actual multiplier determine a
+        winning chance for a ${{ session.config.belief_prize_dollars }} belief prize.
+      </p>
+      <p>
+        The computer draws a number that is equally likely to be any integer
+        from 0 through 100. That round's belief prize is paid when
+        \(\text{random draw} \leq \text{winning chance}\).
+      </p>
     </div>
   </div>
 </div>
