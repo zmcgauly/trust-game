@@ -5,13 +5,24 @@ IS_PRODUCTION = bool(environ.get("OTREE_PRODUCTION"))
 
 SESSION_CONFIGS = [
     dict(
-        name="trust_game_randomized",
-        display_name="Trust Game - Randomized by Period",
+        name="trust_game_no_picture",
+        display_name="Trust Game - No Pictures",
         num_demo_participants=10,
         app_sequence=["trust_game"],
-        randomize_treatment_by_period=True,
-        treatment_randomization_level="period",
+        treatment_randomization_level="period_multiplier",
         is_real_experiment=True,
+        picture_condition=False,
+        chance_of_3=0.50,
+        large_multiplier=6,
+    ),
+    dict(
+        name="trust_game_picture",
+        display_name="Trust Game - Pictures",
+        num_demo_participants=10,
+        app_sequence=["trust_game"],
+        treatment_randomization_level="period_multiplier",
+        is_real_experiment=True,
+        picture_condition=True,
         chance_of_3=0.50,
         large_multiplier=6,
     ),
@@ -20,6 +31,7 @@ SESSION_CONFIGS = [
 SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00,
     participation_fee=0.00,
+    picture_condition=False,
     doc="",
 )
 

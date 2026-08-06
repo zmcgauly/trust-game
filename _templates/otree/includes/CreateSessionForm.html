@@ -30,7 +30,7 @@
     <div class="controls">
       <select class="form-select w-auto"
               id="trust-game-chance-of-3"
-              name="trust_game_randomized.chance_of_3">
+              name="trust_game_no_picture.chance_of_3">
         <option value="0.25">25%</option>
         <option value="0.50" selected>50%</option>
         <option value="0.75">75%</option>
@@ -45,7 +45,7 @@
     <div class="controls">
       <input class="form-control w-auto"
              id="trust-game-large-multiplier"
-             name="trust_game_randomized.large_multiplier"
+             name="trust_game_no_picture.large_multiplier"
              type="number"
              step="1"
              min="4"
@@ -61,7 +61,7 @@
     <div class="form-check">
       <input class="form-check-input"
              id="trust-game-real-experiment"
-             name="trust_game_randomized.is_real_experiment"
+             name="trust_game_no_picture.is_real_experiment"
              type="checkbox"
              checked>
       <label class="form-check-label" for="trust-game-real-experiment">
@@ -146,9 +146,18 @@
         $('#config-' + sessionconfigname).show();
         $('.lcm').hide();
         $('#lcm-' + sessionconfigname).show();
-        $('#real-experiment-session-field').toggle(sessionconfigname === 'trust_game_randomized');
-        $('#trust-game-chance-of-3-field').toggle(sessionconfigname === 'trust_game_randomized');
-        $('#trust-game-large-multiplier-field').toggle(sessionconfigname === 'trust_game_randomized');
+        const isTrustGameConfig = (
+            sessionconfigname === 'trust_game_no_picture'
+            || sessionconfigname === 'trust_game_picture'
+        );
+        $('#real-experiment-session-field').toggle(isTrustGameConfig);
+        $('#trust-game-chance-of-3-field').toggle(isTrustGameConfig);
+        $('#trust-game-large-multiplier-field').toggle(isTrustGameConfig);
+        if (isTrustGameConfig) {
+            $('#trust-game-chance-of-3').attr('name', sessionconfigname + '.chance_of_3');
+            $('#trust-game-large-multiplier').attr('name', sessionconfigname + '.large_multiplier');
+            $('#trust-game-real-experiment').attr('name', sessionconfigname + '.is_real_experiment');
+        }
     }
 
     $(document).ready(function () {
@@ -165,18 +174,22 @@
             showSessionConfigInfo(dropdown.val());
         })
 
-        $("input[name='trust_game_randomized.is_real_experiment']")
+        $("input[name$='.is_real_experiment']")
             .not("#trust-game-real-experiment")
             .prop("disabled", true)
             .closest("tr")
             .hide();
-        $("[name='trust_game_randomized.chance_of_3']")
+        $("[name$='.chance_of_3']")
             .not("#trust-game-chance-of-3")
             .prop("disabled", true)
             .closest("tr")
             .hide();
-        $("[name='trust_game_randomized.large_multiplier']")
+        $("[name$='.large_multiplier']")
             .not("#trust-game-large-multiplier")
+            .prop("disabled", true)
+            .closest("tr")
+            .hide();
+        $("[name$='.picture_condition']")
             .prop("disabled", true)
             .closest("tr")
             .hide();

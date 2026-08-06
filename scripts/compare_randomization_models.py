@@ -15,7 +15,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_ROOT = ROOT / "bot_comparison"
 SEED_ENV_VAR = "TRUST_GAME_BOT_RANDOM_SEED"
 CONFIGS = [
-    ("current_period_level", "trust_game_randomized"),
+    ("period_multiplier_no_picture", "trust_game_no_picture"),
+    ("period_multiplier_picture", "trust_game_picture"),
 ]
 
 

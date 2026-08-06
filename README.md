@@ -16,28 +16,30 @@ entry point is `settings.py` and the app is `trust_game`.
 - Sent points are multiplied for the responder.
 - Responders choose how many whole points to send back.
 - After each round result, proposers answer how many points they think the responder sent back.
-- At the start of each period, the app independently randomizes one of the four treatment cells with equal 1-in-4 probability.
-- The two rounds in the same period use the same treatment cell.
-- Players are told their fixed role at the start of each period, without being told the treatment cell.
+- The session is created as either a picture session or a no-picture session.
+- At the start of each period, the app independently randomizes the multiplier condition.
+- The two rounds in the same period use the same multiplier condition.
+- Players are told their fixed role at the start of each period, without being told the multiplier condition.
 - Players are never asked to upload pictures.
-- If pictures are visible in a period, both players' pictures are shown. If pictures are not visible, neither player's picture is shown.
+- In picture sessions, both players' pictures are shown. In no-picture sessions, neither player's picture is shown.
 - In random-multiplier periods, the session draws either the 3x or large multiplier once per period.
 - By default, the 3x multiplier occurs with probability `0.50` and the large multiplier is `6`.
 - In fixed-multiplier periods, the multiplier is always 3x.
-- Participants are not told which treatment cell applies; exports include the private audit fields.
+- Participants are not told which multiplier condition applies; exports include the private audit fields.
 
-## Treatment Cells
+## Session Options and Period Treatments
 
-| Picture condition | Multiplier condition | Box label |
+| Session option | Period multiplier condition | Box label |
 | --- | --- | --- |
-| No picture | Fixed 3x | No picture / Multiplier 3 |
-| No picture | Hidden 3x/large draw | No picture / Multiplier 3 or large |
-| Picture | Fixed 3x | Picture / Multiplier 3 |
-| Picture | Hidden 3x/large draw | Picture / Multiplier 3 or large |
+| No pictures | Fixed 3x | No picture / Multiplier 3 |
+| No pictures | Hidden 3x/large draw | No picture / Multiplier 3 or large |
+| Pictures | Fixed 3x | Picture / Multiplier 3 |
+| Pictures | Hidden 3x/large draw | Picture / Multiplier 3 or large |
 
-The oTree demo page shows one session config, `trust_game_randomized`. The treatment
-box is drawn separately for each period, not each round. The two rounds in a period
-always use the same box.
+The oTree demo page shows two session configs, `trust_game_no_picture` and
+`trust_game_picture`. The picture condition is selected when the session is created.
+The multiplier condition is drawn separately for each period, not each round. The two
+rounds in a period always use the same multiplier condition.
 
 ## Running with oTree
 
@@ -48,12 +50,13 @@ Use the same Python environment where oTree is installed. This project targets o
 .\.venv\Scripts\otree.exe devserver
 ```
 
-Then open the local oTree URL printed by the server and create the randomized trust-game
-session config.
+Then open the local oTree URL printed by the server and create either the picture or
+no-picture trust-game session config.
 
-Available oTree session config:
+Available oTree session configs:
 
-- `trust_game_randomized`
+- `trust_game_no_picture`
+- `trust_game_picture`
 
 The random multiplier parameter is set in `settings.py`:
 
@@ -114,9 +117,9 @@ the filename:
 - `Player 9.jpg`
 - `Player 10.jpg`
 
-When a period is assigned to a picture condition, oTree displays the matching images
-automatically. When pictures are not visible, neither the participant's own image nor the
-partner's image is displayed.
+When a picture session is created, oTree displays the matching images automatically.
+When a no-picture session is created, neither the participant's own image nor the
+partner's image is displayed in any period.
 
 ## Standalone Prototype
 

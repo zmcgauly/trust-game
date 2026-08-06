@@ -95,29 +95,13 @@ class C(BaseConstants):
         ["Yes", "Yes"],
         ["Prefer not to say", "Prefer not to say"],
     ]
-    TREATMENTS = [
+    MULTIPLIER_TREATMENTS = [
         dict(
-            code="no_picture_fixed_multiplier",
-            picture_label="No picture",
-            picture=False,
+            code="fixed_multiplier",
             random_multiplier=False,
         ),
         dict(
-            code="no_picture_random_multiplier",
-            picture_label="No picture",
-            picture=False,
-            random_multiplier=True,
-        ),
-        dict(
-            code="picture_fixed_multiplier",
-            picture_label="Picture",
-            picture=True,
-            random_multiplier=False,
-        ),
-        dict(
-            code="picture_random_multiplier",
-            picture_label="Picture",
-            picture=True,
+            code="random_multiplier",
             random_multiplier=True,
         ),
     ]
@@ -411,8 +395,28 @@ class Player(BasePlayer):
     multiplier_belief_bonus = models.CurrencyField(initial=0)
 
 
-def make_period_treatments():
-    return [random.choice(C.TREATMENTS).copy() for _ in range(C.PERIODS)]
+def get_session_picture_condition(session):
+    return bool(session.config.get("picture_condition", False))
+
+
+def add_session_picture_condition(session, treatment):
+    treatment = treatment.copy()
+    picture = get_session_picture_condition(session)
+    picture_code = "picture" if picture else "no_picture"
+    treatment["picture"] = picture
+    treatment["picture_label"] = "Picture" if picture else "No picture"
+    treatment["code"] = f'{picture_code}_{treatment["code"]}'
+    return treatment
+
+
+def make_period_treatments(session):
+    return [
+        add_session_picture_condition(
+            session,
+            random.choice(C.MULTIPLIER_TREATMENTS),
+        )
+        for _ in range(C.PERIODS)
+    ]
 
 
 def get_period_treatments(session):
@@ -432,14 +436,15 @@ def treatment_label(session, treatment):
 
 
 def get_treatment_randomization_level(session):
-    return session.config.get("treatment_randomization_level", "period")
+    return session.config.get("treatment_randomization_level", "period_multiplier")
 
 
-def practice_treatment():
+def practice_treatment(session):
+    picture = get_session_picture_condition(session)
     return dict(
-        code="practice",
-        picture_label="Picture",
-        picture=True,
+        code=f'practice_{"picture" if picture else "no_picture"}_random_multiplier',
+        picture_label="Picture" if picture else "No picture",
+        picture=picture,
         random_multiplier=True,
     )
 
@@ -550,7 +555,7 @@ def creating_session(subsession: Subsession):
 
     if subsession.round_number == 1:
         seed_random_for_bot_comparison()
-        period_treatments = make_period_treatments()
+        period_treatments = make_period_treatments(subsession.session)
         subsession.session.vars["period_treatments"] = period_treatments
         subsession.session.vars["period_realized_multipliers"] = (
             make_period_realized_multipliers(subsession.session, period_treatments)
@@ -560,7 +565,7 @@ def creating_session(subsession: Subsession):
     if practice_round:
         period_index = 0
         round_in_period = subsession.round_number
-        period_treatment = practice_treatment()
+        period_treatment = practice_treatment(subsession.session)
     else:
         real_round = real_round_number(subsession)
         period_index = (real_round - 1) // C.ROUNDS_PER_PERIOD
