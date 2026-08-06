@@ -36,7 +36,7 @@ class PlayerBot(Bot):
             yield Instructions4, dict(skip_instructions="")
             yield Instructions5, dict(skip_instructions="")
             yield Instructions6, dict(skip_instructions="")
-            if self.player.session.config.get("is_real_experiment", True):
+            if not self.player.participant.vars.get("skip_instructions_and_quiz"):
                 yield InstructionQuiz, dict(
                     instruction_quiz_1="same",
                     instruction_quiz_2="learning",

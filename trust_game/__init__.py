@@ -1118,7 +1118,6 @@ class InstructionQuiz(Page):
     def is_displayed(player: Player):
         return (
             player.round_number == 1
-            and is_real_experiment_session(player.session)
             and not instruction_quiz_failed(player)
             and not instructions_skipped(player)
         )
@@ -1161,7 +1160,6 @@ class InstructionQuizFailed(Page):
     def is_displayed(player: Player):
         return (
             player.round_number == 1
-            and is_real_experiment_session(player.session)
             and instruction_quiz_failed(player)
         )
 
