@@ -184,75 +184,80 @@ class Player(BasePlayer):
     round_in_period = models.IntegerField()
     skip_instructions = models.StringField(blank=True, initial="")
     instruction_quiz_1 = models.StringField(
-        choices=[
-            ["same", "Your role stays the same for the entire session."],
-            ["changes", "Your role changes after each period."],
-            ["chosen", "You choose your role before each round."],
-        ],
-        label="What happens to your role during the session?",
-        widget=widgets.RadioSelect,
+        choices=[["same", "Your role stays the same for the entire session."],
+                 ["changes", "Your role changes after each period."],
+                 ["chosen", "You choose your role before each round."]],
+        label="What happens to your role during the session?", widget=widgets.RadioSelect,
     )
     instruction_quiz_2 = models.StringField(
-        choices=[
-            ["included", "Practice rounds can be selected for payoff."],
-            ["learning", "Practice rounds are only for learning and cannot be selected for payoff."],
-            ["none", "There are no practice rounds."],
-        ],
-        label="How are practice rounds treated?",
-        widget=widgets.RadioSelect,
+        choices=[["learning", "Practice rounds are only for learning and cannot be selected for payoff."],
+                 ["included", "Practice rounds can be selected for payoff."],
+                 ["none", "There are no practice rounds."]],
+        label="How are practice rounds treated?", widget=widgets.RadioSelect,
     )
     instruction_quiz_3 = models.StringField(
-        choices=[
-            ["zero_to_twenty", "The proposer chooses a whole number from 0 to 20."],
-            ["all_or_nothing", "The proposer must send either 0 points or all 20 points."],
-            ["responder_decides", "The responder chooses how many of the proposer's 20 points are sent."],
-        ],
-        label="In each round, what can the proposer send to the responder?",
-        widget=widgets.RadioSelect,
+        choices=[["zero_to_twenty", "The proposer chooses a whole number from 0 to 20."],
+                 ["all_or_nothing", "The proposer must send either 0 or 20 points."],
+                 ["responder_decides", "The responder chooses the amount sent."]],
+        label="What can the proposer send in each round?", widget=widgets.RadioSelect,
     )
     instruction_quiz_4 = models.StringField(
-        choices=[
-            ["sent_available", "How many points were sent and how many points are available after multiplication."],
-            ["only_sent", "Only how many points were sent."],
-            ["nothing", "Neither the points sent nor the points available."],
-        ],
-        label="What information does the responder see before deciding how much to send back?",
-        widget=widgets.RadioSelect,
+        choices=[["sent_available", "The amount sent and the amount available after multiplication."],
+                 ["only_sent", "Only the amount sent."],
+                 ["nothing", "Neither amount."]],
+        label="What does the responder see before choosing a return?", widget=widgets.RadioSelect,
     )
     instruction_quiz_5 = models.StringField(
         choices=[
             [
                 "correct",
                 (
-                    r"\(\text{proposer earnings} = 20 - "
-                    r"\text{points sent by proposer} + "
-                    r"\text{points returned by responder}\); "
-                    r"\(\text{responder earnings} = "
-                    r"\text{points available to responder} - "
-                    r"\text{points returned by responder}\)."
+                    r"Proposer: \(\text{proposer round points} = 20 - "
+                    r"\text{points sent} + \text{points returned}\); "
+                    r"Responder: \(\text{responder round points} = "
+                    r"\text{points sent} \times \text{realized multiplier} - "
+                    r"\text{points returned}\)."
                 ),
             ],
             [
                 "swapped",
                 (
-                    r"\(\text{proposer earnings} = "
-                    r"\text{points available to responder} - "
-                    r"\text{points returned by responder}\); "
-                    r"\(\text{responder earnings} = 20 - "
-                    r"\text{points sent by proposer} + "
-                    r"\text{points returned by responder}\)."
+                    r"Proposer: \(\text{proposer round points} = "
+                    r"\text{points sent} \times \text{realized multiplier} - "
+                    r"\text{points returned}\); Responder: "
+                    r"\(\text{responder round points} = 20 - "
+                    r"\text{points sent} + \text{points returned}\)."
                 ),
             ],
             [
                 "same",
                 (
-                    r"\(\text{both players' earnings} = "
-                    r"\text{points available to responder} - "
-                    r"\text{points returned by responder}\)."
+                    r"Both receive \(\text{round points} = "
+                    r"\text{points sent} \times \text{realized multiplier} - "
+                    r"\text{points returned}\)."
                 ),
             ],
         ],
         label="How are round points calculated?",
+        widget=widgets.RadioSelect,
+    )
+    instruction_quiz_6 = models.StringField(
+        choices=[["both_rounds", "One period is selected; both rounds' trust-game outcomes and both proposer belief reports determine payment."],
+                 ["one_round", "Only one randomly selected round is paid."],
+                 ["all_rounds", "Every real round is paid."]],
+        label="Which decisions determine payment?", widget=widgets.RadioSelect,
+    )
+    instruction_quiz_7 = models.StringField(
+        choices=[
+            ["sixty", "60%"],
+            ["eighty_four", "84%"],
+            ["forty", "40%"],
+            ["sixteen", "16%"],
+        ],
+        label=(
+            r"Suppose the multiplier really was low and you reported \(X = 60\%\). "
+            r"What is your probability of winning that round's belief prize?"
+        ),
         widget=widgets.RadioSelect,
     )
     gender = models.StringField(
@@ -904,6 +909,8 @@ INSTRUCTION_QUIZ_FIELDS = [
     "instruction_quiz_3",
     "instruction_quiz_4",
     "instruction_quiz_5",
+    "instruction_quiz_6",
+    "instruction_quiz_7",
 ]
 
 INSTRUCTION_QUIZ_CORRECT_ANSWERS = dict(
@@ -912,6 +919,8 @@ INSTRUCTION_QUIZ_CORRECT_ANSWERS = dict(
     instruction_quiz_3="zero_to_twenty",
     instruction_quiz_4="sent_available",
     instruction_quiz_5="correct",
+    instruction_quiz_6="both_rounds",
+    instruction_quiz_7="eighty_four",
 )
 
 

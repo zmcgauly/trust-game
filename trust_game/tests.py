@@ -43,6 +43,8 @@ class PlayerBot(Bot):
                     instruction_quiz_3="zero_to_twenty",
                     instruction_quiz_4="sent_available",
                     instruction_quiz_5="correct",
+                    instruction_quiz_6="both_rounds",
+                    instruction_quiz_7="eighty_four",
                 )
 
         if self.player.round_in_period == 1:
