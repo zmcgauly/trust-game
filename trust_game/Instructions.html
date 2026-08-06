@@ -1,12 +1,16 @@
-{{ block title }}Part 2: Decision Task Instructions{{ endblock }}
+{{ block title }}Part {{ game_part_number }}: Decision Task Instructions{{ endblock }}
 {{ block styles }}<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">{{ endblock }}
 {{ block content }}
 {{ include_sibling 'InstructionsButton.html' }}
 {{ include_sibling 'TestingSkipButton.html' }}
 <div class="trust-panel">
-  <p>You have completed Part 1. You will now receive the instructions for Part 2.</p>
-  <p>Part 2 is an experiment in economic decision making. Your choices and the choices of others determine your additional earnings.</p>
-  <p>After Part 2 is completed, you will receive instructions for the next part.</p>
+  {{ if written_description_condition }}
+    <p>You have completed Part 1. You will now receive the instructions for Part 2.</p>
+  {{ endif }}
+  <p>Part {{ game_part_number }} is an experiment in economic decision making. Your choices and the choices of others determine your additional earnings.</p>
+  {{ if show_next_part_after_game }}
+    <p>After Part {{ game_part_number }} is completed, you will receive instructions for the next part.</p>
+  {{ endif }}
 </div>
 {{ next_button }}
 {{ endblock }}

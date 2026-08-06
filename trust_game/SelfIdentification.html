@@ -1,5 +1,5 @@
 {{ block title }}
-Part 1: About You
+Part {{ self_survey_part_number }}: About You
 {{ endblock }}
 
 {{ block styles }}
@@ -8,12 +8,14 @@ Part 1: About You
 
 {{ block content }}
 <div class="trust-meta">
-  <span>Part 1 of 3</span>
+  <span>Part {{ self_survey_part_number }} of {{ total_experiment_parts }}</span>
 </div>
 
 <div class="trust-panel">
   <p>Please answer the following questions about yourself. You may choose "Prefer not to say" for any question.</p>
-  <p>Your answers may be used in Part 2 to identify you to participants you are matched with.</p>
+  {{ if is_pre_game_self_survey }}
+    <p>Your answers may be used in Part 2 to identify you to participants you are matched with.</p>
+  {{ endif }}
 </div>
 
 {{ formfield 'age' }}

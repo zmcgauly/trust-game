@@ -587,7 +587,8 @@ def treatment_partner_cue(player: Player):
 
 
 def self_demographic_player(player: Player):
-    return player.in_round(1)
+    round_number = 1 if treatment_written_description(player) else last_active_round(player.session)
+    return player.in_round(round_number)
 
 
 def normalized_demographic_value(value):
@@ -652,11 +653,42 @@ def page_common_vars(player: Player):
         belief_prize=f"{get_belief_prize(player.session):.2f}",
         participation_fee=f"{float(player.session.config.get('participation_fee', 10.00)):.2f}",
         example_22_point_payment=f"{22 * get_trust_point_value(player.session):.2f}",
+        game_part_number=game_part_number(player),
+        self_survey_part_number=self_survey_part_number(player),
+        total_experiment_parts=total_experiment_parts(player),
+        show_next_part_after_game=show_next_part_after_game(player),
     )
 
 
-def show_part1_self_survey(player: Player):
-    return player.round_number == 1 and not instruction_quiz_failed(player)
+def show_pre_game_self_survey(player: Player):
+    return (
+        player.round_number == 1
+        and treatment_written_description(player)
+        and not instruction_quiz_failed(player)
+    )
+
+
+def show_post_game_self_survey(player: Player):
+    return (
+        player.round_number == last_active_round(player.session)
+        and not treatment_written_description(player)
+    )
+
+
+def self_survey_part_number(player: Player):
+    return 1 if treatment_written_description(player) else 2
+
+
+def game_part_number(player: Player):
+    return 2 if treatment_written_description(player) else 1
+
+
+def total_experiment_parts(player: Player):
+    return 3 if treatment_picture(player) else 2
+
+
+def show_next_part_after_game(player: Player):
+    return not treatment_written_description(player) or treatment_picture(player)
 
 
 def show_part3_partner_survey(player: Player):
@@ -1224,13 +1256,31 @@ class Part1Instructions(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_part1_self_survey(player)
+        return show_pre_game_self_survey(player)
 
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
             **page_common_vars(player),
-            is_part1_self_survey=True,
+            is_self_survey=True,
+            is_pre_game_self_survey=True,
+            is_part3_partner_survey=False,
+        )
+
+
+class PostGameSelfInstructions(Page):
+    template_name = "trust_game/QuestionnaireInstructions.html"
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return show_post_game_self_survey(player)
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            **page_common_vars(player),
+            is_self_survey=True,
+            is_pre_game_self_survey=False,
             is_part3_partner_survey=False,
         )
 
@@ -1246,7 +1296,8 @@ class Part3Instructions(Page):
     def vars_for_template(player: Player):
         return dict(
             **page_common_vars(player),
-            is_part1_self_survey=False,
+            is_self_survey=False,
+            is_pre_game_self_survey=False,
             is_part3_partner_survey=True,
         )
 
@@ -1257,11 +1308,11 @@ class SelfIdentification(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_part1_self_survey(player)
+        return show_pre_game_self_survey(player)
 
     @staticmethod
     def vars_for_template(player: Player):
-        return page_common_vars(player)
+        return dict(**page_common_vars(player), is_pre_game_self_survey=True)
 
     @staticmethod
     def error_message(player: Player, values):
@@ -1292,7 +1343,17 @@ class WaitForSelfIdentification(WaitPage):
 
     @staticmethod
     def is_displayed(player: Player):
-        return show_part1_self_survey(player)
+        return show_pre_game_self_survey(player)
+
+
+class PostGameSelfIdentification(SelfIdentification):
+    @staticmethod
+    def is_displayed(player: Player):
+        return show_post_game_self_survey(player)
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(**page_common_vars(player), is_pre_game_self_survey=False)
 
 
 class PartnerIdentification1(Page):
@@ -1484,6 +1545,7 @@ page_sequence = [
     ProposerDecision, WaitForProposer, ResponderDecision, WaitForResponder,
     ProposerReceipt, ProposerBeliefPost,
     WaitForPostBelief, ResponderReceipt, RoundComplete,
+    PostGameSelfInstructions, PostGameSelfIdentification,
     Part3Instructions,
     PartnerIdentification1,
     PartnerIdentification2,

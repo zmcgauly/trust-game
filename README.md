@@ -5,12 +5,11 @@ An oTree 6 experiment with fixed proposer and responder roles, rotating partners
 ## Experimental design
 
 - Participants first receive general instructions about the show-up payment and the option to leave at any time.
-- Part 1 instructions explain that the experiment has three parts and that instructions for Part 2 will be provided after Part 1 is complete.
 - Participants are divided evenly between proposers and responders.
 - Roles remain fixed throughout the session.
-- Part 1 collects participants' self-demographic information.
-- Part 2 instructions and the instruction quiz are shown after Part 1 is complete.
-- Part 2 is the trust-game decision task.
+- In written-description sessions, Part 1 collects participants' self-demographic information before the trust game.
+- In no-written-description sessions, the trust game is Part 1 and the self-demographic survey is Part 2 after the trust game.
+- The trust-game instructions and instruction quiz are shown before the trust-game decision rounds.
 - The session begins with two unpaid practice rounds.
 - Each real period consists of two rounds with the same partner.
 - Partners rotate after each period.
@@ -100,15 +99,15 @@ Picture exposure is controlled by `picture_condition`.
 
 Written descriptions are controlled by `written_description_condition`.
 
-All participants answer demographic questions about themselves in Part 1, before the trust-game decisions begin.
+All participants answer demographic questions about themselves. In written-description sessions, this occurs before the trust-game decisions begin because those answers may be used to identify participants to their partners during the game. In no-written-description sessions, this occurs after the trust-game decisions are complete.
 
 Only participants in picture-treatment sessions make demographic guesses about their matched partners in Part 3, after the trust-game decisions are complete.
 
 The relevant partner's available cues are displayed while each set of guesses is made.
 
-Written descriptions are generated from the partner's Part 1 self-demographic survey responses. If `C.PROFILE_DESCRIPTIONS` in `trust_game/__init__.py`, or optional session config metadata, defines a description keyed by player title or player number, that predefined text overrides the generated survey-based description.
+Written descriptions are generated from the partner's pre-game self-demographic survey responses. If `C.PROFILE_DESCRIPTIONS` in `trust_game/__init__.py`, or optional session config metadata, defines a description keyed by player title or player number, that predefined text overrides the generated survey-based description.
 
-The app waits for all participants to complete Part 1 before Part 2 begins, so written partner descriptions are available during the decision task.
+The app waits for all participants in written-description sessions to complete the pre-game self survey before the trust game begins, so written partner descriptions are available during the decision task.
 
 ## Default configuration
 

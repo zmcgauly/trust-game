@@ -1,14 +1,22 @@
 {{ block title }}
-{{ if is_part1_self_survey }}Part 1: About You{{ else }}Part 3: Partner Questions{{ endif }}
+{{ if is_self_survey }}Part {{ self_survey_part_number }}: About You{{ else }}Part 3: Partner Questions{{ endif }}
 {{ endblock }}
 {{ block styles }}<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">{{ endblock }}
 {{ block content }}
 <div class="trust-panel">
-  {{ if is_part1_self_survey }}
-    <p>The experiment has three parts. You will receive instructions for each part after the previous part is completed.</p>
-    <p>In Part 1, you will answer demographic questions about yourself. For any demographic question, you may select "Prefer not to answer" if you do not wish to provide a response.</p>
-    <p>Your answers in Part 1 may be used in Part 2 to identify you to participants you are matched with.</p>
-    <p>After Part 1 is completed, you will receive the instructions for Part 2.</p>
+  {{ if is_self_survey }}
+    {{ if is_pre_game_self_survey }}
+      <p>The experiment has {{ total_experiment_parts }} parts. You will receive instructions for each part after the previous part is completed.</p>
+      <p>In Part 1, you will answer demographic questions about yourself. For any demographic question, you may select "Prefer not to answer" if you do not wish to provide a response.</p>
+      <p>Your answers in Part 1 may be used in Part 2 to identify you to participants you are matched with.</p>
+      <p>After Part 1 is completed, you will receive the instructions for Part 2.</p>
+    {{ else }}
+      <p>You have completed Part 1. You will now receive the instructions for Part 2.</p>
+      <p>In Part 2, you will answer demographic questions about yourself. For any demographic question, you may select "Prefer not to answer" if you do not wish to provide a response.</p>
+      {{ if picture_condition }}
+        <p>After Part 2 is completed, you will receive the instructions for Part 3.</p>
+      {{ endif }}
+    {{ endif }}
   {{ else }}
     <p>You have completed Part 2. You will now receive the instructions for Part 3.</p>
     <p>In Part 3, you will answer questions about the participants with whom you were matched.</p>

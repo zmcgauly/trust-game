@@ -22,6 +22,7 @@ from . import (
     get_active_periods,
     is_real_experiment_session,
     treatment_picture,
+    treatment_written_description,
 )
 
 
@@ -33,7 +34,6 @@ class PlayerBot(Bot):
             else:
                 yield InstructionsIntro, dict(skip_instructions="1")
 
-            yield Part1Instructions
             identification = dict(
                 age=None,
                 age_prefer_not_to_say=True,
@@ -42,7 +42,9 @@ class PlayerBot(Bot):
                 gender="Prefer not to say",
                 sexuality="Prefer not to say",
             )
-            yield SelfIdentification, identification
+            if treatment_written_description(self.player):
+                yield Part1Instructions
+                yield SelfIdentification, identification
 
             if not self.player.participant.vars.get("skip_instructions_and_quiz"):
                 yield Instructions
@@ -77,6 +79,18 @@ class PlayerBot(Bot):
             yield ResponderReceipt
 
         if self.round_number == C.PRACTICE_ROUNDS + get_active_periods(self.player.session) * C.ROUNDS_PER_PERIOD:
+            if not treatment_written_description(self.player):
+                from . import PostGameSelfInstructions, PostGameSelfIdentification
+                identification = dict(
+                    age=None,
+                    age_prefer_not_to_say=True,
+                    ethnicity="Prefer not to say",
+                    race="Prefer not to say",
+                    gender="Prefer not to say",
+                    sexuality="Prefer not to say",
+                )
+                yield PostGameSelfInstructions
+                yield PostGameSelfIdentification, identification
             if treatment_picture(self.player):
                 yield Part3Instructions
                 from . import (
