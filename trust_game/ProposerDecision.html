@@ -28,13 +28,6 @@ Proposer Decision
 <div class="trust-panel">
   <p>
     You have 20 points. Choose how many whole points to send to the responder.
-    What the proposer sends will be multiplied by a multiplier. The multiplier
-    {{ if random_multiplier_condition }}
-      can be either {{ low_multiplier }} or {{ high_multiplier }} and will be
-      established by fair odds.
-    {{ else }}
-      will be {{ low_multiplier }} in every round.
-    {{ endif }}
   </p>
   <p class="formula-line">
     \[

@@ -24,6 +24,8 @@ entry point is `settings.py` and the app is `trust_game`.
   certain/picture, uncertain/no picture, or uncertain/picture.
 - The two rounds in the same period use the same multiplier condition.
 - Players are told their fixed role at the start of each period, without being told the multiplier condition.
+- Participant-facing instructions always say the multiplier will be either the low multiplier or the large multiplier.
+- The realized multiplier is shown to responders only on the responder decision page, when they choose how many points to return.
 - Players are never asked to upload pictures.
 - In picture sessions, both players' pictures are shown. In no-picture sessions, neither player's picture is shown.
 - In uncertain-multiplier sessions, the session draws either the 3x or large multiplier once per period.
@@ -47,9 +49,10 @@ The oTree demo page shows four session configs:
 - `trust_game_uncertain_picture`
 
 The picture condition and multiplier certainty condition are selected when the session
-is created. In uncertain-multiplier sessions, the realized multiplier is drawn
-separately for each period, not each round. The two rounds in a period always use the
-same realized multiplier.
+is created. These treatment labels and certainty settings are internal and are not
+shown to participants. In uncertain-multiplier sessions, the realized multiplier is
+drawn separately for each period, not each round. The two rounds in a period always
+use the same realized multiplier.
 
 ## Running with oTree
 

@@ -23,20 +23,13 @@ Decisions During Each Round
   </p>
   <p>
     What the proposer sends will be multiplied by a multiplier. The multiplier
-    {{ if random_multiplier_condition }}
-      can be either {{ low_multiplier }} or {{ large_multiplier }} and will be
-      established by fair odds.
-    {{ else }}
-      will be {{ low_multiplier }} in every round.
-    {{ endif }}
+    will be either {{ low_multiplier }} or {{ large_multiplier }}.
   </p>
-  {{ if random_multiplier_condition }}
   <p>
     The proposer does not know whether the multiplier will be
     {{ low_multiplier }} or {{ large_multiplier }} when making the sending
     decision.
   </p>
-  {{ endif }}
   <p>
     After the multiplier has been applied, the responder observes:
   </p>

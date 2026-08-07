@@ -705,7 +705,6 @@ def pair_card_vars(player: Player):
         partner_role_label=partner_role,
         anonymous_partner_label=f"Anonymous {partner.role_name}",
         belief_prize=f"{get_belief_prize(player.session):.2f}",
-        random_multiplier_condition=bool(player.group.treatment_error),
     )
 
 
@@ -721,9 +720,6 @@ def round_summary_vars(player: Player):
     offer = group.field_maybe_none("offer") or cu(0)
     delivered_return = group.field_maybe_none("delivered_return") or cu(0)
     multiplied_amount = group.multiplied_amount()
-    low_available = offer * C.LOW_MULTIPLIER
-    large_multiplier = get_large_multiplier(player.session)
-    high_available = offer * large_multiplier
 
     if player.role_name == "proposer":
         received_label = "Points you received back"
@@ -744,13 +740,7 @@ def round_summary_vars(player: Player):
         summary_received_label=received_label,
         summary_received_amount=received_amount,
         summary_payoff=final_payoff,
-        summary_low_multiplier=C.LOW_MULTIPLIER,
-        summary_high_multiplier=large_multiplier,
-        summary_low_available=low_available,
-        summary_high_available=high_available,
         summary_offer_number=point_number(offer),
-        summary_low_available_number=point_number(low_available),
-        summary_high_available_number=point_number(high_available),
     )
 
 
@@ -990,7 +980,6 @@ def instruction_page_vars(player: Player):
         show_testing_skip=not is_real_experiment_session(player.session),
         low_multiplier=C.LOW_MULTIPLIER,
         large_multiplier=get_large_multiplier(player.session),
-        random_multiplier_condition=get_session_random_multiplier_condition(player.session),
         belief_prize=f"{get_belief_prize(player.session):.2f}",
         participation_fee=f"{float(player.session.config.get('participation_fee', 10.00)):.2f}",
     )
@@ -1216,13 +1205,6 @@ class ProposerDecision(Page):
             endowment=C.ENDOWMENT,
             low_multiplier=C.LOW_MULTIPLIER,
             high_multiplier=get_large_multiplier(player.session),
-            high_multiplier_probability=get_group_high_multiplier_probability(
-                player.group
-            ),
-            high_multiplier_probability_percent=round(
-                get_group_high_multiplier_probability(player.group) * 100
-            ),
-            random_multiplier_condition=bool(player.group.treatment_error),
         )
 
 
@@ -1252,7 +1234,6 @@ class ResponderDecision(Page):
             multiplied_amount_number=point_number(multiplied_amount),
             low_multiplier=C.LOW_MULTIPLIER,
             large_multiplier=get_large_multiplier(player.session),
-            random_multiplier_condition=bool(player.group.treatment_error),
         )
 
     @staticmethod
@@ -1301,9 +1282,7 @@ class ProposerBelief(Page):
             "large_multiplier": get_large_multiplier(player.session),
             "offer": player.group.offer,
             "delivered_return": player.group.delivered_return,
-            "initial_probability": round(
-                (1 - get_group_high_multiplier_probability(player.group)) * 100
-            ),
+            "initial_probability": round(get_chance_of_3(player.session) * 100),
         }
 
     @staticmethod
