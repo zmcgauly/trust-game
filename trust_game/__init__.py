@@ -418,13 +418,21 @@ def add_session_picture_condition(session, treatment):
 
 
 def make_period_treatments(session):
-    return [
-        add_session_picture_condition(
-            session,
-            random.choice(C.MULTIPLIER_TREATMENTS),
-        )
-        for _ in range(C.PERIODS)
-    ]
+    randomization_level = get_treatment_randomization_level(session)
+    if randomization_level == "session_multiplier":
+        return [session_multiplier_treatment(session) for _ in range(C.PERIODS)]
+    if randomization_level == "period_multiplier":
+        return [
+            add_session_picture_condition(
+                session,
+                random.choice(C.MULTIPLIER_TREATMENTS),
+            )
+            for _ in range(C.PERIODS)
+        ]
+    raise ValueError(
+        "treatment_randomization_level must be 'session_multiplier' or "
+        "'period_multiplier'."
+    )
 
 
 def get_period_treatments(session):
@@ -444,10 +452,30 @@ def treatment_label(session, treatment):
 
 
 def get_treatment_randomization_level(session):
-    return session.config.get("treatment_randomization_level", "period_multiplier")
+    return session.config.get("treatment_randomization_level", "session_multiplier")
+
+
+def get_session_random_multiplier_condition(session):
+    return bool(session.config.get("random_multiplier_condition", False))
+
+
+def session_multiplier_treatment(session):
+    random_multiplier = get_session_random_multiplier_condition(session)
+    code = "random_multiplier" if random_multiplier else "fixed_multiplier"
+    return add_session_picture_condition(
+        session,
+        dict(
+            code=code,
+            random_multiplier=random_multiplier,
+        ),
+    )
 
 
 def practice_treatment(session):
+    if get_treatment_randomization_level(session) == "session_multiplier":
+        treatment = session_multiplier_treatment(session).copy()
+        treatment["code"] = f'practice_{treatment["code"]}'
+        return treatment
     picture = get_session_picture_condition(session)
     return dict(
         code=f'practice_{"picture" if picture else "no_picture"}_random_multiplier',
@@ -677,6 +705,7 @@ def pair_card_vars(player: Player):
         partner_role_label=partner_role,
         anonymous_partner_label=f"Anonymous {partner.role_name}",
         belief_prize=f"{get_belief_prize(player.session):.2f}",
+        random_multiplier_condition=bool(player.group.treatment_error),
     )
 
 
@@ -764,9 +793,11 @@ def unique_partner_count(player: Player):
 
 
 def show_partner_survey(player: Player, slot):
+    match = unique_partner_match_for_slot(player, slot)
     return (
         show_end_demographic_survey(player)
-        and unique_partner_match_for_slot(player, slot) is not None
+        and match is not None
+        and treatment_picture(match[1])
     )
 
 
@@ -959,6 +990,7 @@ def instruction_page_vars(player: Player):
         show_testing_skip=not is_real_experiment_session(player.session),
         low_multiplier=C.LOW_MULTIPLIER,
         large_multiplier=get_large_multiplier(player.session),
+        random_multiplier_condition=get_session_random_multiplier_condition(player.session),
         belief_prize=f"{get_belief_prize(player.session):.2f}",
         participation_fee=f"{float(player.session.config.get('participation_fee', 10.00)):.2f}",
     )
@@ -1190,6 +1222,7 @@ class ProposerDecision(Page):
             high_multiplier_probability_percent=round(
                 get_group_high_multiplier_probability(player.group) * 100
             ),
+            random_multiplier_condition=bool(player.group.treatment_error),
         )
 
 
@@ -1219,6 +1252,7 @@ class ResponderDecision(Page):
             multiplied_amount_number=point_number(multiplied_amount),
             low_multiplier=C.LOW_MULTIPLIER,
             large_multiplier=get_large_multiplier(player.session),
+            random_multiplier_condition=bool(player.group.treatment_error),
         )
 
     @staticmethod
@@ -1267,7 +1301,9 @@ class ProposerBelief(Page):
             "large_multiplier": get_large_multiplier(player.session),
             "offer": player.group.offer,
             "delivered_return": player.group.delivered_return,
-            "initial_probability": round(get_chance_of_3(player.session) * 100),
+            "initial_probability": round(
+                (1 - get_group_high_multiplier_probability(player.group)) * 100
+            ),
         }
 
     @staticmethod

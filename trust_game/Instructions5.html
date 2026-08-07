@@ -10,10 +10,17 @@ Belief Report Instructions
 {{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-panel">
   <p>
+    {{ if random_multiplier_condition }}
     In every round, after seeing how many points the responder returned, the
     proposer reports the probability, from 0% to 100%, that the multiplier was
     {{ low_multiplier }}. For example, reporting 70% means you believe there is
     a 70% chance that the multiplier was {{ low_multiplier }}.
+    {{ else }}
+    In every round, after seeing how many points the responder returned, the
+    proposer reports the probability, from 0% to 100%, that the multiplier was
+    {{ low_multiplier }}. In this session, the multiplier is always
+    {{ low_multiplier }}.
+    {{ endif }}
   </p>
   <p>
     Each real-round belief report is evaluated for a

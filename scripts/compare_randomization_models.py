@@ -15,8 +15,10 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_ROOT = ROOT / "bot_comparison"
 SEED_ENV_VAR = "TRUST_GAME_BOT_RANDOM_SEED"
 CONFIGS = [
-    ("period_multiplier_no_picture", "trust_game_no_picture"),
-    ("period_multiplier_picture", "trust_game_picture"),
+    ("certain_no_picture", "trust_game_certain_no_picture"),
+    ("certain_picture", "trust_game_certain_picture"),
+    ("uncertain_no_picture", "trust_game_uncertain_no_picture"),
+    ("uncertain_picture", "trust_game_uncertain_picture"),
 ]
 
 
@@ -162,14 +164,17 @@ def summarize_rows(rows):
     }
 
 
-def summary_table(rows):
-    summary = summarize_rows(rows)
+def summary_table(summaries):
+    metrics = list(next(iter(summaries.values())).keys())
     return [
         {
             "metric": metric,
-            "current_period_level": str(value),
+            **{
+                label: str(summary.get(metric, ""))
+                for label, summary in summaries.items()
+            },
         }
-        for metric, value in summary.items()
+        for metric in metrics
     ]
 
 
@@ -339,36 +344,47 @@ def main():
         data[label] = read_csv(export_path)
         shutil.copy(export_path, output_dir / f"{label}_full_data.csv")
 
-    current_rows = data["current_period_level"]
-    summary = summary_table(current_rows)
-    rounds = round_rows(current_rows)
+    summaries = {label: summarize_rows(rows) for label, rows in data.items()}
+    summary = summary_table(summaries)
+    round_data_by_label = {
+        label: round_rows(rows)
+        for label, rows in data.items()
+    }
 
     summary_headers = [
         "metric",
-        "current_period_level",
+        *[label for label, _ in CONFIGS],
     ]
-    round_headers = list(rounds[0].keys()) if rounds else []
-    current_headers = list(current_rows[0].keys())
+    first_round_rows = next(iter(round_data_by_label.values()), [])
+    round_headers = list(first_round_rows[0].keys()) if first_round_rows else []
+    first_rows = next(iter(data.values()), [])
+    custom_headers = list(first_rows[0].keys()) if first_rows else []
 
     write_csv(output_dir / "summary.csv", summary_headers, summary)
-    write_csv(output_dir / "round_data.csv", round_headers, rounds)
+    for label, rounds in round_data_by_label.items():
+        write_csv(output_dir / f"{label}_round_data.csv", round_headers, rounds)
 
     workbook_path = output_dir / "trust_game_bot_comparison.xlsx"
+    workbook_sheets = [
+        ("Summary", table_to_sheet(summary_headers, summary)),
+    ]
+    for label, rounds in round_data_by_label.items():
+        workbook_sheets.append(
+            (f"{label} Rounds", table_to_sheet(round_headers, rounds))
+        )
+    for label, rows in data.items():
+        workbook_sheets.append(
+            (f"{label} Full", table_to_sheet(custom_headers, rows))
+        )
     write_xlsx(
         workbook_path,
-        [
-            ("Summary", table_to_sheet(summary_headers, summary)),
-            ("Round Data", table_to_sheet(round_headers, rounds)),
-            (
-                "Current Full Data",
-                table_to_sheet(current_headers, current_rows),
-            ),
-        ],
+        workbook_sheets,
     )
 
     print(f"Created {workbook_path}")
     print(f"Created {output_dir / 'summary.csv'}")
-    print(f"Created {output_dir / 'round_data.csv'}")
+    for label in round_data_by_label:
+        print(f"Created {output_dir / f'{label}_round_data.csv'}")
 
 
 if __name__ == "__main__":

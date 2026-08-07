@@ -1,7 +1,8 @@
 # Trust Game Experiment
 
 This repository contains an oTree-compatible implementation of the Trust Game 1.5 design:
-the original trust-game design with the Trust Game 2.0 sliding-scale belief elicitation.
+the Trust Game 2.0 design before the written-description treatment change, with the
+Trust Game 2.0 sliding-scale belief elicitation.
 The original standalone browser prototype remains in `index.html`, but the oTree project
 entry point is `settings.py` and the app is `trust_game`.
 
@@ -19,30 +20,36 @@ entry point is `settings.py` and the app is `trust_game`.
 - After each round result, proposers report the probability from 0% to 100% that the low multiplier was used.
 - The default show-up fee is `$10.00`.
 - Each real-round proposer belief report is evaluated for a `$2.00` belief prize using the quadratic winning-chance rule.
-- The session is created as either a picture session or a no-picture session.
-- At the start of each period, the app independently randomizes the multiplier condition.
+- The session is created as one of four treatment cells: certain/no picture,
+  certain/picture, uncertain/no picture, or uncertain/picture.
 - The two rounds in the same period use the same multiplier condition.
 - Players are told their fixed role at the start of each period, without being told the multiplier condition.
 - Players are never asked to upload pictures.
 - In picture sessions, both players' pictures are shown. In no-picture sessions, neither player's picture is shown.
-- In random-multiplier periods, the session draws either the 3x or large multiplier once per period.
+- In uncertain-multiplier sessions, the session draws either the 3x or large multiplier once per period.
 - By default, the 3x multiplier occurs with probability `0.50` and the large multiplier is `6`.
-- In fixed-multiplier periods, the multiplier is always 3x.
-- Participants are not told which multiplier condition applies; exports include the private audit fields.
+- In certain-multiplier sessions, the multiplier is always 3x.
 
 ## Session Options and Period Treatments
 
-| Session option | Period multiplier condition | Box label |
+| Session option | Multiplier condition | Box label |
 | --- | --- | --- |
-| No pictures | Fixed 3x | No picture / Multiplier 3 |
-| No pictures | Hidden 3x/large draw | No picture / Multiplier 3 or large |
-| Pictures | Fixed 3x | Picture / Multiplier 3 |
-| Pictures | Hidden 3x/large draw | Picture / Multiplier 3 or large |
+| Certain multiplier / No pictures | Fixed 3x | No picture / Multiplier 3 |
+| Certain multiplier / Pictures | Fixed 3x | Picture / Multiplier 3 |
+| Uncertain multiplier / No pictures | Hidden 3x/large draw | No picture / Multiplier 3 or large |
+| Uncertain multiplier / Pictures | Hidden 3x/large draw | Picture / Multiplier 3 or large |
 
-The oTree demo page shows two session configs, `trust_game_no_picture` and
-`trust_game_picture`. The picture condition is selected when the session is created.
-The multiplier condition is drawn separately for each period, not each round. The two
-rounds in a period always use the same multiplier condition.
+The oTree demo page shows four session configs:
+
+- `trust_game_certain_no_picture`
+- `trust_game_certain_picture`
+- `trust_game_uncertain_no_picture`
+- `trust_game_uncertain_picture`
+
+The picture condition and multiplier certainty condition are selected when the session
+is created. In uncertain-multiplier sessions, the realized multiplier is drawn
+separately for each period, not each round. The two rounds in a period always use the
+same realized multiplier.
 
 ## Running with oTree
 
@@ -53,13 +60,15 @@ Use the same Python environment where oTree is installed. This project targets o
 .\.venv\Scripts\otree.exe devserver
 ```
 
-Then open the local oTree URL printed by the server and create either the picture or
-no-picture trust-game session config.
+Then open the local oTree URL printed by the server and create one of the four
+trust-game session configs.
 
 Available oTree session configs:
 
-- `trust_game_no_picture`
-- `trust_game_picture`
+- `trust_game_certain_no_picture`
+- `trust_game_certain_picture`
+- `trust_game_uncertain_no_picture`
+- `trust_game_uncertain_picture`
 
 The random multiplier parameter is set in `settings.py`:
 

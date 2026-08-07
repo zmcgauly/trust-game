@@ -30,7 +30,7 @@
     <div class="controls">
       <select class="form-select w-auto"
               id="trust-game-chance-of-3"
-              name="trust_game_no_picture.chance_of_3">
+              name="trust_game_certain_no_picture.chance_of_3">
         <option value="0.25">25%</option>
         <option value="0.50" selected>50%</option>
         <option value="0.75">75%</option>
@@ -45,7 +45,7 @@
     <div class="controls">
       <input class="form-control w-auto"
              id="trust-game-large-multiplier"
-             name="trust_game_no_picture.large_multiplier"
+             name="trust_game_certain_no_picture.large_multiplier"
              type="number"
              step="1"
              min="4"
@@ -61,7 +61,7 @@
     <div class="form-check">
       <input class="form-check-input"
              id="trust-game-real-experiment"
-             name="trust_game_no_picture.is_real_experiment"
+             name="trust_game_certain_no_picture.is_real_experiment"
              type="checkbox"
              checked>
       <label class="form-check-label" for="trust-game-real-experiment">
@@ -142,8 +142,10 @@
 
     function isTrustGameConfig(sessionconfigname) {
         return (
-            sessionconfigname === 'trust_game_no_picture'
-            || sessionconfigname === 'trust_game_picture'
+            sessionconfigname === 'trust_game_certain_no_picture'
+            || sessionconfigname === 'trust_game_certain_picture'
+            || sessionconfigname === 'trust_game_uncertain_no_picture'
+            || sessionconfigname === 'trust_game_uncertain_picture'
         );
     }
 
@@ -197,6 +199,14 @@
             .prop("disabled", true)
             .closest("tr")
             .hide();
+        $("[name$='.random_multiplier_condition']")
+            .prop("disabled", true)
+            .closest("tr")
+            .hide();
+        $("[name$='.treatment_randomization_level']")
+            .prop("disabled", true)
+            .closest("tr")
+            .hide();
 
         let $createSessionError = $("#create-session-error");
         let $createSessionWait = $("#create-session-wait");
@@ -217,8 +227,18 @@
             let selectedConfig = dropdown.val();
             if (isTrustGameConfig(selectedConfig)) {
                 form_data[selectedConfig + '.belief_prize_dollars'] = '2.00';
-                if (selectedConfig === 'trust_game_picture') {
+                form_data[selectedConfig + '.treatment_randomization_level'] = 'session_multiplier';
+                if (
+                    selectedConfig === 'trust_game_certain_picture'
+                    || selectedConfig === 'trust_game_uncertain_picture'
+                ) {
                     form_data[selectedConfig + '.picture_condition'] = 'on';
+                }
+                if (
+                    selectedConfig === 'trust_game_uncertain_no_picture'
+                    || selectedConfig === 'trust_game_uncertain_picture'
+                ) {
+                    form_data[selectedConfig + '.random_multiplier_condition'] = 'on';
                 }
             }
             socket.send(JSON.stringify(form_data));
