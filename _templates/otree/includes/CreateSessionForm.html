@@ -154,25 +154,33 @@
             lowMultiplier: '3',
             highMultiplier: '6',
             lowMultiplierProbability: '0.50',
-            isRealExperiment: true
+            isRealExperiment: true,
+            pictureCondition: false,
+            writtenDescriptionCondition: false
         },
         trust_game_no_picture_description: {
             lowMultiplier: '3',
             highMultiplier: '6',
             lowMultiplierProbability: '0.50',
-            isRealExperiment: true
+            isRealExperiment: true,
+            pictureCondition: false,
+            writtenDescriptionCondition: true
         },
         trust_game_picture_no_description: {
             lowMultiplier: '3',
             highMultiplier: '6',
             lowMultiplierProbability: '0.50',
-            isRealExperiment: true
+            isRealExperiment: true,
+            pictureCondition: true,
+            writtenDescriptionCondition: false
         },
         trust_game_picture_description: {
             lowMultiplier: '3',
             highMultiplier: '6',
             lowMultiplierProbability: '0.50',
-            isRealExperiment: true
+            isRealExperiment: true,
+            pictureCondition: true,
+            writtenDescriptionCondition: true
         }
     };
 
@@ -193,6 +201,14 @@
         $('#trust-game-high-multiplier').val(defaults.highMultiplier);
         $('#trust-game-low-multiplier-probability').val(defaults.lowMultiplierProbability);
         $('#trust-game-session-type').val(defaults.isRealExperiment ? 'true' : 'false');
+    }
+
+    function setBooleanFormField(formData, fieldName, enabled) {
+        if (enabled) {
+            formData[fieldName] = 'on';
+        } else {
+            delete formData[fieldName];
+        }
     }
 
     function showSessionConfigInfo(sessionconfigname) {
@@ -276,6 +292,16 @@
                 form_data[selectedConfig + '.low_multiplier'] = $('#trust-game-low-multiplier').val();
                 form_data[selectedConfig + '.high_multiplier'] = $('#trust-game-high-multiplier').val();
                 form_data[selectedConfig + '.low_multiplier_probability'] = $('#trust-game-low-multiplier-probability').val();
+                setBooleanFormField(
+                    form_data,
+                    selectedConfig + '.picture_condition',
+                    trustGameConfigDefaults[selectedConfig].pictureCondition
+                );
+                setBooleanFormField(
+                    form_data,
+                    selectedConfig + '.written_description_condition',
+                    trustGameConfigDefaults[selectedConfig].writtenDescriptionCondition
+                );
                 if ($('#trust-game-session-type').val() === 'true') {
                     form_data[selectedConfig + '.is_real_experiment'] = 'on';
                 } else {

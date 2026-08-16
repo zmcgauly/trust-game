@@ -1347,6 +1347,8 @@ class WaitForSelfIdentification(WaitPage):
 
 
 class PostGameSelfIdentification(SelfIdentification):
+    template_name = "trust_game/SelfIdentification.html"
+
     @staticmethod
     def is_displayed(player: Player):
         return show_post_game_self_survey(player)
