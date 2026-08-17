@@ -8,8 +8,8 @@
   {{ if picture_condition }}
     <p>When making decisions about how many points to send to one another, both players will be able to see their own picture and the picture of their partner.</p>
   {{ endif }}
-  <p>The high multiplier is selected with probability <strong>{{ high_multiplier_probability_percent }}%</strong>, and the low multiplier is selected with probability <strong>{{ low_multiplier_probability_percent }}%</strong>. The proposer does not see the realized multiplier.</p>
-  <p>The responder sees the sent amount, the realized multiplier, and the resulting number of available points. The responder then chooses a whole number of points to return, from 0 up to the amount available.</p>
+  <p>The computer selects a number between 0 and 100. If the number is less than <strong>{{ low_multiplier_probability_percent }}</strong>, the computer selects the low multiplier of <strong>{{ low_multiplier }}</strong>. Otherwise, it selects the high multiplier of <strong>{{ high_multiplier }}</strong>. In this way, it is as if the computer determines that the high multiplier is selected <strong>{{ high_multiplier_probability_percent }}%</strong> of the time and the low multiplier is selected <strong>{{ low_multiplier_probability_percent }}%</strong> of the time.</p>
+  <p>The proposer does not see the realized multiplier. The responder receives the amount sent by the proposer, the multiplier, and the resulting number of points they have received from that multiplication. The responder then chooses a whole number of points to return, from 0 up to the amount available.</p>
 </div>
 {{ next_button }}
 {{ endblock }}
