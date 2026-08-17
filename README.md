@@ -116,7 +116,7 @@ The app waits for all participants in written-description sessions to complete t
 | Low multiplier | `3.0` |
 | High multiplier | `6.0` |
 | High-multiplier probability | `0.50` |
-| Trust-point value | `$0.30` |
+| Trust-point value | `$0.33` |
 | Belief prize per evaluated report | `$2.00` |
 | Participation fee | `$10.00` |
 
