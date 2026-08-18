@@ -89,6 +89,7 @@ SESSION_FIELDS = []
 
 LANGUAGE_CODE = "en"
 REAL_WORLD_CURRENCY_CODE = "USD"
+DEBUG = False
 # player.payoff is stored directly in dollars. Trust-game decisions remain
 # denominated in experimental points and are converted explicitly in the app.
 USE_POINTS = False
