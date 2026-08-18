@@ -73,7 +73,7 @@ W=100-\frac{X^2}{100}
 
 when the multiplier was high.
 
-The computer draws \(Y\), with every integer from 0 through 100 equally likely.
+The computer draws a random number \(Y\) from 0 through 100.
 
 The belief prize is awarded when \(Y\leq W\).
 
@@ -116,7 +116,7 @@ The app waits for all participants in written-description sessions to complete t
 | Low multiplier | `3.0` |
 | High multiplier | `6.0` |
 | High-multiplier probability | `0.50` |
-| Trust-point value | `$0.33` |
+| Trust-point value | `$0.20` |
 | Belief prize per evaluated report | `$2.00` |
 | Participation fee | `$10.00` |
 

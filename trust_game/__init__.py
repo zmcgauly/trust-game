@@ -23,7 +23,7 @@ class C(BaseConstants):
     DEFAULT_LOW_MULTIPLIER = 3.0
     DEFAULT_HIGH_MULTIPLIER = 6.0
     DEFAULT_HIGH_MULTIPLIER_PROBABILITY = 0.50
-    DEFAULT_TRUST_POINT_DOLLAR_VALUE = 0.33
+    DEFAULT_TRUST_POINT_DOLLAR_VALUE = 0.20
     DEFAULT_BELIEF_PRIZE_DOLLARS = 2.00
     INSTRUCTION_QUIZ_MAX_ATTEMPTS = 3
     MIN_AGE = 18
@@ -59,7 +59,7 @@ class C(BaseConstants):
     ]
     CONFIDENCE_CHOICES = [
         ["Sure", "Sure"], ["Unsure", "Unsure"],
-        ["Neither Sure or Unsure", "Neither Sure or Unsure"],
+        ["Neither sure nor unsure", "Neither sure nor unsure"],
     ]
     CONFIDENCE_LABEL = "Confidence in Guess"
     RELATIONSHIP_CHOICES = [["No", "No"], ["Yes", "Yes"], ["Prefer not to say", "Prefer not to say"]]
@@ -141,7 +141,7 @@ class Player(BasePlayer):
     )
     belief_selected_for_payment = models.BooleanField(initial=False)
     belief_winning_chance = models.FloatField()
-    belief_bonus_draw = models.IntegerField()
+    belief_bonus_draw = models.FloatField()
     belief_bonus_awarded = models.BooleanField(initial=False)
     belief_bonus = models.CurrencyField(initial=0)
 
@@ -886,7 +886,7 @@ def record_belief(player: Player):
             player.group.realized_multiplier,
             get_low_multiplier(player.session),
         )
-        bonus_draw = random.randint(0, 100)
+        bonus_draw = random.uniform(0, 100)
         player.belief_selected_for_payment = True
         player.belief_winning_chance = winning_chance
         player.belief_bonus_draw = bonus_draw
@@ -921,7 +921,7 @@ def payment_summary_vars(player: Player):
                 selected_belief_probability=belief_player.belief_post_probability_low,
                 realized_multiplier=display_number(belief_player.group.realized_multiplier),
                 belief_winning_chance=round(belief_player.belief_winning_chance, 2),
-                belief_bonus_draw=belief_player.belief_bonus_draw,
+                belief_bonus_draw=round(belief_player.belief_bonus_draw, 2),
                 belief_bonus=belief_player.belief_bonus,
             ))
         result.update(
@@ -1217,7 +1217,7 @@ class ProposerBeliefPost(Page):
 
 class WaitForPostBelief(WaitPage):
     title_text = "Waiting"
-    body_text = "Please wait while the proposer completes the second belief report."
+    body_text = "Please wait while the proposer completes the belief report."
 
     @staticmethod
     def is_displayed(player: Player):

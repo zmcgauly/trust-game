@@ -4,7 +4,7 @@
 {{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-panel">
   <h3>Selected period</h3>
-  <p>Period {{ paid_period }} was selected for payment. Your two trust-game rounds in that period produced {{ trust_points }} points, worth <strong>{{ trust_payment }}</strong>.</p>
+  <p>Period {{ paid_period }} was selected for payment. Your two trust-game rounds in that period produced {{ trust_points }} points at ${{ trust_point_value }} per point, worth <strong>{{ trust_payment }}</strong>.</p>
 </div>
 {{ if is_proposer }}
 <div class="trust-panel">

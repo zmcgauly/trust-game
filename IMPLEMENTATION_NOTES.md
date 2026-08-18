@@ -6,16 +6,16 @@ The default payment formula is:
 
 ```text
 $10 show-up payment
-+ $0.30 × total trust-game points from both rounds of one selected period
++ $0.20 × total trust-game points from both rounds of one selected period
 + a possible $2 belief prize in each of the selected period's two rounds
 ```
 
 Using the planning benchmark of 23.75 trust-game points per round:
 
 ```text
-Expected trust payment = 2 × 23.75 × $0.30 = $14.25
+Expected trust payment = 2 × 23.75 × $0.20 = $9.50
 Illustrative expected belief payment across all participants at a 50% report ≈ 0.5 × 2 rounds × 0.75 × $2 = $1.50
-Illustrative expected total = $10 + $14.25 + $1.50 = $25.75
+Illustrative expected total = $10 + $9.50 + $1.50 = $21.00
 ```
 
 Only proposers complete the belief reports, so realized average payments can differ by role.
@@ -34,7 +34,7 @@ This is the maximum number of periods that guarantees no proposer-responder pair
 
 One period is selected once per session and hidden until the payment summary. Both rounds' trust-game outcomes and both proposer belief reports from that period determine payment.
 
-For each post-return belief report in the selected period, the app calculates the quadratic winning chance \(W\) from the reported low-multiplier probability \(X\) and the realized multiplier. It then draws \(Y\), with every integer from 0 through 100 equally likely, and awards the bonus when \(Y\leq W\). Each report, winning chance, draw, and outcome is stored for auditing.
+For each post-return belief report in the selected period, the app calculates the quadratic winning chance \(W\) from the reported low-multiplier probability \(X\) and the realized multiplier. It then draws a random number \(Y\) from 0 through 100 and awards the bonus when \(Y\leq W\). Each report, winning chance, draw, and outcome is stored for auditing.
 
 Every group's multiplier is independently drawn in every round using the session-level `high_multiplier_probability`.
 

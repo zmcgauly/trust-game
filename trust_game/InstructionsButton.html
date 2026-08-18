@@ -12,7 +12,7 @@
       <p>The responder earns \(\text{responder round points} = \text{points sent} \times \text{realized multiplier} - \text{points returned}\).</p>
       <p>One period is selected at random for payment. Trust-game points from both rounds in that period are paid at ${{ trust_point_value }} per point, and the ${{ participation_fee }} show-up payment is added to these earnings.</p>
       <p>After seeing each return, proposers report the probability that the low multiplier was used. Both reports from the selected period are evaluated. For each report, the reported probability and the actual multiplier determine a winning chance.</p>
-      <p>The computer draws a number, which is equally likely to be any integer from 0 through 100. That round's ${{ belief_prize }} belief prize is paid when \(\text{random draw} \leq \text{winning chance}\).</p>
+      <p>The computer draws a random number from 0 through 100. That round's ${{ belief_prize }} belief prize is paid when \(\text{random draw} \leq \text{winning chance}\).</p>
     </div>
   </div>
 </div>
