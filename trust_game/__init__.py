@@ -570,7 +570,8 @@ def get_partner(player: Player):
 
 def profile_for(player: Player):
     title = f"Player {player.id_in_subsession}"
-    picture_path = f"trust_game/players/{title}.jpg"
+    picture_name = "Player 1 20260818.jpg" if player.id_in_subsession == 1 else f"{title}.jpg"
+    picture_path = f"trust_game/players/{picture_name}"
     return dict(title=title, picture_url=f"/static/{quote(picture_path)}")
 
 
