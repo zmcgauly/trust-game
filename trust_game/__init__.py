@@ -88,7 +88,7 @@ class C(BaseConstants):
     CONFIDENCE_CHOICES = [
         ["Sure", "Sure"],
         ["Unsure", "Unsure"],
-        ["Neither Sure or Unsure", "Neither Sure or Unsure"],
+        ["Neither sure nor unsure", "Neither sure nor unsure"],
     ]
     CONFIDENCE_LABEL = "Confidence in Guess"
     RELATIONSHIP_CHOICES = [
@@ -398,7 +398,7 @@ class Player(BasePlayer):
         label="After seeing the returned amount, what is the probability that the low multiplier was used?",
     )
     belief_winning_chance = models.FloatField(initial=0)
-    belief_bonus_draw = models.IntegerField(initial=0)
+    belief_bonus_draw = models.FloatField(initial=0)
     belief_bonus_awarded = models.BooleanField(initial=False)
     belief_bonus = models.CurrencyField(initial=0)
 
@@ -878,7 +878,7 @@ def record_belief(player: Player):
         reported_probability,
         get_group_realized_multiplier(player.group),
     )
-    bonus_draw = random.randint(0, 100)
+    bonus_draw = random.uniform(0, 100)
     player.belief_winning_chance = winning_chance
     player.belief_bonus_draw = bonus_draw
     player.belief_bonus_awarded = bonus_draw <= winning_chance

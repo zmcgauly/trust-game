@@ -59,7 +59,7 @@ SESSION_CONFIGS = [
 ]
 
 SESSION_CONFIG_DEFAULTS = dict(
-    real_world_currency_per_point=1.00,
+    real_world_currency_per_point=0.20,
     participation_fee=10.00,
     treatment_randomization_level="session_multiplier",
     picture_condition=False,
