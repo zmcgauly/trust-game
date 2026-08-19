@@ -570,17 +570,7 @@ def get_partner(player: Player):
 
 def profile_for(player: Player):
     title = f"Player {player.id_in_subsession}"
-    updated_pictures = {
-        1: "Player 1 20260818.jpg",
-        2: "Player 2 20260818.png",
-        3: "Player 3 20260818.png",
-        4: "Player 4 20260818.png",
-        5: "Player 5 20260818.png",
-        6: "Player 6 20260818.png",
-        7: "Player 7 20260818.png",
-        8: "Player 8 20260818.png",
-    }
-    picture_name = updated_pictures.get(player.id_in_subsession, f"{title}.jpg")
+    picture_name = f"{title}.jpg"
     picture_path = f"trust_game/players/{picture_name}"
     return dict(title=title, picture_url=f"/static/{quote(picture_path)}")
 
