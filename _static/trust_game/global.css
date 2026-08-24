@@ -1,15 +1,39 @@
 .otree-body {
   max-width: 920px;
+  color: #1f2937;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.45;
 }
 
 .trust-panel,
-.trust-card {
+.trust-card,
+.quiz-field {
   border: 1px solid #d8dee7;
   border-radius: 8px;
   background: #fff;
   padding: 16px;
   margin-bottom: 16px;
   line-height: 1.45;
+}
+
+.quiz-field {
+  padding: 18px;
+}
+
+.quiz-field .form-group {
+  margin-bottom: 0;
+}
+
+.quiz-field label {
+  font-weight: 700;
+}
+
+.quiz-field .form-check label {
+  font-weight: 400;
+}
+
+.quiz-field .form-check {
+  margin-top: 8px;
 }
 
 .practice-note {
