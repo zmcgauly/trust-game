@@ -4,7 +4,7 @@
 {{ include_sibling 'InstructionsButton.html' }}
 <div class="trust-meta">
   {{ if is_practice }}<span>Practice round {{ player.round_in_period }} of {{ C.PRACTICE_ROUNDS }}</span>
-  {{ else }}<span>Period {{ player.period_number }} of {{ total_periods }}</span><span>Round {{ player.round_in_period }} of 2</span>{{ endif }}
+  {{ else }}<span>Period {{ player.period_number }} of {{ total_periods }}</span><span>Round {{ player.round_in_period }} of {{ rounds_per_period }}</span>{{ endif }}
 </div>
 {{ if is_practice }}<div class="trust-panel practice-note"><p>This report is for practice and cannot be selected for payment.</p></div>{{ endif }}
 {{ include_sibling 'RoundSummaryHover.html' }}

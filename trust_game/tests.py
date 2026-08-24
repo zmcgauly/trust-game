@@ -58,7 +58,7 @@ class PlayerBot(Bot):
                     instruction_quiz_3="zero_to_twenty",
                     instruction_quiz_4="sent_available",
                     instruction_quiz_5="correct",
-                    instruction_quiz_6="both_rounds",
+                    instruction_quiz_6="selected_period",
                     instruction_quiz_7="eighty_four",
                 )
 
@@ -113,7 +113,7 @@ class PlayerBot(Bot):
                         f"{prefix}_ethnicity_guess": "No",
                         f"{prefix}_ethnicity_confidence": "Unsure",
                         f"{prefix}_race_guess": "Other",
-                        f"{prefix}_race_confidence": "Neither Sure or Unsure",
+                        f"{prefix}_race_confidence": "Neither sure nor unsure",
                         f"{prefix}_gender_guess": "Other",
                         f"{prefix}_gender_confidence": "Unsure",
                         f"{prefix}_sexuality_guess": "Other",

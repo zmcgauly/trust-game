@@ -11,7 +11,7 @@ An oTree 6 experiment with fixed proposer and responder roles, rotating partners
 - In no-written-description sessions, the trust game is Part 1 and the self-demographic survey is Part 2 after the trust game.
 - The trust-game instructions and instruction quiz are shown before the trust-game decision rounds.
 - The session begins with two unpaid practice rounds.
-- Each real period consists of two rounds with the same partner.
+- Each real period consists of five rounds with the same partner.
 - Partners rotate after each period.
 - A participant is not matched with the same partner in two different real periods.
 - The number of real periods is the smaller of 10 and the number of participants in the opposite role.
@@ -49,7 +49,7 @@ The responder's round payoff is:
 
 One real period is selected at random for payment.
 
-Both trust-game rounds in that period are paid.
+All five trust-game rounds in that period are paid.
 
 Each trust-game point is converted to dollars using `trust_point_dollar_value`.
 
@@ -57,7 +57,7 @@ The participation fee is added to decision-based earnings.
 
 In every round, the proposer reports \(X\), the probability from 0% through 100% that the low multiplier was used.
 
-Both belief reports from the selected period are evaluated for separate belief prizes.
+All five belief reports from the selected period are evaluated for separate belief prizes.
 
 For each evaluated report, the quadratic winning chance is:
 

@@ -5,7 +5,7 @@
 {{ include_sibling 'TestingSkipButton.html' }}
 <div class="trust-panel">
   <p>In every round, after seeing how many points the responder returned, the proposer reports the probability (from 0% to 100%) that the low multiplier was used. For example, reporting 70% means you believe there is a 70% chance that the low multiplier was used.</p>
-  <p>The same period selected for trust-game payment is also used for belief payment. A period consists of two rounds, and the proposer's report from <strong>each round</strong> in the selected period is evaluated for a <strong>${{ belief_prize }}</strong> belief prize. For each report in the selected period, your report and the actual multiplier determine your chance of winning that round's belief prize.</p>
+  <p>The same period selected for trust-game payment is also used for belief payment. A period consists of {{ rounds_per_period }} rounds, and the proposer's report from <strong>each round</strong> in the selected period is evaluated for a <strong>${{ belief_prize }}</strong> belief prize. For each report in the selected period, your report and the actual multiplier determine your chance of winning that round's belief prize.</p>
   <p>If the multiplier was low:</p>
   \[
     \text{winning chance} =

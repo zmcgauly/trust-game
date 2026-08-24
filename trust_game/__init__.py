@@ -6,7 +6,7 @@ from otree.api import *
 
 doc = """
 Two-person trust game with fixed proposer/responder roles, rotating partners,
-two rounds per period, independently randomized multipliers by group and round,
+five rounds per period, independently randomized multipliers by group and round,
 and incentivized probability reports after the return is revealed.
 """
 
@@ -15,7 +15,7 @@ class C(BaseConstants):
     NAME_IN_URL = "trust_game"
     PLAYERS_PER_GROUP = 2
     PRACTICE_ROUNDS = 2
-    ROUNDS_PER_PERIOD = 2
+    ROUNDS_PER_PERIOD = 5
     MAX_PERIODS = 10
     PERIODS = MAX_PERIODS
     NUM_ROUNDS = PRACTICE_ROUNDS + (MAX_PERIODS * ROUNDS_PER_PERIOD)
@@ -82,6 +82,7 @@ class Subsession(BaseSubsession):
         return dict(
             period_rows=rows,
             active_periods=active_periods,
+            rounds_per_period=C.ROUNDS_PER_PERIOD,
             low_multiplier=display_number(get_low_multiplier(self.session)),
             high_multiplier=display_number(get_high_multiplier(self.session)),
             high_multiplier_probability=get_high_multiplier_probability(self.session),
@@ -203,7 +204,7 @@ class Player(BasePlayer):
         label="How are round points calculated?", widget=widgets.RadioSelect,
     )
     instruction_quiz_6 = models.StringField(
-        choices=[["both_rounds", "One period is selected; both rounds' trust-game outcomes and both proposer belief reports determine payment."],
+        choices=[["selected_period", "One period is selected; all five trust-game outcomes and all five proposer belief reports from that period determine payment."],
                  ["one_round", "Only one randomly selected round is paid."],
                  ["all_rounds", "Every real round is paid."]],
         label="Which decisions determine payment?", widget=widgets.RadioSelect,
@@ -643,6 +644,7 @@ def written_description_for(player: Player, partner: Player):
 def page_common_vars(player: Player):
     return dict(
         total_periods=get_active_periods(player.session),
+        rounds_per_period=C.ROUNDS_PER_PERIOD,
         picture_condition=get_picture_condition(player.session),
         written_description_condition=get_written_description_condition(player.session),
         low_multiplier=display_number(get_low_multiplier(player.session)),
@@ -899,8 +901,8 @@ def record_belief(player: Player):
 def payment_summary_vars(player: Player):
     paid_period = get_paid_period(player.session)
     paid_rounds = [
-        player.in_round(real_round_for_period(paid_period)),
-        player.in_round(real_round_for_period(paid_period) + 1),
+        player.in_round(real_round_for_period(paid_period) + offset)
+        for offset in range(C.ROUNDS_PER_PERIOD)
     ]
     trust_points = sum(p.round_points for p in paid_rounds)
     trust_payment = sum((p.trust_game_payment for p in paid_rounds), cu(0))
@@ -936,7 +938,7 @@ INSTRUCTION_QUIZ_FIELDS = [f"instruction_quiz_{i}" for i in range(1, 8)]
 INSTRUCTION_QUIZ_CORRECT_ANSWERS = dict(
     instruction_quiz_1="same", instruction_quiz_2="learning",
     instruction_quiz_3="zero_to_twenty", instruction_quiz_4="sent_available",
-    instruction_quiz_5="correct", instruction_quiz_6="both_rounds",
+    instruction_quiz_5="correct", instruction_quiz_6="selected_period",
     instruction_quiz_7="eighty_four",
 )
 
