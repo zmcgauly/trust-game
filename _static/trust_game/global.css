@@ -250,6 +250,26 @@
   margin-top: 12px;
 }
 
+.experiment-frame {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  width: 100vw;
+  height: 100vh;
+  border: 0;
+  background: #fff;
+}
+
+.experiment-frame[hidden] {
+  display: none;
+}
+
+.fullscreen-frame-active .otree-body {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
 .otree-btn-next.disabled,
 .otree-btn-next:disabled {
   cursor: not-allowed;

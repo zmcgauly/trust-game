@@ -12,19 +12,45 @@
   var button = document.querySelector('[data-fullscreen-enter]');
   if (!gate || !button) return;
 
-  function fullscreenElement() {
-    return document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  function fullscreenElement(doc) {
+    return doc.fullscreenElement || doc.webkitFullscreenElement || doc.msFullscreenElement;
+  }
+
+  function viewportLooksFullscreen(win) {
+    var widthGap = Math.abs(win.screen.availWidth - win.innerWidth);
+    var heightGap = Math.abs(win.screen.availHeight - win.innerHeight);
+    return widthGap <= 8 && heightGap <= 90;
+  }
+
+  function parentIsFullscreen() {
+    try {
+      return window.parent && window.parent !== window && !!fullscreenElement(window.parent.document);
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function experimentFullscreen() {
+    return !!fullscreenElement(document) || parentIsFullscreen() || viewportLooksFullscreen(window.top || window);
   }
 
   function updateGate() {
-    gate.hidden = !!fullscreenElement();
+    gate.hidden = experimentFullscreen();
   }
 
   function requestFullscreen() {
-    var target = document.documentElement;
+    var targetDocument = document;
+    try {
+      if (window.parent && window.parent !== window) {
+        targetDocument = window.parent.document;
+      }
+    } catch (error) {
+      targetDocument = document;
+    }
+    var target = targetDocument.documentElement;
     var request = target.requestFullscreen || target.webkitRequestFullscreen || target.msRequestFullscreen;
     if (!request) {
-      gate.hidden = true;
+      updateGate();
       return;
     }
     Promise.resolve(request.call(target)).then(updateGate).catch(function () {
@@ -34,7 +60,7 @@
 
   button.addEventListener('click', requestFullscreen);
   document.addEventListener('submit', function (event) {
-    if (!fullscreenElement()) {
+    if (!experimentFullscreen()) {
       event.preventDefault();
       gate.hidden = false;
       button.focus();
@@ -43,6 +69,8 @@
   document.addEventListener('fullscreenchange', updateGate);
   document.addEventListener('webkitfullscreenchange', updateGate);
   document.addEventListener('MSFullscreenChange', updateGate);
+  window.addEventListener('resize', updateGate);
+  window.setInterval(updateGate, 500);
   updateGate();
 })();
 </script>

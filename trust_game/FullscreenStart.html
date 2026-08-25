@@ -7,7 +7,7 @@ Full Screen Required
 {{ endblock }}
 
 {{ block content }}
-<div class="trust-panel fullscreen-start">
+<div class="trust-panel fullscreen-start" data-fullscreen-start-panel>
   <h3>Full Screen Required</h3>
   <ul>
     <li>Please continue in full screen mode for the experiment.</li>
@@ -18,20 +18,34 @@ Full Screen Required
 </div>
 
 {{ next_button }}
+<iframe class="experiment-frame" name="experiment-frame" data-experiment-frame allowfullscreen allow="fullscreen" hidden></iframe>
 
 <script>
 (function () {
   var enterButton = document.querySelector('[data-fullscreen-start]');
   var status = document.querySelector('[data-fullscreen-status]');
   var nextButton = document.querySelector('.otree-btn-next') || document.querySelector('button[type="submit"]');
-  if (!enterButton || !status || !nextButton) return;
+  var form = nextButton ? nextButton.closest('form') : null;
+  var panel = document.querySelector('[data-fullscreen-start-panel]');
+  var frame = document.querySelector('[data-experiment-frame]');
+  if (!enterButton || !status || !nextButton || !form || !panel || !frame) return;
 
-  function fullscreenElement() {
-    return document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  function fullscreenElement(doc) {
+    return doc.fullscreenElement || doc.webkitFullscreenElement || doc.msFullscreenElement;
+  }
+
+  function viewportLooksFullscreen(win) {
+    var widthGap = Math.abs(win.screen.availWidth - win.innerWidth);
+    var heightGap = Math.abs(win.screen.availHeight - win.innerHeight);
+    return widthGap <= 8 && heightGap <= 90;
+  }
+
+  function experimentFullscreen() {
+    return !!fullscreenElement(document) || viewportLooksFullscreen(window);
   }
 
   function updatePage() {
-    var isFullscreen = !!fullscreenElement();
+    var isFullscreen = experimentFullscreen();
     nextButton.disabled = !isFullscreen;
     nextButton.classList.toggle('disabled', !isFullscreen);
     status.textContent = isFullscreen
@@ -43,8 +57,7 @@ Full Screen Required
     var target = document.documentElement;
     var request = target.requestFullscreen || target.webkitRequestFullscreen || target.msRequestFullscreen;
     if (!request) {
-      status.textContent = 'This browser does not support full screen mode. Please alert the experimenter.';
-      nextButton.disabled = true;
+      updatePage();
       return;
     }
     Promise.resolve(request.call(target)).then(updatePage).catch(function () {
@@ -54,9 +67,23 @@ Full Screen Required
   }
 
   enterButton.addEventListener('click', requestFullscreen);
+  form.addEventListener('submit', function (event) {
+    if (!experimentFullscreen()) {
+      event.preventDefault();
+      updatePage();
+      enterButton.focus();
+      return;
+    }
+    form.target = frame.name;
+    frame.hidden = false;
+    panel.hidden = true;
+    nextButton.hidden = true;
+    document.body.classList.add('fullscreen-frame-active');
+  });
   document.addEventListener('fullscreenchange', updatePage);
   document.addEventListener('webkitfullscreenchange', updatePage);
   document.addEventListener('MSFullscreenChange', updatePage);
+  window.addEventListener('resize', updatePage);
   updatePage();
 })();
 </script>
