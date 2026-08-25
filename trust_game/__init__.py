@@ -130,7 +130,8 @@ class Player(BasePlayer):
         blank=True,
     )
     confirmed_player_identity = models.BooleanField(
-        label="Yes, this is me.",
+        label="This is me.",
+        widget=widgets.CheckboxInput,
         blank=True,
         initial=False,
     )

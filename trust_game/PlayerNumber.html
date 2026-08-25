@@ -8,19 +8,17 @@ Player Number
 
 {{ block content }}
 {{ include_sibling 'FullscreenGate.html' }}
-<div class="trust-panel">
+<div class="trust-panel identity-panel">
   <p>Enter the player number assigned to you by the experimenter.</p>
-</div>
-
-<div class="identity-grid">
-  <div>
+  <div class="identity-number-field">
     {{ formfield 'claimed_player_number' }}
   </div>
-  <div class="trust-card identity-preview" data-identity-preview hidden>
+  <div class="identity-preview" data-identity-preview hidden>
     <img class="profile-image" data-identity-image alt="">
-    <p><b data-identity-title></b></p>
-    <p>Is this you?</p>
-    {{ formfield 'confirmed_player_identity' }}
+    <p class="identity-title"><b data-identity-title></b></p>
+    <div class="identity-confirm">
+      {{ formfield 'confirmed_player_identity' }}
+    </div>
   </div>
 </div>
 
