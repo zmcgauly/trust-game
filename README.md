@@ -5,6 +5,7 @@ An oTree 6 experiment with fixed proposer and responder roles, rotating partners
 ## Experimental design
 
 - Participants first receive general instructions about the show-up payment and the option to leave at any time.
+- Participants first enter the player number assigned by the experimenter, confirm the matching picture, and cannot continue if another participant has already claimed that number.
 - Participants are divided evenly between proposers and responders.
 - Roles remain fixed throughout the session.
 - In written-description sessions, Part 1 collects participants' self-demographic information before the trust game.
@@ -105,7 +106,9 @@ Only participants in picture-treatment sessions make demographic guesses about t
 
 The relevant partner's available cues are displayed while each set of guesses is made.
 
-Written descriptions are generated from the partner's pre-game self-demographic survey responses. If `C.PROFILE_DESCRIPTIONS` in `trust_game/__init__.py`, or optional session config metadata, defines a description keyed by player title or player number, that predefined text overrides the generated survey-based description.
+Player pictures are loaded from `_static/trust_game/players/` by the player number selected on the first page, for example `Player 1.jpg`.
+
+Written descriptions are generated from the partner's pre-game self-demographic survey responses. If `C.PROFILE_DESCRIPTIONS` in `trust_game/__init__.py`, or optional session config metadata, defines a description keyed by selected player title or selected player number, that predefined text overrides the generated survey-based description.
 
 The app waits for all participants in written-description sessions to complete the pre-game self survey before the trust game begins, so written partner descriptions are available during the decision task.
 

@@ -4,15 +4,21 @@
 {{ include_sibling 'InstructionsButton.html' }}
 {{ include_sibling 'TestingSkipButton.html' }}
 <div class="trust-panel">
+  <ul>
   {{ if written_description_condition }}
-    <p>You have completed Part 1. You will now receive the instructions for Part 2.</p>
+    <li>You have completed Part 1.</li>
+    <li>You will now receive the instructions for Part 2.</li>
   {{ endif }}
-  <p>Part {{ game_part_number }} is an experiment in economic decision making. Your choices and the choices of others determine your additional earnings.</p>
-  <p>You and one other player will be placed into a group of two.</p>
-  <p>There are two roles in this experiment.</p>
+    <li>Part {{ game_part_number }} is an experiment in economic decision making.</li>
+    <li>Your choices and the choices of others determine your additional earnings.</li>
+    <li>You and one other player will be placed into a group of two.</li>
+    <li>There are two roles in this experiment.</li>
+    <li>The instructions button remains available in the upper right hand of your screen during the decision task.</li>
+    <li>There is a calculator for you to use should you need it. Simply press the calculator button in the upper right hand of your screen to access it.</li>
   {{ if show_next_part_after_game }}
-    <p>After Part {{ game_part_number }} is completed, you will receive instructions for the next part.</p>
+    <li>After Part {{ game_part_number }} is completed, you will receive instructions for the next part.</li>
   {{ endif }}
+  </ul>
 </div>
 {{ next_button }}
 {{ endblock }}

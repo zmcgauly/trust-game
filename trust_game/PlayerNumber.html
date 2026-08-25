@@ -1,0 +1,57 @@
+{{ block title }}
+Player Number
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+{{ include_sibling 'FullscreenGate.html' }}
+<div class="trust-panel">
+  <p>Enter the player number assigned to you by the experimenter.</p>
+</div>
+
+<div class="identity-grid">
+  <div>
+    {{ formfield 'claimed_player_number' }}
+    {{ formfield 'confirmed_player_identity' }}
+  </div>
+  <div class="trust-card identity-preview" data-identity-preview hidden>
+    <img class="profile-image" data-identity-image alt="">
+    <p><b data-identity-title></b></p>
+    <p>Is this you?</p>
+  </div>
+</div>
+
+{{ next_button }}
+
+<script>
+(function () {
+  var input = document.getElementById('id_claimed_player_number');
+  var preview = document.querySelector('[data-identity-preview]');
+  var image = document.querySelector('[data-identity-image]');
+  var title = document.querySelector('[data-identity-title]');
+  var maxPlayerNumber = {{ max_player_number }};
+  if (!input || !preview || !image || !title) return;
+
+  function updatePreview() {
+    var value = parseInt(input.value, 10);
+    if (!value || value < 1 || value > maxPlayerNumber) {
+      preview.hidden = true;
+      image.removeAttribute('src');
+      title.textContent = '';
+      return;
+    }
+    var playerTitle = 'Player ' + value;
+    image.src = '/static/trust_game/players/' + encodeURIComponent(playerTitle + '.jpg');
+    image.alt = playerTitle;
+    title.textContent = playerTitle;
+    preview.hidden = false;
+  }
+
+  input.addEventListener('input', updatePreview);
+  updatePreview();
+})();
+</script>
+{{ endblock }}

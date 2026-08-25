@@ -15,6 +15,7 @@ from . import (
     ResponderDecision,
     ResponderReceipt,
     RoleNotice,
+    PlayerNumber,
     Part1Instructions,
     Part3Instructions,
     SelfIdentification,
@@ -29,6 +30,11 @@ from . import (
 class PlayerBot(Bot):
     def play_round(self):
         if self.round_number == 1:
+            yield PlayerNumber, dict(
+                claimed_player_number=self.player.id_in_subsession,
+                confirmed_player_identity=True,
+            )
+
             if is_real_experiment_session(self.player.session):
                 yield InstructionsIntro
             else:

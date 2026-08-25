@@ -4,17 +4,31 @@
 {{ include_sibling 'InstructionsButton.html' }}
 {{ include_sibling 'TestingSkipButton.html' }}
 <div class="trust-panel">
-  <p>The proposer's round payoff is:</p>
-  \[
-    \text{proposer round points} = 20 - \text{points sent} + \text{points returned}
-  \]
-  <p>The responder's round payoff is:</p>
-  \[
-    \text{responder round points} =
-    \text{points sent} \times \text{realized multiplier} - \text{points returned}
-  \]
-  <p>After the experiment, one period is selected at random for payment. A period consists of {{ rounds_per_period }} rounds, and <strong>all rounds from the selected period</strong> determine trust-game earnings.</p>
-  <p>Every point earned in the game is worth <strong>${{ trust_point_value }}</strong> in real-life dollars. For example, 22 points in one round of the selected period would be worth ${{ example_22_point_payment }}. Practice rounds and unselected periods do not affect payment.</p>
+  <ul>
+    <li>The proposer's round payoff is:</li>
+  </ul>
+  <p class="formula-line">
+    \[
+      \text{proposer round points} = 20 - \text{points sent} + \text{points returned}
+    \]
+  </p>
+  <ul>
+    <li>The responder's round payoff is:</li>
+  </ul>
+  <p class="formula-line">
+    \[
+      \text{responder round points} =
+      \text{points sent} \times \text{realized multiplier} - \text{points returned}
+    \]
+  </p>
+  <ul>
+    <li>After the experiment, one period is selected at random for payment.</li>
+    <li>A period consists of {{ rounds_per_period }} rounds.</li>
+    <li><strong>All rounds from the selected period</strong> determine trust-game earnings.</li>
+    <li>Every point earned in the game is worth <strong>${{ trust_point_value }}</strong> in real-life dollars.</li>
+    <li>For example, 22 points in one round of the selected period would be worth ${{ example_22_point_payment }}.</li>
+    <li>Practice rounds and unselected periods do not affect payment.</li>
+  </ul>
 </div>
 {{ next_button }}
 {{ endblock }}

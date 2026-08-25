@@ -1,4 +1,6 @@
+{{ include_sibling 'FullscreenGate.html' }}
 <button class="instructions-button" type="button" data-instructions-open>Instructions</button>
+<button class="calculator-button" type="button" data-calculator-open>Calculator</button>
 <div class="instructions-overlay" data-instructions-overlay hidden>
   <div class="instructions-modal" role="dialog" aria-modal="true" aria-labelledby="instructions-summary-title">
     <div class="instructions-modal-header">
@@ -6,13 +8,57 @@
       <button class="instructions-close" type="button" aria-label="Close instructions" data-instructions-close>x</button>
     </div>
     <div class="instructions-modal-body">
-      <p>Your proposer or responder role remains fixed. There are two unpaid practice rounds, followed by {{ total_periods }} periods with rotating partners. Each period consists of {{ rounds_per_period }} rounds.</p>
-      <p>The proposer sends 0 to 20 points. The amount is multiplied by {{ low_multiplier }} or {{ high_multiplier }}, and the high multiplier occurs with probability {{ high_multiplier_probability_percent }}% in each round.</p>
-      <p>The proposer earns \(\text{proposer round points} = 20 - \text{points sent} + \text{points returned}\).</p>
-      <p>The responder earns \(\text{responder round points} = \text{points sent} \times \text{realized multiplier} - \text{points returned}\).</p>
-      <p>One period is selected at random for payment. Trust-game points from all rounds in that period are paid at ${{ trust_point_value }} per point, and the ${{ participation_fee }} show-up payment is added to these earnings.</p>
-      <p>After seeing each return, proposers report the probability that the low multiplier was used. All reports from the selected period are evaluated. For each report, the reported probability and the actual multiplier determine a winning chance.</p>
-      <p>The computer draws a random number from 0 through 100. That round's ${{ belief_prize }} belief prize is paid when \(\text{random draw} \leq \text{winning chance}\).</p>
+      <ul>
+        <li>Your proposer or responder role remains fixed.</li>
+        <li>There are two unpaid practice rounds, followed by {{ total_periods }} periods with rotating partners.</li>
+        <li>Each period consists of {{ rounds_per_period }} rounds.</li>
+        <li>The proposer sends 0 to 20 points.</li>
+        <li>The amount is multiplied by {{ low_multiplier }} or {{ high_multiplier }}, and the high multiplier occurs with probability {{ high_multiplier_probability_percent }}% in each round.</li>
+        <li>The proposer earns \(\text{proposer round points} = 20 - \text{points sent} + \text{points returned}\).</li>
+        <li>The responder earns \(\text{responder round points} = \text{points sent} \times \text{realized multiplier} - \text{points returned}\).</li>
+        <li>One period is selected at random for payment.</li>
+        <li>Trust-game points from all rounds in that period are paid at ${{ trust_point_value }} per point, and the ${{ participation_fee }} show-up payment is added to these earnings.</li>
+        <li>After seeing each return, proposers report the probability that the low multiplier was used.</li>
+        <li>All reports from the selected period are evaluated.</li>
+        <li>For each report, the reported probability and the actual multiplier determine a winning chance.</li>
+        <li>The computer draws a random number from 0 through 100.</li>
+        <li>That round's ${{ belief_prize }} belief prize is paid when \(\text{random draw} \leq \text{winning chance}\).</li>
+        <li>There is a calculator for you to use should you need it. Simply press the calculator button in the upper right hand of your screen to access it.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="calculator-overlay" data-calculator-overlay hidden>
+  <div class="calculator-modal" role="dialog" aria-modal="true" aria-labelledby="calculator-title">
+    <div class="calculator-header">
+      <h3 id="calculator-title">Calculator</h3>
+      <button class="instructions-close" type="button" aria-label="Close calculator" data-calculator-close>x</button>
+    </div>
+    <div class="calculator-body">
+      <input class="calculator-display" type="text" inputmode="decimal" aria-label="Calculator expression" data-calculator-display>
+      <div class="calculator-result" aria-live="polite" data-calculator-result></div>
+      <div class="calculator-grid">
+        <button type="button" data-calculator-key="7">7</button>
+        <button type="button" data-calculator-key="8">8</button>
+        <button type="button" data-calculator-key="9">9</button>
+        <button type="button" data-calculator-key="/">/</button>
+        <button type="button" data-calculator-key="4">4</button>
+        <button type="button" data-calculator-key="5">5</button>
+        <button type="button" data-calculator-key="6">6</button>
+        <button type="button" data-calculator-key="*">*</button>
+        <button type="button" data-calculator-key="1">1</button>
+        <button type="button" data-calculator-key="2">2</button>
+        <button type="button" data-calculator-key="3">3</button>
+        <button type="button" data-calculator-key="-">-</button>
+        <button type="button" data-calculator-key="0">0</button>
+        <button type="button" data-calculator-key=".">.</button>
+        <button type="button" data-calculator-clear>Clear</button>
+        <button type="button" data-calculator-key="+">+</button>
+        <button type="button" data-calculator-key="(">(</button>
+        <button type="button" data-calculator-key=")">)</button>
+        <button type="button" data-calculator-back>Back</button>
+        <button type="button" data-calculator-equals>=</button>
+      </div>
     </div>
   </div>
 </div>
@@ -34,5 +80,81 @@ window.MathJax = window.MathJax || {
   closeButton.addEventListener('click', closeInstructions);
   overlay.addEventListener('click', function (event) { if (event.target === overlay) closeInstructions(); });
   document.addEventListener('keydown', function (event) { if (event.key === 'Escape' && !overlay.hidden) closeInstructions(); });
+})();
+</script>
+<script>
+(function () {
+  var openButton = document.querySelector('[data-calculator-open]');
+  var overlay = document.querySelector('[data-calculator-overlay]');
+  var closeButton = document.querySelector('[data-calculator-close]');
+  var display = document.querySelector('[data-calculator-display]');
+  var result = document.querySelector('[data-calculator-result]');
+  if (!openButton || !overlay || !closeButton || !display || !result) return;
+
+  function openCalculator() {
+    overlay.hidden = false;
+    display.focus();
+  }
+
+  function closeCalculator() {
+    overlay.hidden = true;
+    openButton.focus();
+  }
+
+  function setResult(text) {
+    result.textContent = text;
+  }
+
+  function calculate() {
+    var expression = display.value.trim();
+    if (!expression) {
+      setResult('');
+      return;
+    }
+    if (!/^[0-9+\-*/().\s]+$/.test(expression)) {
+      setResult('Use numbers and + - * / only.');
+      return;
+    }
+    try {
+      var value = Function('"use strict"; return (' + expression + ');')();
+      if (!Number.isFinite(value)) {
+        setResult('Cannot divide by zero.');
+        return;
+      }
+      display.value = String(Math.round(value * 1000000) / 1000000);
+      setResult('');
+    } catch (error) {
+      setResult('Check the expression.');
+    }
+  }
+
+  openButton.addEventListener('click', openCalculator);
+  closeButton.addEventListener('click', closeCalculator);
+  overlay.addEventListener('click', function (event) { if (event.target === overlay) closeCalculator(); });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && !overlay.hidden) closeCalculator();
+  });
+  display.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      calculate();
+    }
+  });
+  document.querySelectorAll('[data-calculator-key]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      display.value += button.getAttribute('data-calculator-key');
+      display.focus();
+    });
+  });
+  document.querySelector('[data-calculator-clear]').addEventListener('click', function () {
+    display.value = '';
+    setResult('');
+    display.focus();
+  });
+  document.querySelector('[data-calculator-back]').addEventListener('click', function () {
+    display.value = display.value.slice(0, -1);
+    display.focus();
+  });
+  document.querySelector('[data-calculator-equals]').addEventListener('click', calculate);
 })();
 </script>

@@ -7,6 +7,7 @@ Part {{ self_survey_part_number }}: About You
 {{ endblock }}
 
 {{ block content }}
+{{ include_sibling 'FullscreenGate.html' }}
 <div class="trust-meta">
   <span>Part {{ self_survey_part_number }} of {{ total_experiment_parts }}</span>
 </div>

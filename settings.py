@@ -84,7 +84,7 @@ SESSION_CONFIG_DEFAULTS = dict(
     doc="",
 )
 
-PARTICIPANT_FIELDS = ["role_name", "role_number"]
+PARTICIPANT_FIELDS = ["role_name", "role_number", "public_player_number"]
 SESSION_FIELDS = []
 
 LANGUAGE_CODE = "en"

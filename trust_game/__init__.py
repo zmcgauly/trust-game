@@ -124,6 +124,17 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    claimed_player_number = models.IntegerField(
+        min=1,
+        label="Enter your player number",
+        blank=True,
+    )
+    confirmed_player_identity = models.BooleanField(
+        label="Yes, this is me.",
+        blank=True,
+        initial=False,
+    )
+
     role_name = models.StringField()
     role_number = models.IntegerField()
     is_practice_round = models.BooleanField(initial=False)
@@ -569,11 +580,58 @@ def get_partner(player: Player):
     return get_responder(player.group) if player.role_name == "proposer" else get_proposer(player.group)
 
 
+def max_player_number(player: Player):
+    return len(player.subsession.get_players())
+
+
+def public_player_number(player: Player):
+    return (
+        player.participant.vars.get("public_player_number")
+        or player.field_maybe_none("claimed_player_number")
+        or player.id_in_subsession
+    )
+
+
+def participant_public_player_number(participant):
+    return participant.vars.get("public_player_number")
+
+
+def player_number_claims(session):
+    return session.vars.setdefault("public_player_number_claims", {})
+
+
+def claim_player_number(player: Player, number):
+    participant_code = player.participant.code
+    claims = player_number_claims(player.session)
+    for claimed_number, claimed_code in list(claims.items()):
+        if claimed_code == participant_code and claimed_number != str(number):
+            del claims[claimed_number]
+    claims[str(number)] = participant_code
+    player.participant.public_player_number = number
+    player.participant.vars["public_player_number"] = number
+
+
+def player_number_conflict(player: Player, number):
+    participant_code = player.participant.code
+    claims = player_number_claims(player.session)
+    claimed_code = claims.get(str(number))
+    if claimed_code and claimed_code != participant_code:
+        return True
+
+    for participant in player.session.get_participants():
+        if participant.code == participant_code:
+            continue
+        if participant_public_player_number(participant) == number:
+            return True
+    return False
+
+
 def profile_for(player: Player):
-    title = f"Player {player.id_in_subsession}"
+    number = public_player_number(player)
+    title = f"Player {number}"
     picture_name = f"{title}.jpg"
     picture_path = f"trust_game/players/{picture_name}"
-    return dict(title=title, picture_url=f"/static/{quote(picture_path)}")
+    return dict(number=number, title=title, picture_url=f"/static/{quote(picture_path)}")
 
 
 def treatment_picture(player: Player):
@@ -633,9 +691,11 @@ def self_demographic_description_for(player: Player):
 
 def written_description_for(player: Player, partner: Player):
     descriptions = player.session.config.get("written_profile_descriptions", C.PROFILE_DESCRIPTIONS) or {}
-    title = profile_for(partner)["title"]
+    partner_profile = profile_for(partner)
+    title = partner_profile["title"]
     return (
         descriptions.get(title)
+        or descriptions.get(str(partner_profile["number"]))
         or descriptions.get(str(partner.id_in_subsession))
         or self_demographic_description_for(partner)
     )
@@ -645,6 +705,7 @@ def page_common_vars(player: Player):
     return dict(
         total_periods=get_active_periods(player.session),
         rounds_per_period=C.ROUNDS_PER_PERIOD,
+        show_fullscreen_gate=is_real_experiment_session(player.session),
         picture_condition=get_picture_condition(player.session),
         written_description_condition=get_written_description_condition(player.session),
         low_multiplier=display_number(get_low_multiplier(player.session)),
@@ -955,6 +1016,57 @@ def instruction_quiz_failed(player: Player):
 
 def instruction_quiz_wrong_attempts(player: Player):
     return int(player.participant.vars.get("instruction_quiz_wrong_attempts", 0))
+
+
+class PlayerNumber(Page):
+    form_model = "player"
+    form_fields = ["claimed_player_number", "confirmed_player_identity"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return (
+            player.round_number == 1
+            and participant_public_player_number(player.participant) is None
+        )
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            max_player_number=max_player_number(player),
+            show_fullscreen_gate=is_real_experiment_session(player.session),
+        )
+
+    @staticmethod
+    def error_message(player: Player, values):
+        number = values["claimed_player_number"]
+        if number is None:
+            return {"claimed_player_number": "Please enter your player number."}
+        if number < 1 or number > max_player_number(player):
+            return {
+                "claimed_player_number": (
+                    f"Please enter a player number from 1 to {max_player_number(player)}."
+                )
+            }
+        if not values["confirmed_player_identity"]:
+            return {"confirmed_player_identity": "Please confirm that this picture is you."}
+        if player_number_conflict(player, number):
+            return {"claimed_player_number": f"Only one partiecipent can be player {number}"}
+        claim_player_number(player, number)
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if player.field_maybe_none("claimed_player_number") is not None:
+            claim_player_number(player, player.claimed_player_number)
+
+
+class WaitForPlayerNumber(WaitPage):
+    wait_for_all_groups = True
+    title_text = "Waiting for participants"
+    body_text = "Please wait for the other participants to enter their player numbers."
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
 
 
 class RoleNotice(Page):
@@ -1543,6 +1655,7 @@ class PaymentSummary(Page):
 
 
 page_sequence = [
+    PlayerNumber, WaitForPlayerNumber,
     InstructionsIntro,
     Part1Instructions, SelfIdentification, WaitForSelfIdentification,
     Instructions, Instructions2, Instructions3, Instructions4, Instructions5,

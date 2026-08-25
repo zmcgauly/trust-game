@@ -1,0 +1,42 @@
+{{ if show_fullscreen_gate }}
+<div class="fullscreen-gate" data-fullscreen-gate>
+  <div class="fullscreen-gate-panel">
+    <h3>Full Screen Required</h3>
+    <p>Please continue in full screen mode for the experiment.</p>
+    <button class="fullscreen-gate-button" type="button" data-fullscreen-enter>Enter full screen</button>
+  </div>
+</div>
+<script>
+(function () {
+  var gate = document.querySelector('[data-fullscreen-gate]');
+  var button = document.querySelector('[data-fullscreen-enter]');
+  if (!gate || !button) return;
+
+  function fullscreenElement() {
+    return document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  }
+
+  function updateGate() {
+    gate.hidden = !!fullscreenElement();
+  }
+
+  function requestFullscreen() {
+    var target = document.documentElement;
+    var request = target.requestFullscreen || target.webkitRequestFullscreen || target.msRequestFullscreen;
+    if (!request) {
+      gate.hidden = true;
+      return;
+    }
+    Promise.resolve(request.call(target)).then(updateGate).catch(function () {
+      gate.hidden = false;
+    });
+  }
+
+  button.addEventListener('click', requestFullscreen);
+  document.addEventListener('fullscreenchange', updateGate);
+  document.addEventListener('webkitfullscreenchange', updateGate);
+  document.addEventListener('MSFullscreenChange', updateGate);
+  updateGate();
+})();
+</script>
+{{ endif }}

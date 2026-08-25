@@ -4,11 +4,19 @@
 {{ include_sibling 'InstructionsButton.html' }}
 {{ include_sibling 'TestingSkipButton.html' }}
 <div class="trust-panel">
-  <p>There are two roles: proposer and responder. Your role stays the same for the entire session. Everyone in the session reads the same instructions and receives the same information before the experiment begins, regardless of their role.</p>
-  <p>The session begins with two unpaid practice rounds. Afterward, there are <strong>{{ total_periods }} periods</strong>. Each period contains {{ rounds_per_period }} rounds with the same partner. After each period, partners rotate, and you will not be paired with the same partner in two different periods.</p>
+  <ul>
+    <li>There are two roles: proposer and responder.</li>
+    <li>Your role stays the same for the entire session.</li>
+    <li>Everyone in the session reads the same instructions and receives the same information before the experiment begins, regardless of their role.</li>
+    <li>The session begins with two unpaid practice rounds.</li>
+    <li>Afterward, there are <strong>{{ total_periods }} periods</strong>.</li>
+    <li>Each period contains {{ rounds_per_period }} rounds with the same partner.</li>
+    <li>After each period, partners rotate.</li>
+    <li>You will not be paired with the same partner in two different periods.</li>
   {{ if written_description_condition }}
-    <p>You will see a written description identifying your partner throughout the session.</p>
+    <li>You will see a written description identifying your partner throughout the session.</li>
   {{ endif }}
+  </ul>
 </div>
 {{ next_button }}
 {{ endblock }}

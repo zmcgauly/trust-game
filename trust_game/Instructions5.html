@@ -4,23 +4,49 @@
 {{ include_sibling 'InstructionsButton.html' }}
 {{ include_sibling 'TestingSkipButton.html' }}
 <div class="trust-panel">
-  <p>In every round, after seeing how many points the responder returned, the proposer reports the probability (from 0% to 100%) that the low multiplier was used. For example, reporting 70% means you believe there is a 70% chance that the low multiplier was used.</p>
-  <p>The same period selected for trust-game payment is also used for belief payment. A period consists of {{ rounds_per_period }} rounds, and the proposer's report from <strong>each round</strong> in the selected period is evaluated for a <strong>${{ belief_prize }}</strong> belief prize. For each report in the selected period, your report and the actual multiplier determine your chance of winning that round's belief prize.</p>
-  <p>If the multiplier was low:</p>
-  \[
-    \text{winning chance} =
-    100 - \frac{(100 - \text{reported probability})^2}{100}.
-  \]
-  <p>If the multiplier was high:</p>
-  \[
-    \text{winning chance} =
-    100 - \frac{(\text{reported probability})^2}{100}.
-  \]
-  <p>The computer then draws a random number from 0 through 100. You receive the belief prize when:</p>
-  \[
-    \text{random draw} \leq \text{winning chance}.
-  \]
-  <p>Higher values of the winning chance give you a better chance of receiving the prize. Reporting your true belief about the low multiplier gives you the best chance of receiving it.</p>
+  <ul>
+    <li>In every round, after seeing how many points the responder returned, the proposer reports the probability that the low multiplier was used.</li>
+    <li>The report can be any whole number from 0% to 100%.</li>
+    <li>For example, reporting 70% means you believe there is a 70% chance that the low multiplier was used.</li>
+    <li>The same period selected for trust-game payment is also used for belief payment.</li>
+    <li>A period consists of {{ rounds_per_period }} rounds.</li>
+    <li>The proposer's report from <strong>each round</strong> in the selected period is evaluated for a <strong>${{ belief_prize }}</strong> belief prize.</li>
+    <li>For each report in the selected period, your report and the actual multiplier determine your chance of winning that round's belief prize.</li>
+    <li>If the multiplier was low:</li>
+  </ul>
+  <p class="formula-line">
+    \[
+      \text{winning chance} =
+      100 - \frac{(100 - \text{reported probability})^2}{100}.
+    \]
+  </p>
+  <ul>
+    <li>If the multiplier was high:</li>
+  </ul>
+  <p class="formula-line">
+    \[
+      \text{winning chance} =
+      100 - \frac{(\text{reported probability})^2}{100}.
+    \]
+  </p>
+  <ul>
+    <li>Example using different numbers: suppose the multiplier was low and you reported 80%.</li>
+    <li>First calculate 100 - 80 = 20.</li>
+    <li>Then square 20 to get 400.</li>
+    <li>Then divide 400 by 100 to get 4.</li>
+    <li>Then calculate 100 - 4 = 96, so your chance of winning the belief prize would be 96%.</li>
+    <li>The computer then draws a random number from 0 through 100.</li>
+    <li>You receive the belief prize when:</li>
+  </ul>
+  <p class="formula-line">
+    \[
+      \text{random draw} \leq \text{winning chance}.
+    \]
+  </p>
+  <ul>
+    <li>Higher values of the winning chance give you a better chance of receiving the prize.</li>
+    <li>Reporting your true belief about the low multiplier gives you the best chance of receiving it.</li>
+  </ul>
 </div>
 {{ next_button }}
 {{ endblock }}

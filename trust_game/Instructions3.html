@@ -4,12 +4,21 @@
 {{ include_sibling 'InstructionsButton.html' }}
 {{ include_sibling 'TestingSkipButton.html' }}
 <div class="trust-panel">
-  <p>In every round, the proposer receives 20 points and chooses a whole number from 0 to 20 to send to the responder. The amount sent in your group is multiplied by either <strong>{{ low_multiplier }}</strong> or <strong>{{ high_multiplier }}</strong>.</p>
+  <ul>
+    <li>In every round, the proposer receives 20 points.</li>
+    <li>The proposer chooses a whole number from 0 to 20 to send to the responder.</li>
+    <li>The amount sent in your group is multiplied by either <strong>{{ low_multiplier }}</strong> or <strong>{{ high_multiplier }}</strong>.</li>
   {{ if picture_condition }}
-    <p>When making decisions about how many points to send to one another, both players will be able to see their own picture and the picture of their partner.</p>
+    <li>When making decisions about how many points to send to one another, both players will be able to see their own picture and the picture of their partner.</li>
   {{ endif }}
-  <p>The computer selects a number between 0 and 100. If the number is less than <strong>{{ low_multiplier_probability_percent }}</strong>, the computer selects the low multiplier of <strong>{{ low_multiplier }}</strong>. Otherwise, it selects the high multiplier of <strong>{{ high_multiplier }}</strong>. In this way, it is as if the computer determines that the high multiplier is selected <strong>{{ high_multiplier_probability_percent }}%</strong> of the time and the low multiplier is selected <strong>{{ low_multiplier_probability_percent }}%</strong> of the time.</p>
-  <p>The proposer does not see the realized multiplier. The responder receives the amount sent by the proposer, the multiplier, and the resulting number of points they have received from that multiplication. The responder then chooses a whole number of points to return, from 0 up to the amount available.</p>
+    <li>The computer selects a number between 0 and 100.</li>
+    <li>If the number is less than <strong>{{ low_multiplier_probability_percent }}</strong>, the computer selects the low multiplier of <strong>{{ low_multiplier }}</strong>.</li>
+    <li>Otherwise, it selects the high multiplier of <strong>{{ high_multiplier }}</strong>.</li>
+    <li>In this way, it is as if the high multiplier is selected <strong>{{ high_multiplier_probability_percent }}%</strong> of the time and the low multiplier is selected <strong>{{ low_multiplier_probability_percent }}%</strong> of the time.</li>
+    <li>The proposer does not see the realized multiplier.</li>
+    <li>The responder receives the amount sent by the proposer, the multiplier, and the resulting number of points from that multiplication.</li>
+    <li>The responder then chooses a whole number of points to return, from 0 up to the amount available.</li>
+  </ul>
 </div>
 {{ next_button }}
 {{ endblock }}
