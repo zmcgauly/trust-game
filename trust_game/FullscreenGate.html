@@ -2,7 +2,7 @@
 <div class="fullscreen-gate" data-fullscreen-gate>
   <div class="fullscreen-gate-panel">
     <h3>Full Screen Required</h3>
-    <p>Please continue in full screen mode for the experiment.</p>
+    <p>Please enter full screen to continue.</p>
     <button class="fullscreen-gate-button" type="button" data-fullscreen-enter>Enter full screen</button>
   </div>
 </div>
@@ -33,6 +33,13 @@
   }
 
   button.addEventListener('click', requestFullscreen);
+  document.addEventListener('submit', function (event) {
+    if (!fullscreenElement()) {
+      event.preventDefault();
+      gate.hidden = false;
+      button.focus();
+    }
+  }, true);
   document.addEventListener('fullscreenchange', updateGate);
   document.addEventListener('webkitfullscreenchange', updateGate);
   document.addEventListener('MSFullscreenChange', updateGate);
