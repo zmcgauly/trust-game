@@ -2,6 +2,7 @@ from otree.api import Bot, Submission
 
 from . import (
     C,
+    FullscreenStart,
     InstructionsIntro,
     Instructions,
     Instructions2,
@@ -30,6 +31,9 @@ from . import (
 class PlayerBot(Bot):
     def play_round(self):
         if self.round_number == 1:
+            if is_real_experiment_session(self.player.session):
+                yield FullscreenStart
+
             yield PlayerNumber, dict(
                 claimed_player_number=self.player.id_in_subsession,
                 confirmed_player_identity=True,

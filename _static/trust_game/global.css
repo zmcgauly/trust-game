@@ -239,6 +239,23 @@
   color: #fff;
 }
 
+.fullscreen-start h3 {
+  margin: 0 0 10px;
+  font-size: 1.15rem;
+}
+
+.fullscreen-status {
+  color: #607080;
+  font-weight: 700;
+  margin-top: 12px;
+}
+
+.otree-btn-next.disabled,
+.otree-btn-next:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .formula-line {
   overflow-x: auto;
   padding: 4px 0;

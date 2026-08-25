@@ -1,0 +1,64 @@
+{{ block title }}
+Full Screen Required
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{{ static 'trust_game/global.css' }}">
+{{ endblock }}
+
+{{ block content }}
+<div class="trust-panel fullscreen-start">
+  <h3>Full Screen Required</h3>
+  <ul>
+    <li>Please continue in full screen mode for the experiment.</li>
+    <li>You must enter full screen before moving to the player number page.</li>
+    <li>If you leave full screen during the experiment, you will be asked to return to full screen mode.</li>
+  </ul>
+  <button class="fullscreen-gate-button" type="button" data-fullscreen-start>Enter full screen</button>
+  <p class="fullscreen-status" data-fullscreen-status>Please enter full screen to continue.</p>
+</div>
+
+{{ next_button }}
+
+<script>
+(function () {
+  var enterButton = document.querySelector('[data-fullscreen-start]');
+  var status = document.querySelector('[data-fullscreen-status]');
+  var nextButton = document.querySelector('.otree-btn-next') || document.querySelector('button[type="submit"]');
+  if (!enterButton || !status || !nextButton) return;
+
+  function fullscreenElement() {
+    return document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  }
+
+  function updatePage() {
+    var isFullscreen = !!fullscreenElement();
+    nextButton.disabled = !isFullscreen;
+    nextButton.classList.toggle('disabled', !isFullscreen);
+    status.textContent = isFullscreen
+      ? 'Full screen is active. You may continue.'
+      : 'Please enter full screen to continue.';
+  }
+
+  function requestFullscreen() {
+    var target = document.documentElement;
+    var request = target.requestFullscreen || target.webkitRequestFullscreen || target.msRequestFullscreen;
+    if (!request) {
+      status.textContent = 'This browser does not support full screen mode. Please alert the experimenter.';
+      nextButton.disabled = true;
+      return;
+    }
+    Promise.resolve(request.call(target)).then(updatePage).catch(function () {
+      status.textContent = 'Full screen did not start. Please try again.';
+      updatePage();
+    });
+  }
+
+  enterButton.addEventListener('click', requestFullscreen);
+  document.addEventListener('fullscreenchange', updatePage);
+  document.addEventListener('webkitfullscreenchange', updatePage);
+  document.addEventListener('MSFullscreenChange', updatePage);
+  updatePage();
+})();
+</script>
+{{ endblock }}

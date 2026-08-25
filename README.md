@@ -5,7 +5,7 @@ An oTree 6 experiment with fixed proposer and responder roles, rotating partners
 ## Experimental design
 
 - Participants first receive general instructions about the show-up payment and the option to leave at any time.
-- Participants first enter the player number assigned by the experimenter, confirm the matching picture, and cannot continue if another participant has already claimed that number.
+- Participants first enter full screen mode, then enter the player number assigned by the experimenter, confirm the matching picture, and cannot continue if another participant has already claimed that number.
 - Participants are divided evenly between proposers and responders.
 - Roles remain fixed throughout the session.
 - In written-description sessions, Part 1 collects participants' self-demographic information before the trust game.

@@ -1018,6 +1018,12 @@ def instruction_quiz_wrong_attempts(player: Player):
     return int(player.participant.vars.get("instruction_quiz_wrong_attempts", 0))
 
 
+class FullscreenStart(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1 and is_real_experiment_session(player.session)
+
+
 class PlayerNumber(Page):
     form_model = "player"
     form_fields = ["claimed_player_number", "confirmed_player_identity"]
@@ -1655,7 +1661,7 @@ class PaymentSummary(Page):
 
 
 page_sequence = [
-    PlayerNumber, WaitForPlayerNumber,
+    FullscreenStart, PlayerNumber, WaitForPlayerNumber,
     InstructionsIntro,
     Part1Instructions, SelfIdentification, WaitForSelfIdentification,
     Instructions, Instructions2, Instructions3, Instructions4, Instructions5,
